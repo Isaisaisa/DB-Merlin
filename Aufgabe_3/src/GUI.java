@@ -14,11 +14,10 @@ public class GUI {
 	private JButton btnEinloggen;
 	private JLabel label;
 	private JLabel lblHerzlichWillkommenAuf;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
+	private JTextField txtVorname;
+	private JTextField txtEmail;
+	private JTextField txtName;
+	private JTextField txtPasswort;
 
 	/**
 	 * Launch the application.
@@ -70,20 +69,20 @@ public class GUI {
 		lblHerzlichWillkommenAuf.setBounds(23, 61, 184, 149);
 		frame.getContentPane().add(lblHerzlichWillkommenAuf);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(308, 114, 184, 20);
-		frame.getContentPane().add(textField_1);
-		textField_1.setColumns(10);
+		txtVorname = new JTextField();
+		txtVorname.setBounds(308, 114, 184, 20);
+		frame.getContentPane().add(txtVorname);
+		txtVorname.setColumns(10);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(308, 145, 184, 20);
-		frame.getContentPane().add(textField_2);
-		textField_2.setColumns(10);
+		txtEmail = new JTextField();
+		txtEmail.setBounds(308, 145, 184, 20);
+		frame.getContentPane().add(txtEmail);
+		txtEmail.setColumns(10);
 		
-		textField_3 = new JTextField();
-		textField_3.setBounds(308, 83, 184, 20);
-		frame.getContentPane().add(textField_3);
-		textField_3.setColumns(10);
+		txtName = new JTextField();
+		txtName.setBounds(308, 83, 184, 20);
+		frame.getContentPane().add(txtName);
+		txtName.setColumns(10);
 		
 		JLabel lblName = new JLabel("Name");
 		lblName.setBounds(228, 86, 70, 14);
@@ -93,15 +92,15 @@ public class GUI {
 		lblVorname.setBounds(228, 117, 70, 14);
 		frame.getContentPane().add(lblVorname);
 		
-		JLabel lblEmail = new JLabel("E-mail");
-		lblEmail.setLabelFor(textField_3);
+		JLabel lblEmail = new JLabel("E-Mail");
+		lblEmail.setLabelFor(txtName);
 		lblEmail.setBounds(228, 148, 70, 14);
 		frame.getContentPane().add(lblEmail);
 		
-		textField_4 = new JTextField();
-		textField_4.setBounds(310, 30, 86, 20);
-		frame.getContentPane().add(textField_4);
-		textField_4.setColumns(10);
+		txtPasswort = new JTextField();
+		txtPasswort.setBounds(310, 30, 86, 20);
+		frame.getContentPane().add(txtPasswort);
+		txtPasswort.setColumns(10);
 		
 		JLabel lblPasswort = new JLabel("Passwort");
 		lblPasswort.setBounds(222, 15, 46, -3);
@@ -111,10 +110,10 @@ public class GUI {
 		lblPasswort_1.setBounds(312, 11, 84, 14);
 		frame.getContentPane().add(lblPasswort_1);
 		
-		textField_5 = new JTextField();
-		textField_5.setBounds(210, 30, 86, 20);
-		frame.getContentPane().add(textField_5);
-		textField_5.setColumns(10);
+		JTextField txtUsername = new JTextField();
+		txtUsername.setBounds(210, 30, 86, 20);
+		frame.getContentPane().add(txtUsername);
+		txtUsername.setColumns(10);
 		
 		JLabel lblUsername = new JLabel("Username");
 		lblUsername.setBounds(210, 11, 86, 14);
