@@ -2,13 +2,8 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
-import java.awt.BorderLayout;
-import javax.swing.SwingConstants;
 import javax.swing.JTextField;
-import javax.swing.JTable;
 import java.awt.Color;
-import javax.swing.JMenu;
-import javax.swing.JTextArea;
 import javax.swing.JLabel;
 
 
