@@ -1,5 +1,0 @@
-package merlin.data.entities;
-
-public class BirdwatcherImpl implements Birdwatcher {
-
-}
