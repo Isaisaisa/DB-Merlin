@@ -20,13 +20,17 @@ public class MerlinLogin {
 
 	private JFrame frmLogin;
 	private JTextField textField;
+	private JTextField txtUsernameReg;
 	private JButton btnLogin;
 	private JLabel label;
 	private JLabel lblWelcomeText;
 	private JTextField txtVorname;
 	private JTextField txtEmail;
 	private JTextField txtName;
-	private JPasswordField txtPasswort;
+//	private JPasswordField txtPasswort;
+	private JPasswordField passwordLog;
+	private JPasswordField txtPasswordRegBest;
+	private JPasswordField txtPasswordReg;
 	
 	/**
 	 * Launch the application.
@@ -67,12 +71,12 @@ public class MerlinLogin {
 		frmLogin.setResizable(false);
 		frmLogin.setForeground(Color.WHITE);
 		frmLogin.setBackground(Color.WHITE);
-		frmLogin.setBounds(200, 200, 600, 300);
+		frmLogin.setBounds(200, 200, 600, 400);
 		frmLogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmLogin.getContentPane().setLayout(null);
 		
 		JButton btnRegister = new JButton("Registrieren");
-		btnRegister.setBounds(334, 198, 107, 23);
+		btnRegister.setBounds(308, 323, 107, 23);
 		frmLogin.getContentPane().add(btnRegister);
 		
 		btnLogin = new JButton("Einloggen");
@@ -91,57 +95,94 @@ public class MerlinLogin {
 		frmLogin.getContentPane().add(label);
 		
 		lblWelcomeText = new JLabel("<html> Herzlich Willkommen auf der Merlinseite f\u00FCr Vogelbeobachtungen Sie haben einen Vogel beobachtet und wollen dies abspecihern? <br> Dann registrieren Sie sich jetzt oder loggen Sie sich mit Ihrem Username und Passwort ein </html>");
-		lblWelcomeText.setBounds(15, 83, 184, 149);
+		lblWelcomeText.setBounds(10, -6, 132, 219);
 		frmLogin.getContentPane().add(lblWelcomeText);
+
+		
+		
+		JLabel lblVorname = new JLabel("Vorname");
+		lblVorname.setBounds(181, 148, 70, 14);
+		frmLogin.getContentPane().add(lblVorname);
 		
 		txtVorname = new JTextField();
-		txtVorname.setBounds(308, 136, 184, 20);
+		txtVorname.setBounds(308, 145, 184, 20);
 		frmLogin.getContentPane().add(txtVorname);
 		txtVorname.setColumns(10);
 		
-		txtEmail = new JTextField();
-		txtEmail.setBounds(308, 167, 184, 20);
-		frmLogin.getContentPane().add(txtEmail);
-		txtEmail.setColumns(10);
 		
-		txtName = new JTextField();
-		txtName.setBounds(308, 105, 184, 20);
-		frmLogin.getContentPane().add(txtName);
-		txtName.setColumns(10);
-		
-		JLabel lblName = new JLabel("Name");
-		lblName.setBounds(228, 108, 70, 14);
-		frmLogin.getContentPane().add(lblName);
-		
-		JLabel lblVorname = new JLabel("Vorname");
-		lblVorname.setBounds(228, 139, 70, 14);
-		frmLogin.getContentPane().add(lblVorname);
 		
 		JLabel lblEmail = new JLabel("E-Mail");
 		lblEmail.setLabelFor(txtName);
-		lblEmail.setBounds(228, 170, 70, 14);
+		lblEmail.setBounds(181, 179, 70, 14);
 		frmLogin.getContentPane().add(lblEmail);
 		
-		JLabel lblPasswort = new JLabel("Passwort");
-		lblPasswort.setBounds(222, 15, 46, -3);
-		frmLogin.getContentPane().add(lblPasswort);
+		txtEmail = new JTextField();
+		txtEmail.setBounds(308, 176, 184, 20);
+		frmLogin.getContentPane().add(txtEmail);
+		txtEmail.setColumns(10);
+
 		
-		JLabel lblPasswort_1 = new JLabel("Passwort");
-		lblPasswort_1.setBounds(312, 11, 84, 14);
-		frmLogin.getContentPane().add(lblPasswort_1);
+		
+		JLabel lblName = new JLabel("Name");
+		lblName.setBounds(181, 117, 70, 14);
+		frmLogin.getContentPane().add(lblName);
+				
+		txtName = new JTextField();
+		txtName.setBounds(308, 114, 184, 20);
+		frmLogin.getContentPane().add(txtName);
+		txtName.setColumns(10);
+				
+		
+		
+		JLabel lblPasswort = new JLabel("Passwort");
+		lblPasswort.setBounds(297, 11, 84, 14);
+		frmLogin.getContentPane().add(lblPasswort);
+
+		passwordLog = new JPasswordField();
+		passwordLog.setBounds(297, 30, 99, 20);
+		frmLogin.getContentPane().add(passwordLog);
+		
+		
 		
 		JTextField txtUsername = new JTextField();
-		txtUsername.setBounds(210, 30, 86, 20);
+		txtUsername.setBounds(181, 30, 99, 20);
 		frmLogin.getContentPane().add(txtUsername);
 		txtUsername.setColumns(10);
 		
 		JLabel lblUsername = new JLabel("Username");
-		lblUsername.setBounds(210, 11, 86, 14);
+		lblUsername.setBounds(181, 11, 86, 14);
 		frmLogin.getContentPane().add(lblUsername);
 		
-		txtPasswort = new JPasswordField();
-		txtPasswort.setBounds(308, 30, 86, 20);
-		frmLogin.getContentPane().add(txtPasswort);
+		
+		
+		JLabel lblUsernameReg = new JLabel("Username");
+		lblUsernameReg.setBounds(181, 210, 70, 14);
+		frmLogin.getContentPane().add(lblUsernameReg);
+
+		txtUsernameReg = new JTextField();
+		txtUsernameReg.setColumns(10);
+		txtUsernameReg.setBounds(308, 207, 184, 20);
+		frmLogin.getContentPane().add(txtUsernameReg);
+
+		
+		
+		JLabel lblPasswortReg = new JLabel("Passwort");
+		lblPasswortReg.setBounds(181, 244, 70, 14);
+		frmLogin.getContentPane().add(lblPasswortReg);
+
+		txtPasswordReg = new JPasswordField();
+		txtPasswordReg.setBounds(307, 241, 185, 20);
+		frmLogin.getContentPane().add(txtPasswordReg);
+		
+		
+		
+		JLabel lblPasswortBestReg = new JLabel("Passwort best.");
+		lblPasswortBestReg.setBounds(181, 280, 101, 14);
+		frmLogin.getContentPane().add(lblPasswortBestReg);
+		
+		txtPasswordRegBest = new JPasswordField();
+		txtPasswordRegBest.setBounds(307, 277, 185, 20);
+		frmLogin.getContentPane().add(txtPasswordRegBest);
 		
 		JCheckBox chkRememberUser = new JCheckBox("Nutzernamen merken");
 		chkRememberUser.setBounds(209, 57, 139, 23);
