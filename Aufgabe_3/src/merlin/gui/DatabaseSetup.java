@@ -15,7 +15,6 @@ import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.awt.Dialog.ModalityType;
 
 public class DatabaseSetup extends JDialog {
 
@@ -45,6 +44,7 @@ public class DatabaseSetup extends JDialog {
 	 * Create the dialog.
 	 */
 	public DatabaseSetup(final ArrayList<String> dbSettings) {
+		setTitle("Datenbankverbindung einrichten");
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(DatabaseSetup.class.getResource("/javax/swing/plaf/metal/icons/ocean/minimize.gif")));

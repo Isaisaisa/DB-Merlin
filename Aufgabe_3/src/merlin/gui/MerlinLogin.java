@@ -19,9 +19,7 @@ import javax.swing.JCheckBox;
 public class MerlinLogin {
 
 	private JFrame frmLogin;
-	private JTextField textField;
 	private JButton btnLogin;
-	private JLabel label;
 	private JLabel lblWelcomeText;
 	private JTextField txtVorname;
 	private JTextField txtEmail;
@@ -85,10 +83,6 @@ public class MerlinLogin {
 		});
 		btnLogin.setBounds(406, 29, 86, 23);
 		frmLogin.getContentPane().add(btnLogin);
-		
-		label = new JLabel("");
-		label.setBounds(39, 11, 46, 14);
-		frmLogin.getContentPane().add(label);
 		
 		lblWelcomeText = new JLabel("<html> Herzlich Willkommen auf der Merlinseite f\u00FCr Vogelbeobachtungen Sie haben einen Vogel beobachtet und wollen dies abspecihern? <br> Dann registrieren Sie sich jetzt oder loggen Sie sich mit Ihrem Username und Passwort ein </html>");
 		lblWelcomeText.setBounds(15, 83, 184, 149);
