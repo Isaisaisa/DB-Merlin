@@ -1,3 +1,4 @@
+package GUI;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -5,9 +6,13 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import org.eclipse.wb.swing.FocusTraversalOnArray;
+import java.awt.Component;
+import javax.swing.JScrollPane;
 
 
-public class GUI {
+public class Login {
 
 	private JFrame frame;
 	private JTextField textField;
@@ -26,7 +31,7 @@ public class GUI {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					GUI window = new GUI();
+					Login window = new Login();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -38,7 +43,7 @@ public class GUI {
 	/**
 	 * Create the application.
 	 */
-	public GUI() {
+	public Login() {
 		initialize();
 	}
 
@@ -58,7 +63,7 @@ public class GUI {
 		frame.getContentPane().add(btnBeobachtung);
 		
 		btnEinloggen = new JButton("Einloggen");
-		btnEinloggen.setBounds(406, 29, 86, 23);
+		btnEinloggen.setBounds(392, 29, 101, 23);
 		frame.getContentPane().add(btnEinloggen);
 		
 		label = new JLabel("");
@@ -98,7 +103,7 @@ public class GUI {
 		frame.getContentPane().add(lblEmail);
 		
 		txtPasswort = new JTextField();
-		txtPasswort.setBounds(310, 30, 86, 20);
+		txtPasswort.setBounds(290, 30, 86, 20);
 		frame.getContentPane().add(txtPasswort);
 		txtPasswort.setColumns(10);
 		
@@ -107,20 +112,18 @@ public class GUI {
 		frame.getContentPane().add(lblPasswort);
 		
 		JLabel lblPasswort_1 = new JLabel("Passwort");
-		lblPasswort_1.setBounds(312, 11, 84, 14);
+		lblPasswort_1.setBounds(290, 11, 84, 14);
 		frame.getContentPane().add(lblPasswort_1);
 		
 		JTextField txtUsername = new JTextField();
-		txtUsername.setBounds(210, 30, 86, 20);
+		txtUsername.setBounds(194, 30, 86, 20);
 		frame.getContentPane().add(txtUsername);
 		txtUsername.setColumns(10);
 		
 		JLabel lblUsername = new JLabel("Username");
-		lblUsername.setBounds(210, 11, 86, 14);
+		lblUsername.setBounds(194, 11, 86, 14);
 		frame.getContentPane().add(lblUsername);
+		frame.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{btnBeobachtung, btnEinloggen, txtVorname, label, txtEmail, txtName, lblHerzlichWillkommenAuf, lblName, frame.getContentPane(), lblVorname, lblEmail, txtPasswort, lblPasswort, lblPasswort_1, txtUsername, lblUsername}));
 		
 	}
-	
-	
-	
 }
