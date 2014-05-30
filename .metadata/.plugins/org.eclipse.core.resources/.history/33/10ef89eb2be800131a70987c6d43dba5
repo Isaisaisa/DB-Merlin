@@ -17,14 +17,13 @@ import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
 import javax.swing.JCheckBox;
 
-import merlin.logic.impl.Merlin;
-
 import java.awt.Font;
-
+import merlin.logic;
 
 public class MerlinLogin {
 
 	private JFrame frmLogin;
+	private JTextField textField;
 	private JTextField txtUsernameReg;
 	private JButton btnLogin;
 	private JLabel label;
@@ -82,7 +81,7 @@ public class MerlinLogin {
 		JButton btnRegister = new JButton("Registrieren");
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Merlin.insertBirdwatcher(txtName.getText().trim(), txtVorname.getText().trim(), txtEmail.getText().trim());
+				insert(txtName.getText().trim(), txtVorname.getText().trim(), txtEmail.getText().trim());
 			}
 		});
 		btnRegister.setBounds(308, 323, 107, 23);

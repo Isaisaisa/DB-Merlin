@@ -1,0 +1,13 @@
+package merlin.logic.impl;
+
+import merlin.logic.User;
+
+public class LoginImpl implements User{
+
+	
+	public void insertBirdwatcher(String name, String vorname, String email) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

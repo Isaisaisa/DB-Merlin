@@ -1,0 +1,10 @@
+package merlin.logic.impl;
+
+import merlin.logic.User;
+
+public class UserImpl implements User{
+
+	
+	
+
+}

@@ -1,0 +1,9 @@
+package merlin.logic.impl;
+
+public class Merlin {
+
+	
+	public static void insertBirdwatcher(String name, String vorname, String email) {
+		
+	}
+}

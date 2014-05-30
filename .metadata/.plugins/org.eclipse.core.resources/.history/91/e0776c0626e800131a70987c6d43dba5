@@ -10,21 +10,17 @@ import javax.swing.UnsupportedLookAndFeelException;
 import java.awt.Color;
 
 import javax.swing.JLabel;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
 import javax.swing.JPasswordField;
 import javax.swing.JCheckBox;
-
-import merlin.logic.impl.Merlin;
-
 import java.awt.Font;
 
 
 public class MerlinLogin {
 
 	private JFrame frmLogin;
+	private JTextField textField;
 	private JTextField txtUsernameReg;
 	private JButton btnLogin;
 	private JLabel label;
@@ -32,6 +28,7 @@ public class MerlinLogin {
 	private JTextField txtVorname;
 	private JTextField txtEmail;
 	private JTextField txtName;
+//	private JPasswordField txtPasswort;
 	private JPasswordField passwordLog;
 	private JPasswordField txtPasswordRegBest;
 	private JPasswordField txtPasswordReg;
@@ -80,11 +77,6 @@ public class MerlinLogin {
 		frmLogin.getContentPane().setLayout(null);
 		
 		JButton btnRegister = new JButton("Registrieren");
-		btnRegister.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				Merlin.insertBirdwatcher(txtName.getText().trim(), txtVorname.getText().trim(), txtEmail.getText().trim());
-			}
-		});
 		btnRegister.setBounds(308, 323, 107, 23);
 		frmLogin.getContentPane().add(btnRegister);
 		

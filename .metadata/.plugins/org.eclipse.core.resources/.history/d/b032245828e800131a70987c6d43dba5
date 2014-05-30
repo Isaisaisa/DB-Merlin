@@ -1,0 +1,9 @@
+package merlin.data;
+
+public class Birdwatcher {
+	
+	public static void insert(String name, String vorname, String email){
+		
+	}
+
+}

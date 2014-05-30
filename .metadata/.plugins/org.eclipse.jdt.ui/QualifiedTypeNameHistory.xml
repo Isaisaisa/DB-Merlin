@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="merlin.logic.Login"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="merlin.data.entities.Birdwatcher"/>
+<fullyQualifiedTypeName name="merlin.data.BirdwatcherRepository"/>
+<fullyQualifiedTypeName name="java.lang.NullPointerException"/>
+<fullyQualifiedTypeName name="java.lang.IllegalArgumentException"/>
+<fullyQualifiedTypeName name="merlin.logic.impl.Merlin"/>
+</qualifiedTypeNameHistroy>

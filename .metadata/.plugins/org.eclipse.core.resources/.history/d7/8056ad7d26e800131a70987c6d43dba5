@@ -1,0 +1,8 @@
+package merlin.logic;
+
+public interface User {
+
+	public void insertBirdwatcher(String name, String vorname, String email);
+		
+	
+}
