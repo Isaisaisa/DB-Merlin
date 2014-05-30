@@ -23,7 +23,7 @@ public class Main {
 		Properties properties = new Properties();
 		String fileSeperator = System.getProperty("file.separator");
 		String path = new java.io.File("").getAbsolutePath();
-		String propFile = path + fileSeperator + "dbconfig.properties";
+		String propFile = path + fileSeperator + "config.properties";
 		
 		try {
 			properties.load(new FileInputStream(propFile));
