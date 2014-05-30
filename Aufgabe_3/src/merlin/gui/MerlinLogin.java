@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
 import javax.swing.JCheckBox;
+import java.awt.Font;
 
 
 public class MerlinLogin {
@@ -94,8 +95,9 @@ public class MerlinLogin {
 		label.setBounds(39, 11, 46, 14);
 		frmLogin.getContentPane().add(label);
 		
-		lblWelcomeText = new JLabel("<html> Herzlich Willkommen auf der Merlinseite f\u00FCr Vogelbeobachtungen Sie haben einen Vogel beobachtet und wollen dies abspecihern? <br> Dann registrieren Sie sich jetzt oder loggen Sie sich mit Ihrem Username und Passwort ein </html>");
-		lblWelcomeText.setBounds(10, -6, 132, 219);
+		lblWelcomeText = new JLabel("<html> Herzlich Willkommen auf der Merlinseite <br> f\u00FCr Vogelbeobachtungen Sie haben einen Vogel beobachtet und wollen dies abspecihern? <br> Dann registrieren Sie sich jetzt oder loggen Sie sich mit Ihrem Username und Passwort ein </html>");
+		lblWelcomeText.setFont(new Font("Arial", Font.PLAIN, 14));
+		lblWelcomeText.setBounds(10, -9, 161, 265);
 		frmLogin.getContentPane().add(lblWelcomeText);
 
 		
