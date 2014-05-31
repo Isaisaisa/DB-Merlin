@@ -11,7 +11,10 @@ import merlin.gui.*;
 public class Main {
 	
 	// Properties-Object, das von überall aus zugänglich ist
-	static Properties properties = new Properties();
+	static Properties properties   = new Properties();
+	static String     propFilePath = new java.io.File("").getAbsolutePath()
+									 + System.getProperty("file.separator")
+									 + "config.properties";
 	
 	// TODO DbWrapper eventuell auslagern, falls Zugriffsprobleme entstehen
 	static DbWrapper database;
@@ -20,13 +23,8 @@ public class Main {
 		
 		/* Initialisierungen */
 		
-		String fileSeperator = System.getProperty("file.separator");
-		String path = new java.io.File("").getAbsolutePath();
-		String propFile = path + fileSeperator + "config.properties";
-		String propFile = path + fileSeperator + "dbconfig.properties";
-		
 		try {
-			properties.load(new FileInputStream(propFile));
+			properties.load(new FileInputStream(propFilePath));
 			
 			if (				 getProp("dbURL")  == "" ||
 				Integer.parseInt(getProp("dbPort")) == 0 ||
@@ -40,6 +38,7 @@ public class Main {
 		
 		/* GUI anzeigen */
 		MerlinLogin.main(null);
+		MerlinMain.main(null);
 	}
 	
 	/* PROPERTIES-OBJECT ACCESSORS */
