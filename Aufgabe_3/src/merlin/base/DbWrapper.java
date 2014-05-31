@@ -13,6 +13,7 @@ public final class DbWrapper {
 	private final String dbURL, dbSID, dbUsername, dbPassword;
 	private final int dbPort;
 	private Connection connection;
+	private ResultContainer resultContainer;
 	
 	/* PRIVATE CONTRUCTOR */
 	private DbWrapper(String dbUrl, int dbPort, String dbSID, String dbUsername, String dbPassword) throws ClassNotFoundException, SQLException {
@@ -21,6 +22,8 @@ public final class DbWrapper {
         this.dbSID      = dbSID;      // Security Identifier
 		this.dbUsername = dbUsername;
 		this.dbPassword = dbPassword;
+		
+		this.resultContainer = new ResultContainer();
 		
 		// Initialisierungen
 		initDriver();
@@ -76,91 +79,36 @@ public final class DbWrapper {
 		}
 	}
 	
-	/* Methode, um Query zu senden und anschließend das Ergebnis in Vektoren aufzuarbeiten - in einem Aufruf. */
-//	public Vector<Vector<Object>> getResultOfQuery(String query) throws SQLException {
-//		try {
-//			return processResult(sendQuery(query));
-//		} catch (Exception e) {
-//			System.err.println("The query could not be processed.");
-//			e.printStackTrace();
-//			
-//			/* return empty table at least */
-//			return new Vector<Vector<Object>>();
-//		}
-//	}
+
+	/* GIBT DIE ERGEBNISTABELLE EINE QUERY'S ZURÜCK (columnNames müssen separat per DbWrapper.columnNames() geholt werden);
+	 * Man übergibt getResultOfQuery einen String in Form eines Queries,
+	 * der Query wird delegiert an sendQuery, um die Anfrage an die Datenbank zu senden.
+	 * Das Ergebnis (ResultSet) wird innerhalb der Methode resultSet des ResultContainer's
+	 * weiterverarbeitet, dass am Ende alle nötigen Informationen zur Erstellung einer Tabelle
+	 * vorhanden sind. Zusätzlich gibt die Methode eine Matrix rowData zurück,
+	 * die eine Tabelle (ohne Spaltenüberschriften repräsentiert).
+	 */
+	public Vector<Vector<Object>> getResultOfQuery(String query) throws SQLException {
+		return resultContainer().resultSet(sendQuery(query));
+	}
 	
-//	public Vector<Vector<Object>> getResultOfQuery(String query) {
-//		try {
-//			return processResult(sendQuery(query));
-//		} catch (Exception e) {
-//			System.err.println("The query could not be processed.");
-//			e.printStackTrace();
-//			
-//			/* return empty table at least */
-//			return new Vector<Vector<Object>>();
-//		}
-//	}
+	
+	public ResultContainer resultContainer() {
+		return resultContainer;
+	}
 	
 	/* Query an Datenbank senden */
 	public ResultSet sendQuery(String query) throws SQLException {
 		Statement statement = connection().createStatement();
-		ResultSet resultSet;
-		
-		resultSet = statement.executeQuery(query);
+		ResultSet resultSet = statement.executeQuery(query);
 		return resultSet;
 	}
-        
-        public Vector<String> getColumnNames(ResultSet resultSet) throws SQLException {
-            return getColumnNames(resultSet.getMetaData());
-        }
-        
-        public Vector<String> getColumnNames(ResultSetMetaData metaData) throws SQLException {
-            Vector<String> columnNames = new Vector<String>();
-            int columns = metaData.getColumnCount();
-        
-            /* Spaltennamen ermitteln */
-            for (int i = 1; i <= columns; i++) {
-                    String colname = metaData.getColumnName(i);
-                    columnNames.addElement(colname);
-            }
-            return columnNames;
-        }
-    
-	/* Das Ergebnis eines Queries in Vektoren schreiben*/
 	
-	/* processResult BASE METHOD */
-	public Vector<Vector<Object>> processResult(ResultSet resultSet) throws SQLException {
-		
-		ResultSetMetaData metaData = resultSet.getMetaData();
-		Vector<Vector<Object>> resultTable = new Vector<Vector<Object>>();
-//                Vector<String> columnNames = new Vector<String>();
-		int columns = metaData.getColumnCount();
-//        
-//		/* Spaltennamen ermitteln */
-//		for (int i = 1; i <= columns; i++) {
-//			String colname = metaData.getColumnName(i);
-//			columnNames.addElement(colname);
-//		}
-                
-                
-		
-		/* Zeileninhalt ermitteln */
-		while (resultSet.next()) {
-			
-			/* neue Spalte erzeugen */
-			Vector<Object> row = new Vector<Object>(columns);
-			
-			/* Spalte mit Zeilen füllen */
-			for (int i = 1; i <= columns; i++) {
-				
-				/* Zeile mit Werten füllen */
-				row.addElement(resultSet.getObject(i));
-			}
-			/* Zeile in Spalte eintragen */			
-			resultTable.addElement(row);
-		}
-		
-		/* Ergebnis-Tabelle zurückliefern */
-		return resultTable;
+	public Vector<String> columnNames() {
+		return resultContainer.columnNames();
+	}
+	
+	public ResultSetMetaData resultSetMetaData() {
+		return resultContainer.resultSetMetaData();
 	}
 }
