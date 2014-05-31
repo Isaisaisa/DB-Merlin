@@ -9,12 +9,14 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.Toolkit;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import merlin.base.Main;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 
 public class DatabaseSetup extends JDialog {
 
@@ -26,13 +28,18 @@ public class DatabaseSetup extends JDialog {
 	private JTextField txtURL;
 	private JTextField txtPort;
 	private JTextField txtSID;
+	
+	/* Default Strings for text fields */
+	private final String defaultURL  = "oracle.informatik.haw-hamburg.de";
+	private final String defaultPort = "1521";
+	private final String defaultSID  = "inf09";
 
 	/**
 	 * Launch the application.
 	 */
-	public static void showDialog(ArrayList<String> dbSettings) {
+	public static void showDialog() {
 		try {
-			DatabaseSetup dialog = new DatabaseSetup(dbSettings);
+			DatabaseSetup dialog = new DatabaseSetup();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -43,7 +50,7 @@ public class DatabaseSetup extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public DatabaseSetup(final ArrayList<String> dbSettings) {
+	public DatabaseSetup() {
 		setTitle("Datenbankverbindung einrichten");
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -61,7 +68,7 @@ public class DatabaseSetup extends JDialog {
 		}
 		{
 			txtURL = new JTextField();
-			txtURL.setText("oracle.informatik.haw-hamburg.de");
+			txtURL.setText(defaultURL);
 			txtURL.setColumns(10);
 			txtURL.setBounds(40, 11, 287, 20);
 			contentPanel.add(txtURL);
@@ -73,7 +80,7 @@ public class DatabaseSetup extends JDialog {
 		}
 		{
 			txtPort = new JTextField();
-			txtPort.setText("1521");
+			txtPort.setText(defaultPort);
 			txtPort.setColumns(10);
 			txtPort.setBounds(40, 35, 287, 20);
 			contentPanel.add(txtPort);
@@ -85,7 +92,7 @@ public class DatabaseSetup extends JDialog {
 		}
 		{
 			txtSID = new JTextField();
-			txtSID.setText("inf09");
+			txtSID.setText(defaultSID);
 			txtSID.setColumns(10);
 			txtSID.setBounds(40, 59, 287, 20);
 			contentPanel.add(txtSID);
@@ -98,9 +105,9 @@ public class DatabaseSetup extends JDialog {
 				JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						dbSettings.add(txtURL.getText());
-						dbSettings.add(txtPort.getText());
-						dbSettings.add(txtSID.getText());
+						Main.saveProp("dbURL", txtURL.getText());
+						Main.saveProp("dbPort", txtPort.getText());
+						Main.saveProp("dbSID", txtSID.getText());
 					    dispose();
 					}
 				});
@@ -120,5 +127,7 @@ public class DatabaseSetup extends JDialog {
 			}
 		}
 	}
+	
+	
 
 }
