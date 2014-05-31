@@ -57,73 +57,73 @@ public class Login {
 		frame.setBounds(100, 100, 600, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		
+
 		JButton btnBeobachtung = new JButton("Registrieren");
 		btnBeobachtung.setBounds(334, 176, 107, 23);
 		frame.getContentPane().add(btnBeobachtung);
-		
+
 		btnEinloggen = new JButton("Einloggen");
 		btnEinloggen.setBounds(392, 29, 101, 23);
 		frame.getContentPane().add(btnEinloggen);
-		
+
 		label = new JLabel("");
 		label.setBounds(39, 11, 46, 14);
 		frame.getContentPane().add(label);
-		
+
 		lblHerzlichWillkommenAuf = new JLabel("<html> Herzlich Willkommen auf der Merlinseite f\u00FCr Vogelbeobachtungen Sie haben einen Vogel beobachtet und wollen dies abspecihern? <br> Dann registrieren Sie sich jetzt oder loggen Sie sich mit Ihrem Username und Passwort ein </html>");
 		lblHerzlichWillkommenAuf.setBounds(23, 61, 184, 149);
 		frame.getContentPane().add(lblHerzlichWillkommenAuf);
-		
+
 		txtVorname = new JTextField();
 		txtVorname.setBounds(308, 114, 184, 20);
 		frame.getContentPane().add(txtVorname);
 		txtVorname.setColumns(10);
-		
+
 		txtEmail = new JTextField();
 		txtEmail.setBounds(308, 145, 184, 20);
 		frame.getContentPane().add(txtEmail);
 		txtEmail.setColumns(10);
-		
+
 		txtName = new JTextField();
 		txtName.setBounds(308, 83, 184, 20);
 		frame.getContentPane().add(txtName);
 		txtName.setColumns(10);
-		
+
 		JLabel lblName = new JLabel("Name");
 		lblName.setBounds(228, 86, 70, 14);
 		frame.getContentPane().add(lblName);
-		
+
 		JLabel lblVorname = new JLabel("Vorname");
 		lblVorname.setBounds(228, 117, 70, 14);
 		frame.getContentPane().add(lblVorname);
-		
+
 		JLabel lblEmail = new JLabel("E-Mail");
 		lblEmail.setLabelFor(txtName);
 		lblEmail.setBounds(228, 148, 70, 14);
 		frame.getContentPane().add(lblEmail);
-		
+
 		txtPasswort = new JTextField();
 		txtPasswort.setBounds(290, 30, 86, 20);
 		frame.getContentPane().add(txtPasswort);
 		txtPasswort.setColumns(10);
-		
+
 		JLabel lblPasswort = new JLabel("Passwort");
 		lblPasswort.setBounds(222, 15, 46, -3);
 		frame.getContentPane().add(lblPasswort);
-		
+
 		JLabel lblPasswort_1 = new JLabel("Passwort");
 		lblPasswort_1.setBounds(290, 11, 84, 14);
 		frame.getContentPane().add(lblPasswort_1);
-		
+
 		JTextField txtUsername = new JTextField();
 		txtUsername.setBounds(194, 30, 86, 20);
 		frame.getContentPane().add(txtUsername);
 		txtUsername.setColumns(10);
-		
+
 		JLabel lblUsername = new JLabel("Username");
 		lblUsername.setBounds(194, 11, 86, 14);
 		frame.getContentPane().add(lblUsername);
 		frame.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{btnBeobachtung, btnEinloggen, txtVorname, label, txtEmail, txtName, lblHerzlichWillkommenAuf, lblName, frame.getContentPane(), lblVorname, lblEmail, txtPasswort, lblPasswort, lblPasswort_1, txtUsername, lblUsername}));
-		
+
 	}
 }
