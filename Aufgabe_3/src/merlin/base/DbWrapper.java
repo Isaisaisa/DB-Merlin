@@ -2,6 +2,7 @@ package merlin.base;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -30,12 +31,16 @@ public final class DbWrapper {
 		connectToDatabase();
 	}
 	
-	public static DbWrapper instanceOf(String dbURL, int dbPort, String dbSID, String dbUsername, String dbPassword) throws ClassNotFoundException, SQLException {
+	public static DbWrapper valueOf(String dbURL, int dbPort, String dbSID, String dbUsername, String dbPassword) throws ClassNotFoundException, SQLException {
 		return new DbWrapper(dbURL, dbPort, dbSID, dbUsername, dbPassword);
 	}
 	
-	public static DbWrapper instanceOf(String username, String password) throws ClassNotFoundException, SQLException {
-		return instanceOf("oracle.informatik.haw-hamburg.de", 1521, "inf09", username, password);
+	public static DbWrapper valueOf(String username, String password) throws ClassNotFoundException, SQLException {
+		return valueOf("oracle.informatik.haw-hamburg.de", 1521, "inf09", username, password);
+	}
+	//A-Kennung und Passwort hier
+	public static DbWrapper valueOf() throws ClassNotFoundException, SQLException {
+		return valueOf("","" );
 	}
 	
 	/* ACCESSORS */
@@ -102,6 +107,11 @@ public final class DbWrapper {
 		Statement statement = connection().createStatement();
 		ResultSet resultSet = statement.executeQuery(query);
 		return resultSet;
+	}
+	
+	public void sendUpdate(String query) throws SQLException {
+		PreparedStatement statement = connection().prepareStatement(query);
+		statement.executeUpdate();
 	}
 	
 	public Vector<String> columnNames() {
