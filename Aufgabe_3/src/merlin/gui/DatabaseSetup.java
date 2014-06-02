@@ -15,8 +15,6 @@ import java.awt.Toolkit;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import merlin.base.Main;
-
 import merlin.gui.enums.ExitCode;
 import static merlin.gui.enums.ExitCode.*;
 
@@ -37,10 +35,9 @@ import java.awt.event.FocusEvent;
 
 public class DatabaseSetup extends JDialog {
 
-	/**
+	/** TODO generate serial!
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private static ExitCode exitCode = CANCEL_BUTTON_PUSHED;
 	private final JPanel contentPanel = new JPanel();
 	
