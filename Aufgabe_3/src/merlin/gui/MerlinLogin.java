@@ -18,7 +18,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JCheckBox;
 
 import merlin.logic.exception.IllegalPasswordException;
-import merlin.logic.impl.Merlin;
+import merlin.logic.impl.MerlinLogic;
 
 import java.awt.Font;
 import java.awt.Dialog.ModalExclusionType;
@@ -95,7 +95,7 @@ public class MerlinLogin {
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					Merlin.insertBirdwatcher(txtName.getText().trim(), txtVorname.getText().trim(), txtUsernameReg.getText().trim(), txtPasswordReg.getPassword(), txtPasswordRegBest.getPassword(), txtEmail.getText().trim());
+					MerlinLogic.insertBirdwatcher(txtName.getText().trim(), txtVorname.getText().trim(), txtUsernameReg.getText().trim(), txtPasswordReg.getPassword(), txtPasswordRegBest.getPassword(), txtEmail.getText().trim());
 				} catch (IllegalPasswordException e) {
 					System.out.println("Passwörter sind nicht identische, bitte neu eingeben");
 					e.printStackTrace();
