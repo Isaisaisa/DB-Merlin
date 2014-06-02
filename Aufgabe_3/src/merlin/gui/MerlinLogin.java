@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
 import javax.swing.JCheckBox;
 
+import merlin.logic.exception.IllegalPasswordException;
 import merlin.logic.impl.Merlin;
 
 import java.awt.Font;
@@ -51,6 +52,7 @@ public class MerlinLogin {
 			public void run() {
 				try {
 					MerlinLogin window = new MerlinLogin();
+					DatabaseSetup.showDialog();
 					window.frmLogin.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -79,10 +81,16 @@ public class MerlinLogin {
 		frmLogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmLogin.getContentPane().setLayout(null);
 		
+		//TODO GUI für IllegalPasswordException
 		JButton btnRegister = new JButton("Registrieren");
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Merlin.insertBirdwatcher(txtName.getText().trim(), txtVorname.getText().trim(), txtEmail.getText().trim());
+				try {
+					Merlin.insertBirdwatcher(txtName.getText().trim(), txtVorname.getText().trim(), txtUsernameReg.getText().trim(), txtPasswordReg.getPassword(), txtPasswordRegBest.getPassword(), txtEmail.getText().trim());
+				} catch (IllegalPasswordException e) {
+					System.out.println("Passwörter sind nicht identische, bitte neu eingeben");
+					e.printStackTrace();
+				}
 			}
 		});
 		btnRegister.setBounds(308, 323, 107, 23);

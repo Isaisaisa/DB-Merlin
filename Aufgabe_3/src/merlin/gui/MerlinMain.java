@@ -52,7 +52,6 @@ public class MerlinMain {
 	private void initialize() {
 		frmMerlinMain = new JFrame();
 		frmMerlinMain.setIconImage(Toolkit.getDefaultToolkit().getImage(MerlinMain.class.getResource("/javax/swing/plaf/metal/icons/ocean/hardDrive.gif")));
-		frmMerlinMain.setResizable(false);
 		frmMerlinMain.setTitle("MERLIN Vogelbeobachtungen");
 		frmMerlinMain.setBounds(50, 50, 1024, 800);
 		frmMerlinMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -75,6 +74,7 @@ public class MerlinMain {
 		JButton btnEinstellungen = new JButton("Einstellungen");
 		btnEinstellungen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
 				/* TODO Einstellungen Dialog anzeigen */
 				/* TODO Einstlelungen Dialog GUI-Design und Implementation */
 			}
