@@ -114,6 +114,11 @@ public final class DbWrapper {
 		statement.executeUpdate();
 	}
 	
+	public boolean send(String query) throws SQLException {
+		PreparedStatement statement = connection().prepareStatement(query);
+		return statement.execute();
+	}
+	
 	public Vector<String> columnNames() {
 		return resultContainer.columnNames();
 	}

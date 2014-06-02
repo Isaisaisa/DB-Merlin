@@ -22,10 +22,10 @@ public class Merlin {
 		}
 	}
 	
-	
-	public static boolean checkBirdwatcherRegistration(String benutzername, char[] passwort) {
-		BirdwatcherRepository.checkRegrestration(benutzername, passwort);
-		return true;
-	}
+//	
+//	public static boolean checkBirdwatcherRegistration(String benutzername, char[] passwort) {
+//		BirdwatcherRepository.checkRegrestration(benutzername, passwort);
+//		return true;
+//	}
 	
 }
