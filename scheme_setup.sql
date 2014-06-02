@@ -20,6 +20,10 @@ DROP TABLE beobachtet;
 DROP TABLE Beobachtunsgebiet;
 DROP TABLE Birdwatcher;
 DROP TABLE Vogelart;
+DROP TRIGGER bw_id_trigger;
+DROP SEQUENCE bw_id_sequence;
+
+
 
 /* Implementierung des Merlin-Schemata */
 CREATE TABLE Vogelart 
@@ -34,7 +38,7 @@ CREATE TABLE Birdwatcher
        (Bw_ID         INTEGER PRIMARY KEY, 
         Name          VARCHAR(150) NOT NULL, 
         Vorname       VARCHAR(150) NOT NULL,
-        Benutzername  VARCHAR(150) NOT NULL,
+        Benutzername  VARCHAR(150) UNIQUE NOT NULL,
         Passwort      VARCHAR(150) NOT NULL,
         Email         VARCHAR(255) NOT NULL,
         Rolle         VARCHAR(150) NOT NULL);
@@ -59,6 +63,18 @@ CREATE TABLE kommtVor
        (Va_ID         INTEGER REFERENCES Vogelart ON DELETE CASCADE, 
         Ort_ID        INTEGER REFERENCES Beobachtunsgebiet ON DELETE CASCADE,
         PRIMARY KEY   (Va_ID, Ort_ID));
+        
+        
+CREATE SEQUENCE bw_id_sequence
+  START WITH 1
+  INCREMENT BY 1;
+  
+ CREATE OR REPLACE TRIGGER bw_id_trigger
+  BEFORE INSERT ON Birdwatcher
+  FOR EACH ROW
+  BEGIN
+    :new.Bw_ID := bw_id_sequence.nextval;
+  END;
 
 /*############################################################################*/ 
 
@@ -133,6 +149,8 @@ INSERT INTO kommtVor
 
  INSERT INTO Birdwatcher
     Values (3, 'Watcher', 'Birdy', 'demo', 'merlindemo', 'demo@merlin.de', 'R03');
+    
+ 
 
 /*############################################################################*/		
 
