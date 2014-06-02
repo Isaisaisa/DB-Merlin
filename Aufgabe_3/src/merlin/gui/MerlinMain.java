@@ -6,14 +6,21 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
 import java.awt.Color;
 import java.awt.Toolkit;
+
 import javax.swing.JButton;
+
+import merlin.gui.enums.ExitCode;
+import static merlin.gui.enums.ExitCode.*;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class MerlinMain {
 
+	private static ExitCode exitCode = DIALOG_ABORTED;
 	private JFrame frmMerlinMain;
 
 	/**
@@ -23,7 +30,7 @@ public class MerlinMain {
 	 * @throws InstantiationException 
 	 * @throws ClassNotFoundException 
 	 */
-	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+	public static ExitCode main() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		
@@ -37,6 +44,8 @@ public class MerlinMain {
 				}
 			}
 		});
+		
+		return exitCode;
 	}
 
 	/**
@@ -57,10 +66,6 @@ public class MerlinMain {
 		frmMerlinMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMerlinMain.getContentPane().setLayout(null);
 		
-		JPanel tablePanel = TableTest.valueOf();
-		
-		frmMerlinMain.getContentPane().add(tablePanel);
-		
 		JPanel userPanel = new JPanel();
 		userPanel.setBackground(Color.LIGHT_GRAY);
 		userPanel.setBounds(0, 0, 1018, 43);
@@ -68,6 +73,15 @@ public class MerlinMain {
 		userPanel.setLayout(null);
 		
 		JButton btnAusloggen = new JButton("Ausloggen");
+		btnAusloggen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				/* ABFRAGE, OB WIRKLICH BEENDET WERDEN SOLL.
+				 * Dementsprechend exitCode setzen oder nicht.
+				 */
+				// exitCode = LOGOUT_BUTTON_PUSHED;				
+			}
+		});
 		btnAusloggen.setBounds(913, 11, 95, 23);
 		userPanel.add(btnAusloggen);
 		
