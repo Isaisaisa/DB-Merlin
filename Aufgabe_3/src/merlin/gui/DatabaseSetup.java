@@ -106,7 +106,6 @@ public class DatabaseSetup extends JDialog {
 					txtAKennung.setBackground(Color.WHITE);
 				}
 			});
-			txtAKennung.setText("abr002");
 			txtAKennung.setColumns(10);
 			txtAKennung.setBounds(81, 19, 61, 20);
 			loginPanel.add(txtAKennung);
@@ -215,6 +214,7 @@ public class DatabaseSetup extends JDialog {
 			lblError.setForeground(Color.RED);
 			lblError.setBounds(43, 250, 309, 14);
 			contentPanel.add(lblError);
+			lblError.setVisible(false);
 		
 		{
 			JPanel buttonPane = new JPanel();
@@ -228,27 +228,30 @@ public class DatabaseSetup extends JDialog {
 						boolean badInput = false;
 						Color badColor = Color.RED;
 						
-						lblError.setVisible(false);
-						
 						if (txtURL.getText().isEmpty()) {
 							txtURL.setBackground(badColor);
 							badInput = true;
-						} else if (txtPort.getText().isEmpty()) {
+						}
+						if (txtPort.getText().isEmpty()) {
 							txtPort.setBackground(badColor);
 							badInput = true;
-						} else if (txtSID.getText().isEmpty()) {
+						}
+						if (txtSID.getText().isEmpty()) {
 							txtSID.setBackground(badColor);
 							badInput = true;
-						} else if (txtAKennung.getText().isEmpty()) {
+						}
+						if (txtAKennung.getText().isEmpty()) {
 							txtAKennung.setBackground(badColor);
 							badInput = true;
-						} else if (pwdPasswort.getPassword().length == 0) {
+						}
+						if (pwdPasswort.getPassword().length == 0) {
 							pwdPasswort.setBackground(badColor);
 							badInput = true;
 						}
 						
 						if (badInput) {
 							// Eingaben nicht OK, auf Fehler hinweisen und Dialog nicht abbrechen
+							lblError.setVisible(true);
 						} else {
 							// Eingaben OK, Werte übernehmen und fortfahren
 							
