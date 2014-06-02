@@ -20,6 +20,9 @@ import javax.swing.JCheckBox;
 import merlin.logic.impl.Merlin;
 
 import java.awt.Font;
+import java.awt.Dialog.ModalExclusionType;
+import merlin.gui.enums.ExitCode;
+import static merlin.gui.enums.ExitCode.*;
 
 
 public class MerlinLogin {
@@ -36,14 +39,16 @@ public class MerlinLogin {
 	private JPasswordField txtPasswordRegBest;
 	private JPasswordField txtPasswordReg;
 	
+	private static ExitCode exitCode = DIALOG_ABORTED;
+	
 	/**
 	 * Launch the application.
 	 * @throws UnsupportedLookAndFeelException 
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
-	 * @throws ClassNotFoundException 
+	 * @throws ClassNotFoundException
 	 */
-	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+	public static ExitCode main() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		
@@ -57,6 +62,8 @@ public class MerlinLogin {
 				}
 			}
 		});
+		
+		return exitCode;
 	}
 
 	/**
@@ -71,6 +78,7 @@ public class MerlinLogin {
 	 */
 	private void initialize() {
 		frmLogin = new JFrame();
+		frmLogin.setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		frmLogin.setTitle("MERLIN - Anmeldung");
 		frmLogin.setResizable(false);
 		frmLogin.setForeground(Color.WHITE);
@@ -83,6 +91,7 @@ public class MerlinLogin {
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Merlin.insertBirdwatcher(txtName.getText().trim(), txtVorname.getText().trim(), txtEmail.getText().trim());
+				exitCode = REGISTER_BUTTON_PUSHED;
 			}
 		});
 		btnRegister.setBounds(308, 323, 107, 23);
@@ -91,9 +100,7 @@ public class MerlinLogin {
 		btnLogin = new JButton("Einloggen");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
-				
-				/* An DB Anmelden */ 
+				exitCode = LOGIN_BUTTON_PUSHED;
 			}
 		});
 		btnLogin.setBounds(406, 29, 86, 23);
