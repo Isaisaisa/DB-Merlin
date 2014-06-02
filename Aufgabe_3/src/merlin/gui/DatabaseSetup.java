@@ -35,10 +35,9 @@ import java.awt.event.FocusEvent;
 
 public class DatabaseSetup extends JDialog {
 
-	/**
+	/** TODO generate serial!
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private static ExitCode exitCode = CANCEL_BUTTON_PUSHED;
 	private final JPanel contentPanel = new JPanel();
 	

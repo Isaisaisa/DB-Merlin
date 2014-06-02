@@ -21,6 +21,7 @@ public class Merlin {
 			}
 		}
 	}
+<<<<<<< HEAD
 	
 //	
 //	public static boolean checkBirdwatcherRegistration(String benutzername, char[] passwort) {
@@ -28,4 +29,41 @@ public class Merlin {
 //		return true;
 //	}
 	
+=======
+
+	public static void loginBirdwatcher(String benutzername, char[] passwort) {
+
+	}
+	
+	public static boolean loginToDatabase(String dbURL, String dbPort, String dbSID, String dbUsername, String dbPassword, boolean saveLoginData) {
+		/* Erhält die Eingaben aus DatabaseSetup und delegiert Diese an eine Prüfmethode.
+		 * Falls Eingaben OK ==> Verbindungsdaten in Properties ablegen,
+		 * und Anmeldedaten, falls gewünscht, verschlüsselt ablegen.
+		 * Anschließend DbWrapper initialisieren und DB Verbindung aufbauen.
+		 */
+		
+		if (checkInputOfSetup(dbURL, dbPort, dbSID, dbUsername, dbPassword)) {
+			;	
+		}
+		
+		// falls Anmeldedaten gemerkt werden sollen ==> verschlüsselt in Properties ablegen.
+		if (saveLoginData) {
+			;
+		}
+		
+		
+		return true;
+		
+	}
+	
+	public static boolean checkInputOfSetup(String dbURL, String dbPort, String dbSID, String dbUsername, String dbPassword) {
+		/* Eingaben aus DatabaseSetup (delegiert durch loginToDatabase) prüfen */
+		
+		
+		
+		return true;
+	}
+	
+
+>>>>>>> ea7473290f698865d0c0af5ea8abff5c0f1c8187
 }
