@@ -34,7 +34,7 @@ public class BirdwatcherRepository {
 		return BirdwatcherImpl.valueOf(id, name, vorname, benutzername, benutzername, email, role);
 	} 
 	
-//	public static boolean checkRegrestration(String benutzername, char[] passwort ){
+//	public static boolean isRegistered(String benutzername, char[] passwort ){
 //		try {
 //			DbWrapper dbWrapper = DbWrapper.valueOf();
 //			ResultSet rs = dbWrapper.sendQuery("SELECT * FROM Birdwatcher WHERE Benutzername = " + benutzername + "," + "Passwort = " + new String(passwort));
@@ -46,9 +46,9 @@ public class BirdwatcherRepository {
 //			e.printStackTrace();
 //			return null;
 //		}
-
+//
 //		boolean execute("SELECT * FROM Birdwatcher WHERE Benutzername = " + benutzername + "," + "Passwort = " + new String(passwort));
-		
+//		
 //	}
 	
 	

@@ -109,7 +109,8 @@ public class MerlinLogin {
 		btnLogin = new JButton("Einloggen");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Merlin.checkBirdwatcherRegistration(txtUsernameLog.getText().trim(), txtPasswordLog.getPassword());
+//				TODO login überprüfen
+//				Merlin.isRegistered(txtUsernameLog.getText().trim(), txtPasswordLog.getPassword());
 				exitCode = LOGIN_BUTTON_PUSHED;
 			}
 		});

@@ -21,15 +21,15 @@ public class Merlin {
 			}
 		}
 	}
-<<<<<<< HEAD
-	
+
+//	TODO login überprüfen
 //	
-//	public static boolean checkBirdwatcherRegistration(String benutzername, char[] passwort) {
-//		BirdwatcherRepository.checkRegrestration(benutzername, passwort);
+//	public static boolean isRegistered(String benutzername, char[] passwort) {
+//		BirdwatcherRepository.isRegistered(benutzername, passwort);
 //		return true;
 //	}
 	
-=======
+
 
 	public static void loginBirdwatcher(String benutzername, char[] passwort) {
 
@@ -65,5 +65,4 @@ public class Merlin {
 	}
 	
 
->>>>>>> ea7473290f698865d0c0af5ea8abff5c0f1c8187
 }
