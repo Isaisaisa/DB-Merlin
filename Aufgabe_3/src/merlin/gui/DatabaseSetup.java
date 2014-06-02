@@ -15,8 +15,6 @@ import java.awt.Toolkit;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import merlin.base.Main;
-
 import merlin.gui.enums.ExitCode;
 import static merlin.gui.enums.ExitCode.*;
 

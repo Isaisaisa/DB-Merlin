@@ -36,9 +36,10 @@ public class MerlinLogin {
 	private JTextField txtVorname;
 	private JTextField txtEmail;
 	private JTextField txtName;
-	private JPasswordField passwordLog;
+	private JPasswordField txtPasswordLog;
 	private JPasswordField txtPasswordRegBest;
 	private JPasswordField txtPasswordReg;
+	private JTextField txtUsernameLog;
 	
 	private static ExitCode exitCode = DIALOG_ABORTED;
 	
@@ -108,6 +109,7 @@ public class MerlinLogin {
 		btnLogin = new JButton("Einloggen");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				Merlin.checkBirdwatcherRegistration(txtUsernameLog.getText().trim(), txtPasswordLog.getPassword());
 				exitCode = LOGIN_BUTTON_PUSHED;
 			}
 		});
@@ -118,7 +120,7 @@ public class MerlinLogin {
 		label.setBounds(39, 11, 46, 14);
 		frmLogin.getContentPane().add(label);
 		
-		lblWelcomeText = new JLabel("<html> Herzlich Willkommen auf der Merlinseite <br> f\u00FCr Vogelbeobachtungen Sie haben einen Vogel beobachtet und wollen dies abspecihern? <br> Dann registrieren Sie sich jetzt oder loggen Sie sich mit Ihrem Username und Passwort ein </html>");
+		lblWelcomeText = new JLabel("<html> Herzlich Willkommen auf der Merlinseite <br> f\u00FCr Vogelbeobachtungen Sie haben einen Vogel beobachtet und wollen dies abspeichern? <br> Dann registrieren Sie sich jetzt oder loggen Sie sich mit Ihrem Username und Passwort ein </html>");
 		lblWelcomeText.setFont(new Font("Arial", Font.PLAIN, 14));
 		lblWelcomeText.setBounds(10, -9, 161, 265);
 		frmLogin.getContentPane().add(lblWelcomeText);
@@ -163,16 +165,16 @@ public class MerlinLogin {
 		lblPasswort.setBounds(297, 11, 84, 14);
 		frmLogin.getContentPane().add(lblPasswort);
 
-		passwordLog = new JPasswordField();
-		passwordLog.setBounds(297, 30, 99, 20);
-		frmLogin.getContentPane().add(passwordLog);
+		txtPasswordLog = new JPasswordField();
+		txtPasswordLog.setBounds(297, 30, 99, 20);
+		frmLogin.getContentPane().add(txtPasswordLog);
 		
 		
 		
-		JTextField txtUsername = new JTextField();
-		txtUsername.setBounds(181, 30, 99, 20);
-		frmLogin.getContentPane().add(txtUsername);
-		txtUsername.setColumns(10);
+		txtUsernameLog = new JTextField();
+		txtUsernameLog.setBounds(181, 30, 99, 20);
+		frmLogin.getContentPane().add(txtUsernameLog);
+		txtUsernameLog.setColumns(10);
 		
 		JLabel lblUsername = new JLabel("Username");
 		lblUsername.setBounds(181, 11, 86, 14);

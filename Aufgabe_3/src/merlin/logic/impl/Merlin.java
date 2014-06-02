@@ -4,6 +4,7 @@ import merlin.data.BirdwatcherRepository;
 import merlin.logic.exception.IllegalPasswordException;
 
 public class Merlin {
+	
 	//TODO Zeichen der Eingaben abfangen und auswerten
 	public static void insertBirdwatcher(String name, String vorname, String benutzername, char[] passwort, char[] passwortBest, String email) throws IllegalPasswordException {
 		
@@ -20,9 +21,11 @@ public class Merlin {
 			}
 		}
 	}
-
-	public static void loginBirdwatcher(String benutzername, char[] passwort) {
-
+	
+	
+	public static boolean checkBirdwatcherRegistration(String benutzername, char[] passwort) {
+		BirdwatcherRepository.checkRegrestration(benutzername, passwort);
+		return true;
 	}
-
+	
 }

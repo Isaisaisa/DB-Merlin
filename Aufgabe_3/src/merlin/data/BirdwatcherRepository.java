@@ -27,8 +27,15 @@ public class BirdwatcherRepository {
 			e.printStackTrace();
 			return null;
 		}
-		return new BirdwatcherImpl(name, vorname, email);
+		int id =  Integer.valueOf("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = " + benutzername);
+		String role = ("SELECT Rolle FROM Birdwatcher WHERE Benutzername = " + benutzername);
+		return BirdwatcherImpl.valueOf(id, name, vorname, benutzername, benutzername, email, role);
+	} 
+	
+	public static void checkRegrestration(String benutzername, char[] passwort ){
+//		if ("SELECT * FROM Birdwatcher WHERE Benutzername = " + benutzername + "," + "Passwort = " + new String(passwort));
 	}
+	
 	
 	public static List<Birdwatcher> findByName(String name) {
 		
