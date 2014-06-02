@@ -11,17 +11,18 @@ public class Merlin {
 			throw new IllegalArgumentException("Ein 'Arsch' ist nicht erlaubt!");
 		}
 		// Anlegen des Birdwatchers
-		if (BirdwatcherRepository.create( name, vorname, benutzername, passwort, email) == null) {
-			if (passwort == passwortBest){
-				throw new IllegalArgumentException("Birdwatcher konnte nicht angelegt werden.");
+		if (BirdwatcherRepository.create(name, vorname, benutzername, passwort, email) == null) {
+			if (passwort == passwortBest) {
+				throw new IllegalArgumentException(
+						"Birdwatcher konnte nicht angelegt werden.");
+			} else {
+				throw new IllegalPasswordException("Passwort ungleich");
 			}
-			else{ throw new IllegalPasswordException("Passwort ungleich");}
 		}
 	}
-	
-	public static void loginBirdwatcher(String benutzername, char[] passwort){
-		
+
+	public static void loginBirdwatcher(String benutzername, char[] passwort) {
+
 	}
-	
-	
+
 }
