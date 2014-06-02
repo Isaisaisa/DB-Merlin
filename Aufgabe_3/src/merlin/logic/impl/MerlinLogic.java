@@ -3,7 +3,7 @@ package merlin.logic.impl;
 import merlin.data.BirdwatcherRepository;
 import merlin.logic.exception.IllegalPasswordException;
 
-public class Merlin {
+public class MerlinLogic {
 	
 	//TODO Zeichen der Eingaben abfangen und auswerten
 	public static void insertBirdwatcher(String name, String vorname, String benutzername, char[] passwort, char[] passwortBest, String email) throws IllegalPasswordException {
