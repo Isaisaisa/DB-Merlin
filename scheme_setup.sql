@@ -25,7 +25,7 @@ DROP TABLE Vogelart;
 CREATE TABLE Vogelart 
 
        (Va_ID         INTEGER PRIMARY KEY, 
-        Artentyp		  VARCHAR(50) NOT NULL,
+        Artentyp      VARCHAR(50) NOT NULL,
         Name_DE       VARCHAR(150), 
         Name_ENG      VARCHAR(150), 
         Name_LAT      VARCHAR(150) NOT NULL);
@@ -34,10 +34,10 @@ CREATE TABLE Birdwatcher
        (Bw_ID         INTEGER PRIMARY KEY, 
         Name          VARCHAR(150) NOT NULL, 
         Vorname       VARCHAR(150) NOT NULL,
-				Benutzername  VARCHAR(150) NOT NULL,
-				Passwort			VARCHAR(150) NOT NULL,
+        Benutzername  VARCHAR(150) NOT NULL,
+        Passwort      VARCHAR(150) NOT NULL,
         Email         VARCHAR(255) NOT NULL,
-				Rolle         VARCHAR(150) NOT NULL);
+        Rolle         VARCHAR(150) NOT NULL);
         
 CREATE TABLE Beobachtunsgebiet 
        (Ort_ID        INTEGER PRIMARY KEY, 
@@ -51,11 +51,9 @@ CREATE TABLE beobachtet
         Ort_ID        INTEGER REFERENCES Beobachtunsgebiet ON DELETE CASCADE,
         DatumVon      DATE NOT NULL, 
         DatumBis      DATE,
-        Bemerkung     VARCHAR(200))/*,
-        PRIMARY KEY   (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis));*/;
-				/* Primärschlüssel vorrübergehend entfernt. Keine null-Werte in einem Attribut erlaubt, das ein Teilschlüssel darstellt.
-				 * Evtl. Modellierungsfehler?
-				 */
+        Bemerkung     VARCHAR(200),
+        PRIMARY KEY   (Va_ID, Bw_ID, Ort_ID, DatumVon));
+
         
 CREATE TABLE kommtVor 
        (Va_ID         INTEGER REFERENCES Vogelart ON DELETE CASCADE, 
