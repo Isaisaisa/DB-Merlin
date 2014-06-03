@@ -1,5 +1,6 @@
 package merlin.logic.impl;
 
+import merlin.base.AES;
 import merlin.data.BirdwatcherRepository;
 import merlin.logic.exception.IllegalPasswordException;
 
