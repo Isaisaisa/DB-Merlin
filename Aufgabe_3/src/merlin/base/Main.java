@@ -27,8 +27,6 @@ public class Main {
 				
 				/* Beschaffenheit der Properties-Datei prüfen */
 				
-				
-				
 				// TODO Prüfungen auslagern??
 				// TODO PRÜFUNGEN VERVOLLSTÄNDIGEN
 				if (getProp(dbURLPropKey) == ""
@@ -42,7 +40,7 @@ public class Main {
 
 		exitCode = DatabaseSetup.showDialog();
 		if (exitCode == CANCEL_BUTTON_PUSHED) {
-			System.exit(0);
+			shutdown();
 		} else if (exitCode == OK_BUTTON_PUSHED) {
 			// Datenbankeinrichtung wurde bestätigt
 		}
@@ -56,9 +54,16 @@ public class Main {
 		} else if (exitCode == REGISTER_BUTTON_PUSHED) {
 			
 		} else {
-			System.exit(0);
+			shutdown();
 		}
 		
+	}
+	
+	public static void shutdown() {
+		// anything that remains to be shut down properly - will be shut down here
+		// zb. datenbank verbindung trennen
+		
+		System.exit(0);
 	}
 	
 	/* PROPERTIES-OBJECT ACCESSORS */

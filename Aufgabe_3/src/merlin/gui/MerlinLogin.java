@@ -24,6 +24,22 @@ import java.awt.Font;
 import java.awt.Dialog.ModalExclusionType;
 import merlin.gui.enums.ExitCode;
 import static merlin.gui.enums.ExitCode.*;
+import javax.swing.SwingConstants;
+import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JMenu;
+import javax.swing.JCheckBoxMenuItem;
+import org.eclipse.wb.swing.FocusTraversalOnArray;
+import java.awt.Component;
+import javax.swing.ImageIcon;
 
 
 public class MerlinLogin {
@@ -42,6 +58,15 @@ public class MerlinLogin {
 	private JTextField txtUsernameLog;
 	
 	private static ExitCode exitCode = DIALOG_ABORTED;
+	private JLabel lblNewLabel;
+	private JPanel panelRegistration;
+	private JPanel panelLogin;
+	private JLabel lblbereitsRegistriert;
+	private JPanel panel;
+	private JMenu mnDatei;
+	private JMenuItem mntmBeenden;
+	private JMenu mnEintellungen;
+	private JMenuItem mntmVerbindungseinstellungen;
 	
 	/**
 	 * Launch the application.
@@ -86,12 +111,171 @@ public class MerlinLogin {
 		frmLogin.setResizable(false);
 		frmLogin.setForeground(Color.WHITE);
 		frmLogin.setBackground(Color.WHITE);
-		frmLogin.setBounds(200, 200, 600, 400);
+		frmLogin.setBounds(200, 200, 676, 493);
 		frmLogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmLogin.getContentPane().setLayout(null);
 		
+		label = new JLabel("");
+		label.setBounds(39, 11, 46, 14);
+		frmLogin.getContentPane().add(label);
+		
+		panelRegistration = new JPanel();
+		panelRegistration.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panelRegistration.setBounds(330, 161, 332, 276);
+		frmLogin.getContentPane().add(panelRegistration);
+		panelRegistration.setLayout(null);
+		
+		JLabel lblVorname = new JLabel("Vorname");
+		lblVorname.setBounds(10, 141, 70, 14);
+		panelRegistration.add(lblVorname);
+		
+		txtVorname = new JTextField();
+		txtVorname.setBounds(117, 82, 204, 20);
+		panelRegistration.add(txtVorname);
+		txtVorname.setColumns(10);
+		
+		
+		
+		JLabel lblEmail = new JLabel("E-Mail");
+		lblEmail.setBounds(10, 113, 70, 14);
+		panelRegistration.add(lblEmail);
+		lblEmail.setLabelFor(txtName);
+		
+		txtEmail = new JTextField();
+		txtEmail.setBounds(117, 110, 204, 20);
+		panelRegistration.add(txtEmail);
+		txtEmail.setColumns(10);
+		
+				
+				
+				JLabel lblName = new JLabel("Name");
+				lblName.setBounds(10, 85, 70, 14);
+				panelRegistration.add(lblName);
+				
+		txtName = new JTextField();
+		txtName.setBounds(117, 138, 204, 20);
+		panelRegistration.add(txtName);
+		txtName.setColumns(10);
+		
+		
+		
+		JLabel lblUsernameReg = new JLabel("Benutzername");
+		lblUsernameReg.setBounds(10, 57, 70, 14);
+		panelRegistration.add(lblUsernameReg);
+		
+				txtUsernameReg = new JTextField();
+				txtUsernameReg.setBounds(117, 54, 204, 20);
+				panelRegistration.add(txtUsernameReg);
+				txtUsernameReg.setColumns(10);
+				
+						
+						
+						JLabel lblPasswortReg = new JLabel("Passwort");
+						lblPasswortReg.setBounds(10, 169, 70, 14);
+						panelRegistration.add(lblPasswortReg);
+						
+								txtPasswordReg = new JPasswordField();
+								txtPasswordReg.setBounds(117, 166, 204, 20);
+								panelRegistration.add(txtPasswordReg);
+								
+								
+								
+								JLabel lblPasswortBestReg = new JLabel("Passwort best\u00E4tigen");
+								lblPasswortBestReg.setBounds(10, 197, 101, 14);
+								panelRegistration.add(lblPasswortBestReg);
+								
+								txtPasswordRegBest = new JPasswordField();
+								txtPasswordRegBest.setBounds(117, 194, 204, 20);
+								panelRegistration.add(txtPasswordRegBest);
+								
+								lblNewLabel = new JLabel("<html><b><p style=\"font-size: 12px; text-align:center;\">Als Beobachter registrieren</p></b></html>");
+								lblNewLabel.setBounds(10, 11, 311, 32);
+								panelRegistration.add(lblNewLabel);
+		
 		//TODO GUI für IllegalPasswordException
 		JButton btnRegister = new JButton("Registrieren");
+		btnRegister.setBounds(117, 225, 204, 39);
+		panelRegistration.add(btnRegister);
+		
+		panelLogin = new JPanel();
+		panelLogin.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		panelLogin.setBounds(330, 11, 332, 139);
+		frmLogin.getContentPane().add(panelLogin);
+		panelLogin.setLayout(null);
+		
+		btnLogin = new JButton("Einloggen");
+		btnLogin.setBounds(235, 73, 86, 53);
+		panelLogin.add(btnLogin);
+		
+		
+		
+		JLabel lblPasswort = new JLabel("Passwort");
+		lblPasswort.setBounds(126, 55, 84, 14);
+		panelLogin.add(lblPasswort);
+		
+				txtPasswordLog = new JPasswordField();
+				txtPasswordLog.setBounds(126, 74, 99, 20);
+				panelLogin.add(txtPasswordLog);
+				
+				
+				
+				txtUsernameLog = new JTextField();
+				txtUsernameLog.setBounds(10, 74, 99, 20);
+				panelLogin.add(txtUsernameLog);
+				txtUsernameLog.setColumns(10);
+				
+				JLabel lblUsername = new JLabel("Benutzername");
+				lblUsername.setBounds(10, 55, 86, 14);
+				panelLogin.add(lblUsername);
+				
+				JCheckBox chkRememberUser = new JCheckBox("Anmeldedaten merken (AES verschl\u00FCsselt)");
+				chkRememberUser.setBounds(6, 103, 227, 23);
+				panelLogin.add(chkRememberUser);
+				
+				lblbereitsRegistriert = new JLabel("<html><b><p style=\"font-size: 12px; text-align:center;\">Bereits registriert?</p></b></html>");
+				lblbereitsRegistriert.setBounds(10, 11, 311, 32);
+				panelLogin.add(lblbereitsRegistriert);
+				
+				panel = new JPanel();
+				panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+				panel.setBounds(10, 11, 310, 426);
+				frmLogin.getContentPane().add(panel);
+				panel.setLayout(null);
+				
+				lblWelcomeText = new JLabel("<html><b><p style=\"font-size: 16px; text-align:center;\">MERLIN</p></b>\r\n<p style=\"font-size: 8px; text-align:center;\">\r\n\t<b>Ein integriertes Informationssystem f\u00FCr die Verwaltung und Auswertung von Naturbeobachtungen</b></p>\r\n<br/>\r\nHerzlich willkommen zu MERLIN!<br/>\r\nMERLIN ist das ideale Online-Werkzeug f\u00FCr Naturbeobachter!\r\nSchauen Sie mit Hilfe von regionalen Checklisten, was es zu Entdecken gibt und f\u00FChren Sie Ihre eigene Beobachtungsliste, die Sie einfach verwalten und auswerten k\u00F6nnen.<br/><br/>\r\n\r\nRegistrieren Sie sich jetzt und legen sofort los, oder probieren Sie unseren Demo-Login aus, um sich einen Eindruck zu verschaffen!<br/><br/>\r\nBenutzername: <b>demo</b><br/>\r\nPasswort: <b>merlindemo</b><br/><br/>\r\n\r\nSie sind bereits registrierter Beobachter? Dann k\u00F6nnen Sie sich jetzt einloggen!");
+				lblWelcomeText.setBounds(24, 0, 263, 328);
+				panel.add(lblWelcomeText);
+				lblWelcomeText.setFont(new Font("Candara", Font.PLAIN, 12));
+				
+				JMenuBar menuBar = new JMenuBar();
+				frmLogin.setJMenuBar(menuBar);
+				
+				mnDatei = new JMenu("Datei");
+				menuBar.add(mnDatei);
+				
+				mntmBeenden = new JMenuItem("Beenden");
+				mntmBeenden.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						System.out.println("Beenden?");
+					}
+				});
+				mntmBeenden.setIcon(new ImageIcon(MerlinLogin.class.getResource("/javax/swing/plaf/metal/icons/ocean/close.gif")));
+				mnDatei.add(mntmBeenden);
+				
+				mnEintellungen = new JMenu("Eintellungen");
+				menuBar.add(mnEintellungen);
+				
+				mntmVerbindungseinstellungen = new JMenuItem("Verbindungseinstellungen");
+				mntmVerbindungseinstellungen.setIcon(new ImageIcon(MerlinLogin.class.getResource("/javax/swing/plaf/metal/icons/ocean/minimize.gif")));
+				mnEintellungen.add(mntmVerbindungseinstellungen);
+				frmLogin.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtUsernameLog, txtPasswordLog, chkRememberUser, btnLogin, txtUsernameReg, txtVorname, txtEmail, txtName, txtPasswordReg, txtPasswordRegBest, btnRegister, lblNewLabel, label, frmLogin.getContentPane(), lblVorname, lblEmail, lblName, lblUsernameReg, lblPasswortReg, lblPasswortBestReg, panelLogin, lblPasswort, lblUsername, lblbereitsRegistriert, panel, menuBar, panelRegistration, lblWelcomeText}));
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+//				TODO login überprüfen
+//				Merlin.isRegistered(txtUsernameLog.getText().trim(), txtPasswordLog.getPassword());
+				exitCode = LOGIN_BUTTON_PUSHED;
+			}
+		});
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
@@ -103,118 +287,6 @@ public class MerlinLogin {
 				exitCode = REGISTER_BUTTON_PUSHED;
 			}
 		});
-		btnRegister.setBounds(308, 323, 107, 23);
-		frmLogin.getContentPane().add(btnRegister);
-		
-		btnLogin = new JButton("Einloggen");
-		btnLogin.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-//				TODO login überprüfen
-//				Merlin.isRegistered(txtUsernameLog.getText().trim(), txtPasswordLog.getPassword());
-				exitCode = LOGIN_BUTTON_PUSHED;
-			}
-		});
-		btnLogin.setBounds(406, 29, 86, 23);
-		frmLogin.getContentPane().add(btnLogin);
-		
-		label = new JLabel("");
-		label.setBounds(39, 11, 46, 14);
-		frmLogin.getContentPane().add(label);
-		
-		lblWelcomeText = new JLabel("<html> Herzlich Willkommen auf der Merlinseite <br> f\u00FCr Vogelbeobachtungen Sie haben einen Vogel beobachtet und wollen dies abspeichern? <br> Dann registrieren Sie sich jetzt oder loggen Sie sich mit Ihrem Username und Passwort ein </html>");
-		lblWelcomeText.setFont(new Font("Arial", Font.PLAIN, 14));
-		lblWelcomeText.setBounds(10, -9, 161, 265);
-		frmLogin.getContentPane().add(lblWelcomeText);
-
-		
-		
-		JLabel lblVorname = new JLabel("Vorname");
-		lblVorname.setBounds(181, 148, 70, 14);
-		frmLogin.getContentPane().add(lblVorname);
-		
-		txtVorname = new JTextField();
-		txtVorname.setBounds(308, 145, 184, 20);
-		frmLogin.getContentPane().add(txtVorname);
-		txtVorname.setColumns(10);
-		
-		
-		
-		JLabel lblEmail = new JLabel("E-Mail");
-		lblEmail.setLabelFor(txtName);
-		lblEmail.setBounds(181, 179, 70, 14);
-		frmLogin.getContentPane().add(lblEmail);
-		
-		txtEmail = new JTextField();
-		txtEmail.setBounds(308, 176, 184, 20);
-		frmLogin.getContentPane().add(txtEmail);
-		txtEmail.setColumns(10);
-
-		
-		
-		JLabel lblName = new JLabel("Name");
-		lblName.setBounds(181, 117, 70, 14);
-		frmLogin.getContentPane().add(lblName);
-				
-		txtName = new JTextField();
-		txtName.setBounds(308, 114, 184, 20);
-		frmLogin.getContentPane().add(txtName);
-		txtName.setColumns(10);
-				
-		
-		
-		JLabel lblPasswort = new JLabel("Passwort");
-		lblPasswort.setBounds(297, 11, 84, 14);
-		frmLogin.getContentPane().add(lblPasswort);
-
-		txtPasswordLog = new JPasswordField();
-		txtPasswordLog.setBounds(297, 30, 99, 20);
-		frmLogin.getContentPane().add(txtPasswordLog);
-		
-		
-		
-		txtUsernameLog = new JTextField();
-		txtUsernameLog.setBounds(181, 30, 99, 20);
-		frmLogin.getContentPane().add(txtUsernameLog);
-		txtUsernameLog.setColumns(10);
-		
-		JLabel lblUsername = new JLabel("Username");
-		lblUsername.setBounds(181, 11, 86, 14);
-		frmLogin.getContentPane().add(lblUsername);
-		
-		
-		
-		JLabel lblUsernameReg = new JLabel("Username");
-		lblUsernameReg.setBounds(181, 210, 70, 14);
-		frmLogin.getContentPane().add(lblUsernameReg);
-
-		txtUsernameReg = new JTextField();
-		txtUsernameReg.setColumns(10);
-		txtUsernameReg.setBounds(308, 207, 184, 20);
-		frmLogin.getContentPane().add(txtUsernameReg);
-
-		
-		
-		JLabel lblPasswortReg = new JLabel("Passwort");
-		lblPasswortReg.setBounds(181, 244, 70, 14);
-		frmLogin.getContentPane().add(lblPasswortReg);
-
-		txtPasswordReg = new JPasswordField();
-		txtPasswordReg.setBounds(307, 241, 185, 20);
-		frmLogin.getContentPane().add(txtPasswordReg);
-		
-		
-		
-		JLabel lblPasswortBestReg = new JLabel("Passwort best.");
-		lblPasswortBestReg.setBounds(181, 280, 101, 14);
-		frmLogin.getContentPane().add(lblPasswortBestReg);
-		
-		txtPasswordRegBest = new JPasswordField();
-		txtPasswordRegBest.setBounds(307, 277, 185, 20);
-		frmLogin.getContentPane().add(txtPasswordRegBest);
-		
-		JCheckBox chkRememberUser = new JCheckBox("Nutzernamen merken");
-		chkRememberUser.setBounds(209, 57, 139, 23);
-		frmLogin.getContentPane().add(chkRememberUser);
 		
 	}
 }

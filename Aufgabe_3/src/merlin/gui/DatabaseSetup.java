@@ -225,9 +225,7 @@ public class DatabaseSetup extends JDialog {
 						boolean badInput = false;
 						Color badColor = Color.RED;
 						
-						/* TODO
-						 * Eingaben überprüfen (Delegation der Daten an Funktion)
-						 * 
+						/* TODO Eingaben überprüfen (Delegation der Daten an Funktion)
 						 */ 
 						
 						if (txtURL.getText().isEmpty()) {
