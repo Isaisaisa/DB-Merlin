@@ -1,5 +1,6 @@
 package merlin.logic.impl;
 
+import merlin.base.AES;
 import merlin.data.BirdwatcherRepository;
 import merlin.logic.exception.IllegalPasswordException;
 
@@ -62,6 +63,17 @@ public class MerlinLogic {
 		
 		
 		return true;
+	}
+	
+	
+	public static boolean loginToMerlin(String username, String password) {
+		return false;
+	}
+	
+	public static boolean checkInputOfMerlinLogin() {
+		
+		
+		return false;
 	}
 	
 

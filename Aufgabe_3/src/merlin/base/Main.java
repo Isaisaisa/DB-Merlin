@@ -2,20 +2,15 @@ package merlin.base;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+
 import javax.swing.UnsupportedLookAndFeelException;
 
 import merlin.gui.*;
 import merlin.gui.enums.ExitCode;
 import static merlin.gui.enums.ExitCode.*;
-
 import static merlin.utils.ConstantElems.*;
 
 public class Main {
-	
-	// Properties-Object, das von überall aus zugänglich ist	
-	
-	
-	
 	
 	// TODO DbWrapper eventuell auslagern, falls Zugriffsprobleme entstehen
 	static DbWrapper database;
@@ -32,20 +27,20 @@ public class Main {
 				
 				/* Beschaffenheit der Properties-Datei prüfen */
 				
-				
-				
-				if (				 getProp("dbURL")   == "" ||
-					Integer.parseInt(getProp("dbPort")) == 0  ||
-					                 getProp("dbSID")   == "") {
+				// TODO Prüfungen auslagern??
+				// TODO PRÜFUNGEN VERVOLLSTÄNDIGEN
+				if (getProp(dbURLPropKey) == ""
+						|| Integer.parseInt(getProp(dbPortPropKey)) == 0
+						|| getProp(dbSIDPropKey) == "") {
 				}
 			} catch (IOException e) {}
 		} else {
 			propFile.createNewFile();
 		}
-		
+
 		exitCode = DatabaseSetup.showDialog();
 		if (exitCode == CANCEL_BUTTON_PUSHED) {
-			System.exit(0);
+			shutdown();
 		} else if (exitCode == OK_BUTTON_PUSHED) {
 			// Datenbankeinrichtung wurde bestätigt
 		}
@@ -59,9 +54,16 @@ public class Main {
 		} else if (exitCode == REGISTER_BUTTON_PUSHED) {
 			
 		} else {
-			System.exit(0);
+			shutdown();
 		}
 		
+	}
+	
+	public static void shutdown() {
+		// anything that remains to be shut down properly - will be shut down here
+		// zb. datenbank verbindung trennen
+		
+		System.exit(0);
 	}
 	
 	/* PROPERTIES-OBJECT ACCESSORS */
@@ -74,32 +76,54 @@ public class Main {
 		saveProp(property, value.toString());
 	}
 	
-	public static String getProp(String property) {
-		return properties.getProperty(property);
-	}
-	
-	public static String getAKennung() throws Exception {
-		return getEncProp(aKennungPropKey);
-	}
-	
-	public static String getPassword() throws Exception {
-		return getEncProp(passwordPropKey);
-	}
-	
-	public static void saveAKennung(String value) throws Exception {
-		saveEncProp(aKennungPropKey, value);
-	}
-	
-	public static void savePassword(String value) throws Exception {
-		saveEncProp(passwordPropKey, value);
-	}
-	
 	public static void saveEncProp(String property, String value) throws Exception {
 		saveProp(property, AES.encrypt(value).toString());
+	}
+	
+	public static String getProp(String property) {
+		return properties.getProperty(property);
 	}
 	
 	public static String getEncProp(String property) throws Exception {
 		byte[] cipher = getProp(property).getBytes();
 		return AES.decrypt(cipher);
+	}
+	
+	public static String[] getLogin(String encLoginData) throws Exception {
+		String loginData   = getEncProp(encLoginData);		
+		String decUsername = loginData.substring(0, loginData.indexOf(loginDataSplitString));
+		String decPwd	   = loginData.substring(decUsername.length()).replaceAll(loginDataSplitString, "");
+		
+		String[] result = {decUsername, decPwd};
+		
+		return result;
+	}
+	
+	public static String[] getDatabaseLogin() throws Exception {
+		return getLogin(loginDataPropKey);
+	}
+
+	public static String[] getBirdwatcherLogin() throws Exception {
+		return getLogin(loginDataBirdwatcherPropKey);
+	}
+
+	public static void saveLogin(String propKey, String username, String password) throws Exception {
+		saveEncProp(propKey, username + loginDataSplitString + password);
+	}
+
+	public static void saveDatabaseLogin(String username, String password) throws Exception { 
+		saveEncProp(loginDataPropKey, username + loginDataSplitString + password);
+	}
+
+	public static void saveBirdwatcherLogin(String username, String password) throws Exception {
+		saveLogin(loginDataBirdwatcherPropKey, username, password);
+	}
+
+	public static String getUsername(String[] loginData) {
+		return loginData[0];
+	}
+
+	public static String getPassword(String[] loginData) {
+		return loginData[1]; 
 	}
 }

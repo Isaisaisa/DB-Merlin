@@ -34,6 +34,6 @@ public class AES {
 	}
 	
 	public static String decrypt(byte[] cipherText) throws Exception {
-		return decrypt(cipherText);
+		return decrypt(cipherText, encKey);
 	}
 }
