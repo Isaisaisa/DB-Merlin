@@ -34,22 +34,27 @@ public class BirdwatcherRepository {
 		return BirdwatcherImpl.valueOf(id, name, vorname, benutzername, benutzername, email, role);
 	} 
 	
-//	public static boolean isRegistered(String benutzername, char[] passwort ){
-//		try {
-//			DbWrapper dbWrapper = DbWrapper.valueOf();
-//			ResultSet rs = dbWrapper.sendQuery("SELECT * FROM Birdwatcher WHERE Benutzername = " + benutzername + "," + "Passwort = " + new String(passwort));
-//			getBoolean(rs);
-//		} catch (ClassNotFoundException e) {
-//			e.printStackTrace();
-//			return null;
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//			return null;
-//		}
-//
-//		boolean execute("SELECT * FROM Birdwatcher WHERE Benutzername = " + benutzername + "," + "Passwort = " + new String(passwort));
-//		
-//	}
+	
+	//TODO funktionionsfähig mit den tests machen
+	public static boolean isRegistered(String benutzername, char[] passwort ){
+		try {
+			DbWrapper dbWrapper = DbWrapper.valueOf();
+			ResultSet rs = dbWrapper.sendQuery("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = " + benutzername + "AND" + "Passwort = " + new String(passwort));
+			if (!rs.next()){
+				return true;
+			}
+			return false;
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			return false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		
+		
+	}
 	
 	
 	public static List<Birdwatcher> findByName(String name) {

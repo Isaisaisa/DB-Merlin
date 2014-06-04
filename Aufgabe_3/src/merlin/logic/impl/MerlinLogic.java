@@ -25,10 +25,10 @@ public class MerlinLogic {
 
 //	TODO login überprüfen
 //	
-//	public static boolean isRegistered(String benutzername, char[] passwort) {
-//		BirdwatcherRepository.isRegistered(benutzername, passwort);
-//		return true;
-//	}
+	public static boolean isRegistered(String benutzername, char[] passwort) {
+		BirdwatcherRepository.isRegistered(benutzername, passwort);
+		return true;
+	}
 	
 
 

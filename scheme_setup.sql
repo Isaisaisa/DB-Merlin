@@ -20,20 +20,11 @@ DROP TABLE beobachtet;
 DROP TABLE Beobachtunsgebiet;
 DROP TABLE Birdwatcher;
 DROP TABLE Vogelart;
-DROP TRIGGER bw_id_trigger;
+/*DROP TRIGGER bw_id_trigger;*/
 DROP SEQUENCE bw_id_sequence;
 
 
-CREATE SEQUENCE bw_id_sequence
-  START WITH 1
-  INCREMENT BY 1;
-  
-CREATE OR REPLACE TRIGGER bw_id_trigger
-BEFORE INSERT ON Birdwatcher
-  FOR EACH ROW
-  BEGIN
-    :new.Bw_ID := bw_id_sequence.nextval;
-  END;
+
   
 /* Implementierung des Merlin-Schemata */
 CREATE TABLE Vogelart 
@@ -73,6 +64,19 @@ CREATE TABLE kommtVor
         Ort_ID        INTEGER REFERENCES Beobachtunsgebiet ON DELETE CASCADE,
         PRIMARY KEY   (Va_ID, Ort_ID));
 
+
+CREATE SEQUENCE bw_id_sequence
+  START WITH 1
+  INCREMENT BY 1;
+
+/*  
+CREATE OR REPLACE TRIGGER bw_id_trigger
+BEFORE INSERT ON Birdwatcher
+  FOR EACH ROW
+  BEGIN
+    :new.Bw_ID := bw_id_sequence.nextval;
+  END;
+*/  
 /*############################################################################*/ 
 
 /* Import aller Stammdaten:

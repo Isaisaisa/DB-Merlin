@@ -67,6 +67,10 @@ public class MerlinLogin {
 	private JMenuItem mntmBeenden;
 	private JMenu mnEintellungen;
 	private JMenuItem mntmVerbindungseinstellungen;
+	private JCheckBox chkRememberUser;
+	private JLabel lblPasswort;
+	private JLabel lblUsername;
+	private JMenuBar menuBar;
 	
 	/**
 	 * Launch the application.
@@ -126,23 +130,18 @@ public class MerlinLogin {
 		panelRegistration.setLayout(null);
 		
 		JLabel lblVorname = new JLabel("Vorname");
-		lblVorname.setBounds(10, 141, 70, 14);
+		lblVorname.setBounds(10, 113, 70, 14);
 		panelRegistration.add(lblVorname);
-		
-		txtVorname = new JTextField();
-		txtVorname.setBounds(117, 82, 204, 20);
-		panelRegistration.add(txtVorname);
-		txtVorname.setColumns(10);
 		
 		
 		
 		JLabel lblEmail = new JLabel("E-Mail");
-		lblEmail.setBounds(10, 113, 70, 14);
+		lblEmail.setBounds(10, 141, 70, 14);
 		panelRegistration.add(lblEmail);
 		lblEmail.setLabelFor(txtName);
 		
 		txtEmail = new JTextField();
-		txtEmail.setBounds(117, 110, 204, 20);
+		txtEmail.setBounds(117, 138, 204, 20);
 		panelRegistration.add(txtEmail);
 		txtEmail.setColumns(10);
 		
@@ -153,7 +152,7 @@ public class MerlinLogin {
 				panelRegistration.add(lblName);
 				
 		txtName = new JTextField();
-		txtName.setBounds(117, 138, 204, 20);
+		txtName.setBounds(117, 82, 204, 20);
 		panelRegistration.add(txtName);
 		txtName.setColumns(10);
 		
@@ -196,6 +195,12 @@ public class MerlinLogin {
 		JButton btnRegister = new JButton("Registrieren");
 		btnRegister.setBounds(117, 225, 204, 39);
 		panelRegistration.add(btnRegister);
+		
+		txtVorname = new JTextField();
+		txtVorname.setBounds(117, 110, 204, 20);
+		panelRegistration.add(txtVorname);
+		txtVorname.setColumns(10);
+		frmLogin.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtUsernameLog, txtPasswordLog, chkRememberUser, btnLogin, txtUsernameReg, txtVorname, txtEmail, txtName, txtPasswordReg, txtPasswordRegBest, btnRegister, lblNewLabel, label, frmLogin.getContentPane(), lblVorname, lblEmail, lblName, lblUsernameReg, lblPasswortReg, lblPasswortBestReg, panelLogin, lblPasswort, lblUsername, lblbereitsRegistriert, panel, menuBar, panelRegistration, lblWelcomeText}));
 		
 		panelLogin = new JPanel();
 		panelLogin.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -268,11 +273,10 @@ public class MerlinLogin {
 				mntmVerbindungseinstellungen = new JMenuItem("Verbindungseinstellungen");
 				mntmVerbindungseinstellungen.setIcon(new ImageIcon(MerlinLogin.class.getResource("/javax/swing/plaf/metal/icons/ocean/minimize.gif")));
 				mnEintellungen.add(mntmVerbindungseinstellungen);
-				frmLogin.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtUsernameLog, txtPasswordLog, chkRememberUser, btnLogin, txtUsernameReg, txtVorname, txtEmail, txtName, txtPasswordReg, txtPasswordRegBest, btnRegister, lblNewLabel, label, frmLogin.getContentPane(), lblVorname, lblEmail, lblName, lblUsernameReg, lblPasswortReg, lblPasswortBestReg, panelLogin, lblPasswort, lblUsername, lblbereitsRegistriert, panel, menuBar, panelRegistration, lblWelcomeText}));
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 //				TODO login überprüfen
-//				Merlin.isRegistered(txtUsernameLog.getText().trim(), txtPasswordLog.getPassword());
+				MerlinLogic.isRegistered(txtUsernameLog.getText().trim(), txtPasswordLog.getPassword());
 				exitCode = LOGIN_BUTTON_PUSHED;
 			}
 		});
