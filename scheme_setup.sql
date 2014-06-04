@@ -54,14 +54,16 @@ CREATE SEQUENCE bw_id_sequence
   START WITH 1
   INCREMENT BY 1;
   
-/*
-CREATE OR REPLACE TRIGGER bw_id_trigger
+
+  
+CREATE TRIGGER bw_id_trigger 
 BEFORE INSERT ON Birdwatcher
-  FOR EACH ROW
-  BEGIN
-    :new.Bw_ID := bw_id_sequence.nextval;
-  END;
-*/
+FOR EACH ROW
+BEGIN
+  SELECT bw_id_sequence.nextval into :new.Bw_ID from dual;
+END;
+
+
 /*############################################################################*/ 
 
  INSERT INTO Birdwatcher
@@ -157,8 +159,13 @@ INSERT INTO beobachtet
 INSERT INTO beobachtet
   VALUES (256, 3, 2, TO_DATE('08-MAI-2014 11:27', 'DD-MONTH-YYYY HH24:MI'), null, '3 m. 5 w.');
 	
-INSERT INTO beobachtet
+/*INSERT INTO beobachtet
   VALUES (284, 3, 2, TO_DATE('08-MAI-2014 11:02', 'DD-MONTH-YYYY HH24:MI'), null, '2 m. im Kampf');
+*/	
 	
-	
-	
+	SELECT  Bw_ID FROM Birdwatcher WHERE Benutzername = 'demo' and Passwort = 'merlindemo';
+  
+  INSERT INTO Birdwatcher (Name, Vorname, Benutzername, Passwort, Email, Rolle)
+   VALUES ('Watcher', 'Birdy', 'demo', 'merlindemo', 'demo@merlin.de', 'R03');
+  
+  
