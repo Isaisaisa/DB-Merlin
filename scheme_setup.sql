@@ -72,8 +72,8 @@ END;
  INSERT INTO Birdwatcher
     Values (2, 'Inhalt', 'Carmen', 'cadmin', 'ichauchchef', 'content_admin@merlin.de', 'R02');
 
- INSERT INTO Birdwatcher
-    Values (3, 'Watcher', 'Birdy', 'demo', 'merlindemo', 'demo@merlin.de', 'R03');
+ /*INSERT INTO Birdwatcher
+    Values (3, 'Watcher', 'Birdy', 'demo', 'merlindemo', 'demo@merlin.de', 'R03');*/
 
 
 /* Import aller Stammdaten:
