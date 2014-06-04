@@ -1,6 +1,7 @@
 package merlin.base;
 
 import java.sql.Connection;
+
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,6 +9,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Vector;
+import static merlin.utils.ConstantElems.*;
 
 public final class DbWrapper {
 	
@@ -36,11 +38,12 @@ public final class DbWrapper {
 	}
 	
 	public static DbWrapper valueOf(String username, String password) throws ClassNotFoundException, SQLException {
-		return valueOf("oracle.informatik.haw-hamburg.de", 1521, "inf09", username, password);
+		return valueOf(defaultDbURL, Integer.parseInt(defaultDbPort), defaultDbSID, username, password);
 	}
-	//A-Kennung und Passwort hier
+	
+	// A-Kennung und Passwort hier
 	public static DbWrapper valueOf() throws ClassNotFoundException, SQLException {
-		return valueOf("","" );
+		return valueOf("","");
 	}
 	
 	/* ACCESSORS */

@@ -2,7 +2,6 @@ package merlin.base;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-
 import javax.swing.UnsupportedLookAndFeelException;
 
 import merlin.gui.*;
@@ -23,17 +22,10 @@ public class Main {
 		/* Konfigurationsdatei anlegen, falls noch nicht vorhanden */
 		if (propFile.exists()) {
 			try {
-				properties.load(new FileInputStream(propFile));
+				loadProperties();
+			} catch (IOException e) {
 				
-				/* Beschaffenheit der Properties-Datei prüfen */
-				
-				// TODO Prüfungen auslagern??
-				// TODO PRÜFUNGEN VERVOLLSTÄNDIGEN
-				if (getProp(dbURLPropKey) == ""
-						|| Integer.parseInt(getProp(dbPortPropKey)) == 0
-						|| getProp(dbSIDPropKey) == "") {
-				}
-			} catch (IOException e) {}
+			}
 		} else {
 			propFile.createNewFile();
 		}
@@ -60,8 +52,16 @@ public class Main {
 	}
 	
 	public static void shutdown() {
+		shutdown(false);
+	}
+	
+	public static void shutdown(boolean saveProperties) {
 		// anything that remains to be shut down properly - will be shut down here
 		// zb. datenbank verbindung trennen
+		
+		if (saveProperties) {
+			
+		}
 		
 		System.exit(0);
 	}
