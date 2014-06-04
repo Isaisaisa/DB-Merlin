@@ -1,15 +1,4 @@
 
-/*Autoren: Tim Hartig (MatrNr: 2171296), Louisa Spahl (MatrNr: 2170984) */
-
-/*
-Relationenmodell
-
-Vogelart: {[Va_ID: integer,  Artentyp: varchar, Name_DE: varchar, Name_ENG: varchar, Name_LAT: varchar]}
-Birdwatcher: {[Bw_ID: integer, Name: varchar, Vorname: varchar ,Email: varchar]}																							NEEDS UPDATE
-Beobachtungsgebiet: {[Ort_ID: integer, Level_1: varchar, Level_2: varchar ,Level_3: varchar]}
-beobachtet: {[Va_ID: integer, Bw_ID: integer, Ort_ID: integer, DatumVon: date, DatumBis: date, Bemerkung: varchar]}
-kommtVor: {[Va_ID: integer, Ort_ID: integer]}
-*/
 
 /*############################################################################*/ 
 
@@ -20,21 +9,9 @@ DROP TABLE beobachtet;
 DROP TABLE Beobachtunsgebiet;
 DROP TABLE Birdwatcher;
 DROP TABLE Vogelart;
-DROP TRIGGER bw_id_trigger;
 DROP SEQUENCE bw_id_sequence;
 
-
-CREATE SEQUENCE bw_id_sequence
-  START WITH 1
-  INCREMENT BY 1;
-  
-CREATE OR REPLACE TRIGGER bw_id_trigger
-BEFORE INSERT ON Birdwatcher
-  FOR EACH ROW
-  BEGIN
-    :new.Bw_ID := bw_id_sequence.nextval;
-  END;
-  
+ 
 /* Implementierung des Merlin-Schemata */
 CREATE TABLE Vogelart 
        (Va_ID         INTEGER PRIMARY KEY, 
@@ -72,8 +49,30 @@ CREATE TABLE kommtVor
        (Va_ID         INTEGER REFERENCES Vogelart ON DELETE CASCADE, 
         Ort_ID        INTEGER REFERENCES Beobachtunsgebiet ON DELETE CASCADE,
         PRIMARY KEY   (Va_ID, Ort_ID));
-
+        
+CREATE SEQUENCE bw_id_sequence
+  START WITH 1
+  INCREMENT BY 1;
+  
+/*
+CREATE OR REPLACE TRIGGER bw_id_trigger
+BEFORE INSERT ON Birdwatcher
+  FOR EACH ROW
+  BEGIN
+    :new.Bw_ID := bw_id_sequence.nextval;
+  END;
+*/
 /*############################################################################*/ 
+
+ INSERT INTO Birdwatcher
+    Values (1, 'Byteschubser', 'Armin', 'admin', 'ichchefdunix', 'admin@merlin.de', 'R01');
+
+ INSERT INTO Birdwatcher
+    Values (2, 'Inhalt', 'Carmen', 'cadmin', 'ichauchchef', 'content_admin@merlin.de', 'R02');
+
+ INSERT INTO Birdwatcher
+    Values (3, 'Watcher', 'Birdy', 'demo', 'merlindemo', 'demo@merlin.de', 'R03');
+
 
 /* Import aller Stammdaten:
 
@@ -138,14 +137,7 @@ INSERT INTO kommtVor
  
  /* Standart-Birdwatcher erstellen: */
  
- INSERT INTO Birdwatcher
-    Values (1, 'Byteschubser', 'Armin', 'admin', 'ichchefdunix', 'admin@merlin.de', 'R01');
 
- INSERT INTO Birdwatcher
-    Values (2, 'Inhalt', 'Carmen', 'cadmin', 'ichauchchef', 'content_admin@merlin.de', 'R02');
-
- INSERT INTO Birdwatcher
-    Values (3, 'Watcher', 'Birdy', 'demo', 'merlindemo', 'demo@merlin.de', 'R03');
     
  
 
