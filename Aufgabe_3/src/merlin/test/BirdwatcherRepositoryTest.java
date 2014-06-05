@@ -42,8 +42,8 @@ public void tearDown(){
 
 @Test
 public void createTest() {
-	Birdwatcher bw = BirdwatcherImpl.valueOf(3, "Watcher" , "Birdy", "damo", "merlindemo", "demo@merlin.de", "R03");
-	Birdwatcher newBw = BirdwatcherRepository.create("Watcher", "Birdy", "damo", "merlindemo".toCharArray(), "demo@merlin.de");
+	Birdwatcher bw = BirdwatcherImpl.valueOf(3, "Watcher" , "Birdy", "dimo", "merlindemo", "demo@merlin.de", "R03");
+	Birdwatcher newBw = BirdwatcherRepository.create("Watcher", "Birdy", "dimo", "merlindemo".toCharArray(), "demo@merlin.de");
 	assertEquals(bw, newBw);
 }
 

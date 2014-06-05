@@ -155,4 +155,4 @@ INSERT INTO beobachtet
   VALUES (256, 3, 2, TO_DATE('08-MAI-2014 11:27', 'DD-MONTH-YYYY HH24:MI'), null, '3 m. 5 w.');
 	
 INSERT INTO beobachtet
-  VALUES (284, 3, 2, TO_DATE('08-MAI-2014 11:02', 'DD-MONTH-YYYY HH24:MI'), null, '2 m. im Kampf');
+  VALUES (284, 3, 2, TO_DATE('08-MAI-2014 11:03', 'DD-MONTH-YYYY HH24:MI'), null, '2 m. im Kampf');
