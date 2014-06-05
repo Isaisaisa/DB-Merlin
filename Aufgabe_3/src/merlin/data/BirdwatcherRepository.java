@@ -31,15 +31,17 @@ public class BirdwatcherRepository {
 		}
 		int id =  Integer.valueOf("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = " + benutzername);
 		String role = ("SELECT Rolle FROM Birdwatcher WHERE Benutzername = " + benutzername);
-		return BirdwatcherImpl.valueOf(id, name, vorname, benutzername, benutzername, email, role);
+		return BirdwatcherImpl.valueOf(id, name, vorname, benutzername, new String(passwort), email, "R03");
 	} 
 	
 	
 	//TODO funktionionsfähig mit den tests machen
 	public static boolean isRegistered(String benutzername, char[] passwort ){
 		try {
+			String psw = new String(passwort);
 			DbWrapper dbWrapper = DbWrapper.valueOf();
-			ResultSet rs = dbWrapper.sendQuery("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = " + benutzername + "AND" + "Passwort = " + new String(passwort));
+			//	SELECT  Bw_ID FROM Birdwatcher WHERE Benutzername = 'demo' and Passwort = 'merlindemo';
+			ResultSet rs = dbWrapper.sendQuery("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = " + "'" + benutzername + "'" + "AND" + "Passwort = " + "'" + psw + "'");
 			if (!rs.next()){
 				return true;
 			}

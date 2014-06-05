@@ -44,7 +44,7 @@ public final class DbWrapper {
 	
 	// A-Kennung und Passwort hier
 	public static DbWrapper valueOf() throws ClassNotFoundException, SQLException {
-		return valueOf("","");
+		return valueOf("abq317","MTA13tjlaH");
 	}
 	
 	/* ACCESSORS */
