@@ -24,11 +24,22 @@ public final class ConstantElems {
 	public static File 			propFile 	 = new File(propFilePath);
 
 	public static boolean loadProperties() throws IOException {
+		FileInputStream input = null;
+		
 		if (propFile.exists()) {
 			try {
 				properties.load(new FileInputStream(propFile));
 			} catch (IOException e) {
-				System.out.println("Properties cannot be loaded. (" + propFile.getAbsolutePath() + ")");
+				System.out.println("Cannot load properties. (" + propFile.getAbsolutePath() + ")" + "\n"
+									+ "(" + e.getMessage() + ")");
+			} finally {
+				if (input != null) {
+					try {
+						input.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		} else {
 			propFile.createNewFile();
@@ -36,14 +47,25 @@ public final class ConstantElems {
 		return true;
 	}
 	
-	public static boolean saveProperties() {
+	public static boolean saveProperties() throws IOException {
 		FileOutputStream output = null;
 		
 		try {
 			output = new FileOutputStream(propFile);
+			properties.store(output, null);
 		} catch (Exception e) {
-			
+			System.err.println("Cannot write properties to file (" + propFile.getAbsolutePath() + "). Check for administrator rights!" + "\n"
+								+ "(" + e.getMessage() + ")");
+		} finally {
+			if (output != null) {
+				try {
+					output.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
+		
 		return true;
 	}
 }
