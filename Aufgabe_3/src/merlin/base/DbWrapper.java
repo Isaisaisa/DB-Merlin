@@ -81,13 +81,15 @@ public final class DbWrapper {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			return true;
 		} catch (ClassNotFoundException e) {
-			System.err.println("Class oracle.jdbc.driver.OracleDriver not found");
+			System.err.println(e.getMessage());
+			//System.err.println("Class oracle.jdbc.driver.OracleDriver not found");
 			return false;
 		}
 	}
 	
 	private boolean connectToDatabase() throws SQLException {
 		try {
+			System.out.println("jdbc:oracle:thin:@" + dbURL + ":" + dbPort + ":" + dbSID +  dbUsername() +  dbPassword);
 			connection(DriverManager.getConnection("jdbc:oracle:thin:@" + dbURL + ":" + dbPort + ":" + dbSID, dbUsername(), dbPassword));
 		    System.out.println("Connection to database '" + dbURL + "' on Port " + dbPort + " established");
 		    return true;
