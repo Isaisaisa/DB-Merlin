@@ -94,6 +94,8 @@ INSERT INTO Vogelart
   (SELECT b.B_ID, b.B_CATEGORY, bde.IOC_GERMAN_NAME, b.B_ENGLISH_NAME, b.B_SCIENTIFIC_NAME
   FROM MERLIN.BIRDS b LEFT JOIN MERLIN.BIRDS_IOC bde ON b.B_SCIENTIFIC_NAME = bde.IOC_SCIENTIFIC_NAME);
   
+DELETE Vogelart
+WHERE Artentyp LIKE 'group%';
   
 /* dt. Beobachtungsgebiete eintragen */
 	
@@ -134,7 +136,7 @@ INSERT INTO kommtVor
   (Va_ID, Ort_ID)
   (SELECT v.Va_ID, b.Ort_ID 
   FROM Vogelart v, MERLIN.BIRDS_DE bd, Beobachtunsgebiet b 
-  WHERE v.Name_DE = bd.DE_DEUTSCH AND b.Ort_ID = 2);
+  WHERE v.NAME_LAT = bd.DE_LATEIN AND b.Ort_ID = 2);
 	
 /*############################################################################*/
 
@@ -156,3 +158,4 @@ INSERT INTO beobachtet
 	
 INSERT INTO beobachtet
   VALUES (284, 3, 2, TO_DATE('08-MAI-2014 11:03', 'DD-MONTH-YYYY HH24:MI'), null, '2 m. im Kampf');
+    
