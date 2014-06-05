@@ -26,7 +26,7 @@ CREATE TABLE Birdwatcher
         Vorname       VARCHAR(150) NOT NULL,
         Benutzername  VARCHAR(150) UNIQUE NOT NULL,
         Passwort      VARCHAR(150) NOT NULL,
-        Email         VARCHAR(255) NOT NULL,
+        Email         VARCHAR(255) UNIQUE NOT NULL,
         Rolle         VARCHAR(150) NOT NULL);
         
 CREATE TABLE Beobachtunsgebiet 
@@ -54,9 +54,7 @@ CREATE SEQUENCE bw_id_sequence
   START WITH 1
   INCREMENT BY 1;
   
-
-/
-
+  
 CREATE OR REPLACE TRIGGER bw_id_trigger 
 BEFORE INSERT ON Birdwatcher
 FOR EACH ROW
@@ -67,14 +65,18 @@ END;
 
 /*############################################################################*/ 
 
- INSERT INTO Birdwatcher
-    Values (1, 'Byteschubser', 'Armin', 'admin', 'ichchefdunix', 'admin@merlin.de', 'R01');
+ /* Standart-Birdwatcher erstellen: */
 
- INSERT INTO Birdwatcher
-    Values (2, 'Inhalt', 'Carmen', 'cadmin', 'ichauchchef', 'content_admin@merlin.de', 'R02');
+/*SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = 'demo' and Passwort = 'merlindemo';*/
 
- INSERT INTO Birdwatcher
-    Values (3, 'Watcher', 'Birdy', 'demo', 'merlindemo', 'demo@merlin.de', 'R03');
+INSERT INTO Birdwatcher (Name, Vorname, Benutzername, Passwort, Email, Rolle)
+  VALUES ('Byteschubser', 'Armin', 'admin', 'ichchefdunix', 'admin@merlin.de', 'R01');
+  
+INSERT INTO Birdwatcher (Name, Vorname, Benutzername, Passwort, Email, Rolle)
+  VALUES ('Inhalt', 'Carmen', 'cadmin', 'ichauchchef', 'content_admin@merlin.de', 'R02');
+  
+INSERT INTO Birdwatcher (Name, Vorname, Benutzername, Passwort, Email, Rolle)
+  VALUES ('Watcher', 'Birdy', 'demo', 'merlindemo', 'demo@merlin.de', 'R03');
 
 
 /* Import aller Stammdaten:
@@ -136,15 +138,7 @@ INSERT INTO kommtVor
 	
 /*############################################################################*/
 
-/* Teil 1: Beobachtung für den deutschen Raum anlegen */  
- 
- /* Standart-Birdwatcher erstellen: */
- 
-
-    
- 
-
-/*############################################################################*/		
+/* Teil 1: Beobachtung für den deutschen Raum anlegen */  	
 
 /* Beispiel-Beobachtungen des Demo-Nutzers in seine Beobachtungsliste (pers. Checkliste) eintragen */
 
@@ -160,13 +154,5 @@ INSERT INTO beobachtet
 INSERT INTO beobachtet
   VALUES (256, 3, 2, TO_DATE('08-MAI-2014 11:27', 'DD-MONTH-YYYY HH24:MI'), null, '3 m. 5 w.');
 	
-/*INSERT INTO beobachtet
+INSERT INTO beobachtet
   VALUES (284, 3, 2, TO_DATE('08-MAI-2014 11:02', 'DD-MONTH-YYYY HH24:MI'), null, '2 m. im Kampf');
-*/	
-	
-	SELECT  Bw_ID FROM Birdwatcher WHERE Benutzername = 'demo' and Passwort = 'merlindemo';
-  
-  INSERT INTO Birdwatcher (Name, Vorname, Benutzername, Passwort, Email, Rolle)
-   VALUES ('Watcher', 'Birdy', 'demo', 'merlindemo', 'demo@merlin.de', 'R03');
-  
-  

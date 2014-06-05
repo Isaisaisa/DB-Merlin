@@ -1,6 +1,5 @@
 package merlin.base;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -12,23 +11,14 @@ import static merlin.utils.ConstantElems.*;
 public class Main {
 	
 	// TODO DbWrapper eventuell auslagern, falls Zugriffsprobleme entstehen
-	static DbWrapper database;
-	private static ExitCode exitCode;
+	public static DbWrapper database;
+	private static ExitCode  exitCode;
 	
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException, IOException {
 		
-		/* Initialisierungen */
+		// Initialisierungen
 		
-		/* Konfigurationsdatei anlegen, falls noch nicht vorhanden */
-		if (propFile.exists()) {
-			try {
-				loadProperties();
-			} catch (IOException e) {
-				
-			}
-		} else {
-			propFile.createNewFile();
-		}
+		loadProperties();
 
 		exitCode = DatabaseSetup.showDialog();
 		if (exitCode == CANCEL_BUTTON_PUSHED) {
@@ -38,7 +28,7 @@ public class Main {
 		}
 		
 		
-		/* GUI - Login Screen anzeigen */
+		// GUI - Login Screen anzeigen
 		exitCode = MerlinLogin.main();
 		
 		if (exitCode == LOGIN_BUTTON_PUSHED) {
@@ -48,7 +38,6 @@ public class Main {
 		} else {
 			shutdown();
 		}
-		
 	}
 	
 	public static void shutdown() {

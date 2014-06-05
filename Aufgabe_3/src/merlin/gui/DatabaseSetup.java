@@ -15,9 +15,10 @@ import java.awt.Toolkit;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import merlin.base.DbWrapper;
+import merlin.base.Main;
 import merlin.gui.enums.ExitCode;
 import static merlin.gui.enums.ExitCode.*;
-
 import static merlin.utils.ConstantElems.*;
 
 import java.awt.event.ActionListener;
@@ -32,20 +33,23 @@ import javax.swing.JCheckBox;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.sql.SQLException;
 
 public class DatabaseSetup extends JDialog {
 
-	/** TODO generate serial!
+	/**
 	 * 
 	 */
+	private static final long serialVersionUID = -1060776611286417913L;
 	private static ExitCode exitCode = CANCEL_BUTTON_PUSHED;
 	private final JPanel contentPanel = new JPanel();
 	
-	private JTextField txtAKennung;
-	private JPasswordField pwdPasswort;
-	private JTextField txtURL;
-	private JTextField txtPort;
-	private JTextField txtSID;
+	private JTextField 		txtAKennung;
+	private JPasswordField 	pwdPasswort;
+	private JTextField 		txtURL;
+	private JTextField 		txtPort;
+	private JTextField 		txtSID;
+	private JCheckBox 		chkRememberLogin;
 	
 	/**
 	 * Launch the application.
@@ -125,14 +129,14 @@ public class DatabaseSetup extends JDialog {
 			loginPanel.add(pwdPasswort);
 		}
 		{
-			JLabel lblAkennung = new JLabel("a-Kennung:");
-			lblAkennung.setBounds(10, 19, 61, 20);
-			loginPanel.add(lblAkennung);
+			JLabel lblAKennung = new JLabel("a-Kennung:");
+			lblAKennung.setBounds(10, 19, 61, 20);
+			loginPanel.add(lblAKennung);
 		}
 		{
-			JCheckBox chkDatenMerken = new JCheckBox("Anmeldedaten merken (AES verschl\u00FCsselt)");
-			chkDatenMerken.setBounds(6, 46, 357, 23);
-			loginPanel.add(chkDatenMerken);
+			chkRememberLogin = new JCheckBox("Anmeldedaten merken (AES verschl\u00FCsselt)");
+			chkRememberLogin.setBounds(6, 46, 357, 23);
+			loginPanel.add(chkRememberLogin);
 		}
 		
 		JPanel dbPanel = new JPanel();
@@ -141,9 +145,9 @@ public class DatabaseSetup extends JDialog {
 		contentPanel.add(dbPanel);
 		dbPanel.setLayout(null);
 		{
-			JLabel label_1 = new JLabel("URL:");
-			label_1.setBounds(9, 19, 29, 20);
-			dbPanel.add(label_1);
+			JLabel lblURL = new JLabel("URL:");
+			lblURL.setBounds(9, 19, 29, 20);
+			dbPanel.add(lblURL);
 		}
 		{
 			txtURL = new JTextField();
@@ -160,9 +164,9 @@ public class DatabaseSetup extends JDialog {
 			dbPanel.add(txtURL);
 		}
 		{
-			JLabel label_1 = new JLabel("Port:");
-			label_1.setBounds(9, 50, 29, 20);
-			dbPanel.add(label_1);
+			JLabel lblPort = new JLabel("Port:");
+			lblPort.setBounds(9, 50, 29, 20);
+			dbPanel.add(lblPort);
 		}
 		{
 			txtPort = new JTextField();
@@ -178,9 +182,9 @@ public class DatabaseSetup extends JDialog {
 			dbPanel.add(txtPort);
 		}
 		{
-			JLabel label_1 = new JLabel("SID:");
-			label_1.setBounds(9, 81, 29, 20);
-			dbPanel.add(label_1);
+			JLabel lblSID = new JLabel("SID:");
+			lblSID.setBounds(9, 81, 29, 20);
+			dbPanel.add(lblSID);
 		}
 		{
 			txtSID = new JTextField();
@@ -255,8 +259,32 @@ public class DatabaseSetup extends JDialog {
 						} else {
 							// Eingaben OK, Werte übernehmen und fortfahren
 							
-							// Anmeldedaten ablegen
+							// Anmeldedaten ablegen?
+							Main.saveProp(dbURLPropKey, txtURL.getText());
+							Main.saveProp(dbPortPropKey, txtPort.getText());
+							Main.saveProp(dbSIDPropKey, txtSID.getText());
+							if (chkRememberLogin.isSelected()) {
+								try {
+									Main.saveLogin(loginDataPropKey, txtAKennung.getText(), pwdPasswort.getPassword().toString());
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
 							
+							
+							try {
+								Main.database = DbWrapper.valueOf(txtURL.getText(), Integer.parseInt(txtPort.getText()), txtSID.getText(), txtAKennung.getText(), pwdPasswort.getPassword().toString());
+							} catch (NumberFormatException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (ClassNotFoundException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 							
 							exitCode = OK_BUTTON_PUSHED;
 							dispose();

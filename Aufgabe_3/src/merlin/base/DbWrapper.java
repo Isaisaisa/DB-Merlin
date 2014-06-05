@@ -1,14 +1,14 @@
 package merlin.base;
 
 import java.sql.Connection;
-
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Vector;
+
 import static merlin.utils.ConstantElems.*;
 
 public final class DbWrapper {
@@ -16,6 +16,7 @@ public final class DbWrapper {
 	private final String dbURL, dbSID, dbUsername, dbPassword;
 	private final int dbPort;
 	private Connection connection;
+	
 	private ResultContainer resultContainer;
 	
 	/* PRIVATE CONTRUCTOR */
@@ -26,7 +27,7 @@ public final class DbWrapper {
 		this.dbUsername = dbUsername;
 		this.dbPassword = dbPassword;
 		
-		this.resultContainer = new ResultContainer();
+		this.resultContainer = null;
 		
 		// Initialisierungen
 		initDriver();
@@ -60,6 +61,18 @@ public final class DbWrapper {
 		this.connection = connection;
 	}
 	
+	public ResultContainer resultContainer() {
+		return resultContainer;
+	}
+	
+	public Vector<Vector<Object>> resultTable() {
+		return resultContainer().resultTable();
+	}
+	
+	// TODO DRINGEND FUNKTIONSFÄHIGKEIT TESTEN
+	public ArrayList<Object> arrayListOfColumn(int columnNumber) {
+		return resultContainer().arrayListOfColumn(columnNumber);
+	}
 	
 	/* OPERATIONS */
 	
@@ -73,7 +86,6 @@ public final class DbWrapper {
 		}
 	}
 	
-	//TODO: eventuell public machen, falls man versuchen will, die Verbindung wiederherzustellen
 	private boolean connectToDatabase() throws SQLException {
 		try {
 			connection(DriverManager.getConnection("jdbc:oracle:thin:@" + dbURL + ":" + dbPort + ":" + dbSID, dbUsername(), dbPassword));
@@ -88,28 +100,17 @@ public final class DbWrapper {
 	}
 	
 
-	/* GIBT DIE ERGEBNISTABELLE EINE QUERY'S ZURÜCK (columnNames müssen separat per DbWrapper.columnNames() geholt werden);
-	 * Man übergibt getResultOfQuery einen String in Form eines Queries,
-	 * der Query wird delegiert an sendQuery, um die Anfrage an die Datenbank zu senden.
-	 * Das Ergebnis (ResultSet) wird innerhalb der Methode resultSet des ResultContainer's
-	 * weiterverarbeitet, dass am Ende alle nötigen Informationen zur Erstellung einer Tabelle
-	 * vorhanden sind. Zusätzlich gibt die Methode eine Matrix rowData zurück,
-	 * die eine Tabelle (ohne Spaltenüberschriften repräsentiert).
-	 */
+	// Gibt eine Object-Matrix zurück, die aus der Ergebnismenge des Query's berechnet wird.
+	// Kann zur Erstellung von Tabellen bzw. Befüllung von JTables u.ä. benutzt werden.
 	public Vector<Vector<Object>> getResultOfQuery(String query) throws SQLException {
-		return resultContainer().resultSet(sendQuery(query));
+		return new ResultContainer().processResultSet( sendQuery(query) );
 	}
 	
-	
-	public ResultContainer resultContainer() {
-		return resultContainer;
-	}
-	
-	/* Query an Datenbank senden */
+	// Query an Datenbank senden
 	public ResultSet sendQuery(String query) throws SQLException {
 		Statement statement = connection().createStatement();
-		ResultSet resultSet = statement.executeQuery(query);
-		return resultSet;
+		statement.closeOnCompletion(); // Statement automatischen schließen lassen, sobald alle referenzierten Ergebnismengen (ResultSets) geschlossen wurden
+		return statement.executeQuery(query);
 	}
 	
 	public void sendUpdate(String query) throws SQLException {
@@ -120,13 +121,5 @@ public final class DbWrapper {
 	public boolean send(String query) throws SQLException {
 		PreparedStatement statement = connection().prepareStatement(query);
 		return statement.execute();
-	}
-	
-	public Vector<String> columnNames() {
-		return resultContainer.columnNames();
-	}
-	
-	public ResultSetMetaData resultSetMetaData() {
-		return resultContainer.resultSetMetaData();
 	}
 }
