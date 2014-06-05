@@ -55,14 +55,15 @@ CREATE SEQUENCE bw_id_sequence
   INCREMENT BY 1;
   
 
-  
-CREATE TRIGGER bw_id_trigger 
+/
+
+CREATE OR REPLACE TRIGGER bw_id_trigger 
 BEFORE INSERT ON Birdwatcher
 FOR EACH ROW
 BEGIN
   SELECT bw_id_sequence.nextval into :new.Bw_ID from dual;
 END;
-
+/
 
 /*############################################################################*/ 
 
