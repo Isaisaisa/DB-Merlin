@@ -18,7 +18,7 @@ import static merlin.gui.enums.ExitCode.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class MerlinMain {
+public class MerlinMainWindow {
 
 	private static ExitCode exitCode = DIALOG_ABORTED;
 	private JFrame frmMerlinMain;
@@ -37,7 +37,7 @@ public class MerlinMain {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MerlinMain window = new MerlinMain();
+					MerlinMainWindow window = new MerlinMainWindow();
 					window.frmMerlinMain.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -51,7 +51,7 @@ public class MerlinMain {
 	/**
 	 * Create the application.
 	 */
-	public MerlinMain() {
+	public MerlinMainWindow() {
 		initialize();
 	}
 
@@ -60,7 +60,7 @@ public class MerlinMain {
 	 */
 	private void initialize() {
 		frmMerlinMain = new JFrame();
-		frmMerlinMain.setIconImage(Toolkit.getDefaultToolkit().getImage(MerlinMain.class.getResource("/javax/swing/plaf/metal/icons/ocean/hardDrive.gif")));
+		frmMerlinMain.setIconImage(Toolkit.getDefaultToolkit().getImage(MerlinMainWindow.class.getResource("/javax/swing/plaf/metal/icons/ocean/hardDrive.gif")));
 		frmMerlinMain.setTitle("MERLIN Vogelbeobachtungen");
 		frmMerlinMain.setBounds(50, 50, 1024, 800);
 		frmMerlinMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -95,5 +95,9 @@ public class MerlinMain {
 		});
 		btnEinstellungen.setBounds(808, 11, 95, 23);
 		userPanel.add(btnEinstellungen);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(0, 45, 1018, 696);
+		frmMerlinMain.getContentPane().add(panel);
 	}
 }

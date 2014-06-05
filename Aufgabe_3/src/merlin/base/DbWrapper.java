@@ -38,15 +38,17 @@ public final class DbWrapper {
 		return new DbWrapper(dbURL, dbPort, dbSID, dbUsername, dbPassword);
 	}
 	
+	public static DbWrapper valueOf(String dbURL, int dbPort, String dbSID, String dbUsername, char[] dbPassword) throws ClassNotFoundException, SQLException {
+		String psw = new String(dbPassword);
+		return new DbWrapper(dbURL, dbPort, dbSID, dbUsername, psw);
+	}
+	
 	public static DbWrapper valueOf(String username, String password) throws ClassNotFoundException, SQLException {
 		return valueOf(defaultDbURL, Integer.parseInt(defaultDbPort), defaultDbSID, username, password);
 	}
 	
-	// A-Kennung und Passwort hier
-	public static DbWrapper valueOf() throws ClassNotFoundException, SQLException {
-		return valueOf("","");
-	}
 	
+		
 	/* ACCESSORS */
 	
 	public String dbUsername() {

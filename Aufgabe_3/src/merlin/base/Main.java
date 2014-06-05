@@ -32,7 +32,7 @@ public class Main {
 		exitCode = MerlinLogin.main();
 		
 		if (exitCode == LOGIN_BUTTON_PUSHED) {
-			exitCode = MerlinMain.main();
+			exitCode = MerlinMainWindow.main();
 		} else if (exitCode == REGISTER_BUTTON_PUSHED) {
 			
 		} else {

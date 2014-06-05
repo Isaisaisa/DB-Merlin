@@ -272,9 +272,11 @@ public class DatabaseSetup extends JDialog {
 								}
 							}
 							
+						
 							
 							try {
-								Main.database = DbWrapper.valueOf(txtURL.getText(), Integer.parseInt(txtPort.getText()), txtSID.getText(), txtAKennung.getText(), pwdPasswort.getPassword().toString());
+//								Main.database = 
+								DbWrapper.valueOf(txtURL.getText(), Integer.parseInt(txtPort.getText()), txtSID.getText(), txtAKennung.getText(), pwdPasswort.getPassword());
 							} catch (NumberFormatException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
