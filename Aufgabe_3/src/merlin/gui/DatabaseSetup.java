@@ -1,39 +1,42 @@
 package merlin.gui;
 
+import static merlin.gui.enums.ExitCode.CANCEL_BUTTON_PUSHED;
+import static merlin.gui.enums.ExitCode.OK_BUTTON_PUSHED;
+import static merlin.gui.enums.ExitCode.QUIT_DIALOG;
+import static merlin.utils.ConstantElems.dbPortPropKey;
+import static merlin.utils.ConstantElems.dbSIDPropKey;
+import static merlin.utils.ConstantElems.dbURLPropKey;
+import static merlin.utils.ConstantElems.defaultDbPort;
+import static merlin.utils.ConstantElems.defaultDbSID;
+import static merlin.utils.ConstantElems.defaultDbURL;
+import static merlin.utils.ConstantElems.loginDataPropKey;
+
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
-
-import java.awt.Toolkit;
-
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+import javax.swing.border.TitledBorder;
 
 import merlin.base.DbWrapper;
 import merlin.base.Main;
 import merlin.gui.enums.ExitCode;
-import static merlin.gui.enums.ExitCode.*;
-import static merlin.utils.ConstantElems.*;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
-import javax.swing.JPasswordField;
-
-import java.awt.Color;
-
-import javax.swing.border.TitledBorder;
-import javax.swing.JCheckBox;
-
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.sql.SQLException;
+import merlin.gui.enums.WindowState;
 
 public class DatabaseSetup extends JDialog {
 
@@ -275,7 +278,6 @@ public class DatabaseSetup extends JDialog {
 						
 							
 							try {
-//								Main.database = 
 								DbWrapper.valueOf(txtURL.getText(), Integer.parseInt(txtPort.getText()), txtSID.getText(), txtAKennung.getText(), pwdPasswort.getPassword());
 							} catch (NumberFormatException e) {
 								// TODO Auto-generated catch block
@@ -289,7 +291,12 @@ public class DatabaseSetup extends JDialog {
 							}
 							
 							exitCode = OK_BUTTON_PUSHED;
-							dispose();
+							WindowState.DATABASELOGIN.nextState();
+//							DatabaseSetup frame = (DatabaseSetup) arg0.getSource();
+//					        frame.dispose();
+													
+							
+//							dispose();
 						}
 						
 //						Main.saveProp("dbURL", txtURL.getText());

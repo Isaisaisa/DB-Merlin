@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import merlin.base.DbWrapper;
 import merlin.base.Main;
 import merlin.data.entities.Birdwatcher;
 import merlin.data.entities.BirdwatcherImpl;
@@ -36,8 +37,8 @@ public class BirdwatcherRepository {
 	public static boolean isRegistered(String benutzername, char[] passwort ){
 		try {
 			String psw = new String(passwort);
-			ResultSet rs = Main.database.sendQuery("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = " + "'" + benutzername + "'" + "AND" + "Passwort = " + "'" + psw + "'");
-			if (!rs.next()){
+			ResultSet rs = Main.database.sendQuery("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = '" + benutzername + "' AND Passwort = '" + psw + "'");
+			if (rs != null && !rs.next()){
 				return true;
 			}
 			return false;

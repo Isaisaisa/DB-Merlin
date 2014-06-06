@@ -23,16 +23,22 @@ import merlin.logic.impl.MerlinLogic;
 
 import java.awt.Font;
 import java.awt.Dialog.ModalExclusionType;
+
 import merlin.gui.enums.ExitCode;
+import merlin.gui.enums.WindowState;
 import static merlin.gui.enums.ExitCode.*;
+
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
+
 import org.eclipse.wb.swing.FocusTraversalOnArray;
+
 import java.awt.Component;
+
 import javax.swing.ImageIcon;
 
 public class MerlinLogin {
@@ -277,9 +283,9 @@ public class MerlinLogin {
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO login überprüfen
-				MerlinLogic.isRegistered(txtUsernameLog.getText().trim(),
-						txtPasswordLog.getPassword());
+				MerlinLogic.isRegistered(txtUsernameLog.getText().trim(), txtPasswordLog.getPassword());
 				exitCode = LOGIN_BUTTON_PUSHED;
+				WindowState.BIRDWATCHERLOGIN.nextState();
 			}
 		});
 		btnRegister.addActionListener(new ActionListener() {

@@ -6,6 +6,10 @@ import java.sql.SQLException;
 
 
 
+
+
+
+import merlin.base.DbWrapper;
 //import merlin.base.DbWrapper;
 import merlin.data.BirdwatcherRepository;
 import merlin.data.entities.Birdwatcher;
@@ -49,10 +53,10 @@ public void createTest() {
 
 
 @Test
-public void isRegisteredTest(){
+public void isRegisteredTest() throws Exception {
 	System.out.println("isRegistered");
-	assertTrue(BirdwatcherRepository.isRegistered("'demo'","'merlindemo'".toCharArray()));
-	
+//	assertTrue(BirdwatcherRepository.isRegistered("'demo'","'merlindemo'".toCharArray()));
+	assertEquals(true, BirdwatcherRepository.isRegistered("demo","merlindemo".toCharArray()));
 }
 	
 
