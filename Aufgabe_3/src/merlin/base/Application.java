@@ -16,7 +16,7 @@ import merlin.gui.enums.ExitCode;
 public final class Application {
 	
 	public DbWrapper database;
-	protected ExitCode exitCode;
+	public ExitCode exitCode;
 	private static Application instance;
 
 	private Application() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, UnsupportedLookAndFeelException {
@@ -36,14 +36,19 @@ public final class Application {
 		loadProperties();
 		database = DbWrapper.getInstance();
 		
-		exitCode = DatabaseSetup.showDialog();
+		exitCode = null;
+		DatabaseSetup.showDialog();
 		System.out.println("ExitCode = " + exitCode);
+		
 		if (exitCode == QUIT_DIALOG || exitCode == CANCEL_BUTTON_PUSHED) {
 			shutdown();
 		} else if (exitCode == OK_BUTTON_PUSHED) {
 			// Datenbankeinrichtung wurde bestätigt
 			// GUI - Login Screen anzeigen
-			exitCode = MerlinLogin.main();
+			exitCode = null;
+			System.out.println("Exitcode auf null setzen --> " + exitCode);
+			MerlinLogin.main();
+			System.out.println("ExitCode = " + exitCode);
 			
 			if (exitCode == LOGIN_BUTTON_PUSHED) {
 				exitCode = MerlinMainWindow.main();
@@ -51,6 +56,21 @@ public final class Application {
 				
 			}
 		}
+//		exitCode = DatabaseSetup.showDialog();
+//		System.out.println("ExitCode = " + exitCode);
+//		if (exitCode == QUIT_DIALOG || exitCode == CANCEL_BUTTON_PUSHED) {
+//			shutdown();
+//		} else if (exitCode == OK_BUTTON_PUSHED) {
+//			// Datenbankeinrichtung wurde bestätigt
+//			// GUI - Login Screen anzeigen
+//			exitCode = MerlinLogin.main();
+//			
+//			if (exitCode == LOGIN_BUTTON_PUSHED) {
+//				exitCode = MerlinMainWindow.main();
+//			} else if (exitCode == REGISTER_BUTTON_PUSHED) {
+//				
+//			}
+//		}
 		
 		System.out.println("ups. doch schon hier? Das schreit nach: korrekte Modalitäten Behandlungen!");
 		

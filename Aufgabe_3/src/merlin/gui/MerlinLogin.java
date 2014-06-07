@@ -29,6 +29,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
+import merlin.base.Application;
 import merlin.gui.enums.ExitCode;
 import merlin.gui.enums.WindowState;
 import merlin.logic.exception.IllegalPasswordException;
@@ -73,10 +74,11 @@ public class MerlinLogin {
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
 	 * @throws ClassNotFoundException
+	 * @throws IOException 
 	 */
-	public static ExitCode main() throws ClassNotFoundException,
-			InstantiationException, IllegalAccessException,
-			UnsupportedLookAndFeelException {
+	public static ExitCode main() throws
+			ClassNotFoundException, InstantiationException,
+			IllegalAccessException, UnsupportedLookAndFeelException, IOException {
 
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
@@ -91,6 +93,7 @@ public class MerlinLogin {
 			}
 		});
 
+		Application.getInstance().exitCode = exitCode;
 		return exitCode;
 	}
 

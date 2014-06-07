@@ -3,14 +3,9 @@ package merlin.gui;
 import static merlin.gui.enums.ExitCode.CANCEL_BUTTON_PUSHED;
 import static merlin.gui.enums.ExitCode.OK_BUTTON_PUSHED;
 import static merlin.gui.enums.ExitCode.QUIT_DIALOG;
-import static merlin.utils.ConstantElems.dbPortPropKey;
-import static merlin.utils.ConstantElems.dbSIDPropKey;
-import static merlin.utils.ConstantElems.dbURLPropKey;
 import static merlin.utils.ConstantElems.defaultDbPort;
 import static merlin.utils.ConstantElems.defaultDbSID;
 import static merlin.utils.ConstantElems.defaultDbURL;
-import static merlin.utils.ConstantElems.loginDataPropKey;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -20,8 +15,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.IOException;
-import java.sql.SQLException;
-
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -36,7 +29,6 @@ import javax.swing.border.TitledBorder;
 
 import merlin.base.Application;
 import merlin.base.DbWrapper;
-import merlin.base.Main;
 import merlin.gui.enums.ExitCode;
 import merlin.logic.impl.MerlinLogic;
 
@@ -65,8 +57,9 @@ public class DatabaseSetup extends JDialog {
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
 	 * @throws ClassNotFoundException 
+	 * @throws IOException 
 	 */
-	public static ExitCode showDialog(ModalityType modalityType) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+	public static ExitCode showDialog(ModalityType modalityType) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException, IOException {
 		
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		
@@ -78,10 +71,11 @@ public class DatabaseSetup extends JDialog {
 			e.printStackTrace();
 		}
 		
+		Application.getInstance().exitCode = exitCode;
 		return exitCode ;
 	}
 	
-	public static ExitCode showDialog() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+	public static ExitCode showDialog() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException, IOException {
 		return showDialog(ModalityType.APPLICATION_MODAL);
 	}
 	
