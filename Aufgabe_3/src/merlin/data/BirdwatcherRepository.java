@@ -28,7 +28,7 @@ public class BirdwatcherRepository {
 		}
 		int id =  Integer.valueOf("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = " + benutzername);
 		String role = ("SELECT Rolle FROM Birdwatcher WHERE Benutzername = " + benutzername);
-		return BirdwatcherImpl.valueOf(id, name, vorname, benutzername, new String(passwort), email, role);
+		return BirdwatcherImpl.valueOf(name, vorname, benutzername, new String(passwort), email);
 	
 	} 
 	
