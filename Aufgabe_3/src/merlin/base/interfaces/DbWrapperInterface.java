@@ -4,9 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public interface DbWrapperInterface {
-	abstract DbWrapperInterface getInstance();
-	abstract void setConnectionData(String dbURL, int dbPort, String dbSID, String dbUsername, char[] dbPassword);
-	abstract void connect();
-	abstract ResultSet sendQuery(String query) throws SQLException;
-	abstract void sendUpdate(String query) throws SQLException;
-	}
+    public void setConnectionData(String dbURL, String dbPort, String dbSID, String dbUsername, char[] dbPassword) throws Exception;
+	public void setLoginData(String dbUsername, String dbPassword) throws Exception;
+	public void connect() throws Exception;
+	public String dbUsername();
+	public ResultSet sendQuery(String query) throws Exception;
+	public void sendUpdate(String query) throws SQLException;
+}

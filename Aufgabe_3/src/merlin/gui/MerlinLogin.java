@@ -83,7 +83,6 @@ public class MerlinLogin {
 			public void run() {
 				try {
 					MerlinLogin window = new MerlinLogin();
-					DatabaseSetup.showDialog();
 					window.frmLogin.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

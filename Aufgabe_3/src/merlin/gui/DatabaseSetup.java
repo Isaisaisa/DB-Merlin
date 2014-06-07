@@ -1,39 +1,44 @@
 package merlin.gui;
 
+import static merlin.gui.enums.ExitCode.CANCEL_BUTTON_PUSHED;
+import static merlin.gui.enums.ExitCode.OK_BUTTON_PUSHED;
+import static merlin.gui.enums.ExitCode.QUIT_DIALOG;
+import static merlin.utils.ConstantElems.dbPortPropKey;
+import static merlin.utils.ConstantElems.dbSIDPropKey;
+import static merlin.utils.ConstantElems.dbURLPropKey;
+import static merlin.utils.ConstantElems.defaultDbPort;
+import static merlin.utils.ConstantElems.defaultDbSID;
+import static merlin.utils.ConstantElems.defaultDbURL;
+import static merlin.utils.ConstantElems.loginDataPropKey;
+
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 
-import java.awt.Toolkit;
-
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-
+import merlin.base.Application;
 import merlin.base.DbWrapper;
 import merlin.base.Main;
 import merlin.gui.enums.ExitCode;
-import static merlin.gui.enums.ExitCode.*;
-import static merlin.utils.ConstantElems.*;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
-import javax.swing.JPasswordField;
-
-import java.awt.Color;
-
-import javax.swing.border.TitledBorder;
-import javax.swing.JCheckBox;
-
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.sql.SQLException;
+import merlin.logic.impl.MerlinLogic;
 
 public class DatabaseSetup extends JDialog {
 
@@ -42,7 +47,7 @@ public class DatabaseSetup extends JDialog {
 	 */
 	private static final long serialVersionUID = -1060776611286417913L;
 	private static ExitCode exitCode = CANCEL_BUTTON_PUSHED;
-	private final JPanel contentPanel = new JPanel();
+	private final JPanel panelDatabaseSetup = new JPanel();
 	
 	private JTextField 		txtAKennung;
 	private JPasswordField 	pwdPasswort;
@@ -50,20 +55,23 @@ public class DatabaseSetup extends JDialog {
 	private JTextField 		txtPort;
 	private JTextField 		txtSID;
 	private JCheckBox 		chkRememberLogin;
+	private JLabel 	lblConnectionState;
+	protected DbWrapper 	database;
 	
 	/**
 	 * Launch the application.
+	 * @param modalityType 
 	 * @throws UnsupportedLookAndFeelException 
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
 	 * @throws ClassNotFoundException 
 	 */
-	public static ExitCode showDialog() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+	public static ExitCode showDialog(ModalityType modalityType) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		
 		try {
-			DatabaseSetup dialog = new DatabaseSetup();
+			DatabaseSetup dialog = new DatabaseSetup(modalityType);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -73,31 +81,50 @@ public class DatabaseSetup extends JDialog {
 		return exitCode ;
 	}
 	
+	public static ExitCode showDialog() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+		return showDialog(ModalityType.APPLICATION_MODAL);
+	}
+	
+	public static DatabaseSetup valueOf(ModalityType mt) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, UnsupportedLookAndFeelException {
+		return new DatabaseSetup(mt);
+	}
+	
+	public static DatabaseSetup valueOf() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, UnsupportedLookAndFeelException {
+		return new DatabaseSetup(ModalityType.APPLICATION_MODAL);
+	}
+	
 	/**
 	 * Create the dialog.
+	 * @throws UnsupportedLookAndFeelException 
+	 * @throws IOException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws ClassNotFoundException 
 	 */
-	public DatabaseSetup() {
-		setModal(true);
-		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
+	public DatabaseSetup(ModalityType modalityType) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, UnsupportedLookAndFeelException {
+//		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		setTitle("Datenbankverbindung einrichten");
-		setModalityType(ModalityType.APPLICATION_MODAL);
+		setModalityType(modalityType);
+//		setModalityType(ModalityType.APPLICATION_MODAL);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(DatabaseSetup.class.getResource("/javax/swing/plaf/metal/icons/ocean/minimize.gif")));
 		setResizable(false);
 		setBounds(100, 100, 402, 329);
 		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(null);
+		panelDatabaseSetup.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(panelDatabaseSetup, BorderLayout.CENTER);
+		panelDatabaseSetup.setLayout(null);
+		
+		database = Application.getInstance().database;
 		
 		JLabel label = new JLabel("");
 		label.setBounds(10, 11, 29, 20);
-		contentPanel.add(label);
+		panelDatabaseSetup.add(label);
 		
 		JPanel loginPanel = new JPanel();
 		loginPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Anmeldedaten", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		loginPanel.setBounds(10, 169, 377, 79);
-		contentPanel.add(loginPanel);
+		panelDatabaseSetup.add(loginPanel);
 		loginPanel.setLayout(null);
 		{
 			txtAKennung = new JTextField();
@@ -105,6 +132,7 @@ public class DatabaseSetup extends JDialog {
 				@Override
 				public void focusGained(FocusEvent arg0) {
 					txtAKennung.setBackground(Color.WHITE);
+					txtAKennung.selectAll();
 				}
 			});
 			txtAKennung.setColumns(10);
@@ -122,6 +150,7 @@ public class DatabaseSetup extends JDialog {
 				@Override
 				public void focusGained(FocusEvent arg0) {
 					pwdPasswort.setBackground(Color.WHITE);
+					pwdPasswort.selectAll();
 				}
 			});
 			pwdPasswort.setToolTipText("Sie k\u00F6nnen uns vertrauen...!");
@@ -142,7 +171,7 @@ public class DatabaseSetup extends JDialog {
 		JPanel dbPanel = new JPanel();
 		dbPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Verbindungsdaten", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		dbPanel.setBounds(10, 11, 377, 147);
-		contentPanel.add(dbPanel);
+		panelDatabaseSetup.add(dbPanel);
 		dbPanel.setLayout(null);
 		{
 			JLabel lblURL = new JLabel("URL:");
@@ -155,6 +184,7 @@ public class DatabaseSetup extends JDialog {
 				@Override
 				public void focusGained(FocusEvent arg0) {
 					txtURL.setBackground(Color.WHITE);
+					txtURL.selectAll();
 				}
 			});
 			txtURL.setBackground(Color.WHITE);
@@ -174,6 +204,7 @@ public class DatabaseSetup extends JDialog {
 				@Override
 				public void focusGained(FocusEvent arg0) {
 					txtPort.setBackground(Color.WHITE);
+					txtPort.selectAll();
 				}
 			});
 			txtPort.setText(defaultDbPort);
@@ -192,6 +223,7 @@ public class DatabaseSetup extends JDialog {
 				@Override
 				public void focusGained(FocusEvent arg0) {
 					txtSID.setBackground(Color.WHITE);
+					txtSID.selectAll();
 				}
 			});
 			txtSID.setText(defaultDbSID);
@@ -214,7 +246,7 @@ public class DatabaseSetup extends JDialog {
 			final JLabel lblError = new JLabel("Markierte Felder enthalten fehlerhafte Eingaben oder sind leer");
 			lblError.setForeground(Color.RED);
 			lblError.setBounds(43, 250, 309, 14);
-			contentPanel.add(lblError);
+			panelDatabaseSetup.add(lblError);
 			lblError.setVisible(false);
 		
 		{
@@ -226,76 +258,33 @@ public class DatabaseSetup extends JDialog {
 				btnAnmelden.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
 						
+						// Fehlerhafte Felder einfärben
 						boolean badInput = false;
 						Color badColor = Color.RED;
 						
-						/* TODO Eingaben überprüfen (Delegation der Daten an Funktion)
-						 */ 
-						
-						if (txtURL.getText().isEmpty()) {
-							txtURL.setBackground(badColor);
-							badInput = true;
-						}
-						if (txtPort.getText().isEmpty()) {
-							txtPort.setBackground(badColor);
-							badInput = true;
-						}
-						if (txtSID.getText().isEmpty()) {
-							txtSID.setBackground(badColor);
-							badInput = true;
-						}
-						if (txtAKennung.getText().isEmpty()) {
-							txtAKennung.setBackground(badColor);
-							badInput = true;
-						}
-						if (pwdPasswort.getPassword().length == 0) {
-							pwdPasswort.setBackground(badColor);
-							badInput = true;
-						}
-						
-						if (badInput) {
-							// Eingaben nicht OK, auf Fehler hinweisen und Dialog nicht abbrechen
-							lblError.setVisible(true);
-						} else {
-							// Eingaben OK, Werte übernehmen und fortfahren
-							
-							// Anmeldedaten ablegen?
-							Main.saveProp(dbURLPropKey, txtURL.getText());
-							Main.saveProp(dbPortPropKey, txtPort.getText());
-							Main.saveProp(dbSIDPropKey, txtSID.getText());
-							if (chkRememberLogin.isSelected()) {
-								try {
-									Main.saveLogin(loginDataPropKey, txtAKennung.getText(), pwdPasswort.getPassword().toString());
-								} catch (Exception e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
+						try {
+							if (MerlinLogic.loginToDatabase(txtURL.getText(),
+									txtPort.getText(), txtSID.getText(),
+									txtAKennung.getText(), new String(
+									pwdPasswort.getPassword()),
+									chkRememberLogin.isSelected()))
+							{
+								exitCode = OK_BUTTON_PUSHED;
+								dispose();
 							}
-							
-							
-							try {
-								Main.database = DbWrapper.valueOf(txtURL.getText(), Integer.parseInt(txtPort.getText()), txtSID.getText(), txtAKennung.getText(), new String(pwdPasswort.getPassword()));
-							} catch (NumberFormatException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (ClassNotFoundException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (SQLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							
-							exitCode = OK_BUTTON_PUSHED;
-							dispose();
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
-						
-//						Main.saveProp("dbURL", txtURL.getText());
-//						Main.saveProp("dbPort", txtPort.getText());
-//						Main.saveProp("dbSID", txtSID.getText());
-//					    
+
 					}
+
 				});
+				{
+					lblConnectionState = new JLabel("Verbindung wird hergestellt. Bitte warten!");
+					buttonPane.add(lblConnectionState);
+					lblConnectionState.setVisible(false);
+				}
 				btnAnmelden.setActionCommand("OK");
 				buttonPane.add(btnAnmelden);
 				getRootPane().setDefaultButton(btnAnmelden);
