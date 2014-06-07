@@ -6,6 +6,10 @@ import java.sql.SQLException;
 
 
 
+
+
+
+import merlin.base.DbWrapper;
 //import merlin.base.DbWrapper;
 import merlin.data.BirdwatcherRepository;
 import merlin.data.entities.Birdwatcher;
@@ -42,17 +46,17 @@ public void tearDown(){
 
 @Test
 public void createTest() {
-	Birdwatcher bw = BirdwatcherImpl.valueOf(3, "Watcher" , "Birdy", "damo", "merlindemo", "demo@merlin.de", "R03");
-	Birdwatcher newBw = BirdwatcherRepository.create("Watcher", "Birdy", "damo", "merlindemo".toCharArray(), "demo@merlin.de");
+	Birdwatcher bw = BirdwatcherImpl.valueOf(3, "Watcher" , "Birdy", "dimo", "merlindemo", "demo@merlin.de", "R03");
+	Birdwatcher newBw = BirdwatcherRepository.create("Watcher", "Birdy", "dimo", "merlindemo".toCharArray(), "demo@merlin.de");
 	assertEquals(bw, newBw);
 }
 
 
 @Test
-public void isRegisteredTest(){
+public void isRegisteredTest() throws Exception {
 	System.out.println("isRegistered");
-	assertTrue(BirdwatcherRepository.isRegistered("'demo'","'merlindemo'".toCharArray()));
-	
+//	assertTrue(BirdwatcherRepository.isRegistered("'demo'","'merlindemo'".toCharArray()));
+	assertEquals(true, BirdwatcherRepository.isRegistered("demo","merlindemo".toCharArray()));
 }
 	
 

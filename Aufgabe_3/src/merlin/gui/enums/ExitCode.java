@@ -11,6 +11,7 @@ public enum ExitCode {
     YES_BUTTON_PUSHED(1),
     NO_BUTTON_PUSHED(0),
     COMMIT_AND_QUIT_BUTTON_PUSHED(2),
+//    CLOSE_WINDOW(0),
     QUIT_BUTTON_PUSHED(1);
     
     private int code = 0;

@@ -16,10 +16,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+<<<<<<< HEAD
 import merlin.base.interfaces.DbWrapperInterface;
 import merlin.logic.exception.*;
 
 public final class DbWrapper implements DbWrapperInterface {
+=======
+import merline.base.interfaces.DbWrapperInterface;
+import static merlin.utils.ConstantElems.*;
+
+public final class DbWrapper implements DbWrapperInterface{
+>>>>>>> 9369ef28a3499c2989777d7ca59260ecf7ac9158
 	
 	private static DbWrapper 	instance;
 	private Connection 		 	connection;
@@ -46,6 +53,7 @@ public final class DbWrapper implements DbWrapperInterface {
 		return instance;
 	}
 	
+<<<<<<< HEAD
 	 ///////////////
 	// ACCESSORS //
 	public void setConnectionData(String dbURL, String dbPort, String dbSID, String dbUsername, char[] dbPassword) throws Exception {
@@ -74,6 +82,21 @@ public final class DbWrapper implements DbWrapperInterface {
 		setLoginData(dbUsername, new String(dbPassword));
 	}
 
+=======
+	public static DbWrapper valueOf(String dbURL, int dbPort, String dbSID, String dbUsername, char[] dbPassword) throws ClassNotFoundException, SQLException {
+		String psw = new String(dbPassword);
+		return new DbWrapper(dbURL, dbPort, dbSID, dbUsername, psw);
+	}
+	
+	public static DbWrapper valueOf(String username, String password) throws ClassNotFoundException, SQLException {
+		return valueOf(defaultDbURL, Integer.parseInt(defaultDbPort), defaultDbSID, username, password);
+	}
+	
+	
+		
+	/* ACCESSORS */
+	
+>>>>>>> 9369ef28a3499c2989777d7ca59260ecf7ac9158
 	public String dbUsername() {
 		return dbUsername;
 	}
@@ -313,5 +336,21 @@ public final class DbWrapper implements DbWrapperInterface {
 	
 	private void debugPrint(String debugThis, boolean err) {
 		debugPrint(debugThis, System.err);
+	}
+
+	public DbWrapperInterface getInstance() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void setConnectionData(String dbURL, int dbPort, String dbSID,
+			String dbUsername, char[] dbPassword) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void connect() {
+		// TODO Auto-generated method stub
+		
 	}
 }
