@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javax.swing.UnsupportedLookAndFeelException;
 
-import merlin.base.AES;
 import merlin.base.Application;
 import merlin.base.DbWrapper;
 import merlin.data.BirdwatcherRepository;
@@ -13,7 +12,7 @@ import merlin.logic.exception.IllegalPasswordException;
 public class MerlinLogic {
 
 	//TODO Zeichen der Eingaben abfangen und auswerten
-	public static void insertBirdwatcher(String name, String vorname, String benutzername, char[] passwort, char[] passwortBest, String email) throws IllegalPasswordException {
+	public static void insertBirdwatcher(String name, String vorname, String benutzername, char[] passwort, char[] passwortBest, String email) throws IllegalPasswordException, ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, UnsupportedLookAndFeelException {
 
 		if (name == "Arsch") {
 			throw new IllegalArgumentException("Ein 'Arsch' ist nicht erlaubt!");
@@ -24,19 +23,17 @@ public class MerlinLogic {
 				throw new IllegalArgumentException(
 						"Birdwatcher konnte nicht angelegt werden.");
 			} else {
-				throw new IllegalPasswordException("Passwort ungleich");
+				throw new IllegalPasswordException("Passwörter ungleich");
 			}
 		}
 	}
 
 //	TODO login überprüfen
 //
-	public static boolean isRegistered(String benutzername, char[] passwort) {
+	public static boolean isRegistered(String benutzername, char[] passwort) throws Exception {
 		BirdwatcherRepository.isRegistered(benutzername, passwort);
 		return true;
 	}
-
-
 
 	public static void loginBirdwatcher(String benutzername, char[] passwort) {
 

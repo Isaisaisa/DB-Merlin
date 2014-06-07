@@ -52,8 +52,8 @@ public final class Application {
 			}
 		}
 		
-		// catch, if app has not been shut down yet
-		shutdown();
+		System.out.println("ups. doch schon hier? Das schreit nach: korrekte Modalitäten Behandlungen!");
+		
 	}
 	
 	public void shutdown(boolean saveProperties) {

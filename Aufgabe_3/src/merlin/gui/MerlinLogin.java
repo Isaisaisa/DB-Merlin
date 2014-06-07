@@ -11,6 +11,7 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -105,7 +106,6 @@ public class MerlinLogin {
 	 */
 	private void initialize() {
 		frmLogin = new JFrame();
-		frmLogin.setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		frmLogin.setTitle("MERLIN - Anmeldung");
 		frmLogin.setResizable(false);
 		frmLogin.setForeground(Color.WHITE);
@@ -288,6 +288,9 @@ public class MerlinLogin {
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				
 				exitCode = LOGIN_BUTTON_PUSHED;
@@ -303,8 +306,22 @@ public class MerlinLogin {
 									.getPassword(), txtPasswordRegBest
 									.getPassword(), txtEmail.getText().trim());
 				} catch (IllegalPasswordException e) {
-					System.out
-							.println("Passwörter sind nicht identische, bitte neu eingeben");
+					System.out.println("Beide Passwörter müssen übereinstimmten!");
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InstantiationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (UnsupportedLookAndFeelException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				exitCode = REGISTER_BUTTON_PUSHED;
