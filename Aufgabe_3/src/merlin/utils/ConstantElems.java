@@ -7,11 +7,13 @@ import java.io.IOException;
 import java.util.Properties;
 
 public final class ConstantElems {
+	
+	// Connection default values
 	public static final String 	defaultDbURL  = "oracle.informatik.haw-hamburg.de";
 	public static final String 	defaultDbPort = "1521";
 	public static final String 	defaultDbSID  = "inf09";
 	
-	/* Properties Key Constants */
+	// Properties Key Constants
 	public static final String 	loginDataPropKey 			= "LD"; // value encrypted!
 	public static final String 	loginDataBirdwatcherPropKey = "BW"; // value encrypted!
 	public static final String 	loginDataSplitString 		= "\0";
@@ -19,10 +21,15 @@ public final class ConstantElems {
 	public static final String 	dbPortPropKey				= "dbPort";
 	public static final String 	dbSIDPropKey				= "dbSID";
 		
-	public static Properties 	properties   = new Properties();
-	public static String     	propFilePath = new File("").getAbsolutePath() + System.getProperty("file.separator") + "config.properties";
-	public static File 			propFile 	 = new File(propFilePath);
+	// Properties Object + Filepath
+	public static final Properties 	properties   = new Properties();
+	public static final String     	propFilePath = new File("").getAbsolutePath() + System.getProperty("file.separator") + "config.properties";
+	public static final File 		propFile 	 = new File(propFilePath);
+	
+	// GUI related constants (Strings etc.)
+	public static final String	windowMainTitle = "MERLIN Naturbeobachtungen";
 
+	
 	public static boolean loadProperties() throws IOException {
 		FileInputStream input = null;
 		
@@ -65,7 +72,6 @@ public final class ConstantElems {
 				}
 			}
 		}
-		
 		return true;
 	}
 }
