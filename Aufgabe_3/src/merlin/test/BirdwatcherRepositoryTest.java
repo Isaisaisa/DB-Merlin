@@ -4,17 +4,8 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
-
-
-
-
-
-
-
 import javax.swing.UnsupportedLookAndFeelException;
 
-import merlin.base.DbWrapper;
-//import merlin.base.DbWrapper;
 import merlin.data.BirdwatcherRepository;
 import merlin.data.entities.Birdwatcher;
 import merlin.data.entities.BirdwatcherImpl;
@@ -50,7 +41,7 @@ public void tearDown(){
 
 @Test
 public void createTest() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, UnsupportedLookAndFeelException {
-	Birdwatcher bw = BirdwatcherImpl.valueOf(3, "Watcher" , "Birdy", "dimo", "merlindemo", "demo@merlin.de", "R03");
+	Birdwatcher bw = BirdwatcherImpl.valueOf("Watcher" , "Birdy", "dimo", "merlindemo", "demo@merlin.de");
 	Birdwatcher newBw = BirdwatcherRepository.create("Watcher", "Birdy", "dimo", "merlindemo".toCharArray(), "demo@merlin.de");
 	assertEquals(bw, newBw);
 }
