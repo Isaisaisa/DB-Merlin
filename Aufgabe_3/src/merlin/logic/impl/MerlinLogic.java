@@ -24,7 +24,7 @@ public class MerlinLogic {
 
 //	TODO login überprüfen
 //	
-	public static boolean isRegistered(String benutzername, char[] passwort) {
+	public static boolean isRegistered(String benutzername, char[] passwort) throws ClassNotFoundException {
 		BirdwatcherRepository.isRegistered(benutzername, passwort);
 		return true;
 	}

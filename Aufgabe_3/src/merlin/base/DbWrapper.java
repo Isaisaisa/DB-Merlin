@@ -9,9 +9,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import merline.base.interfaces.DbWrapperInterface;
 import static merlin.utils.ConstantElems.*;
 
-public final class DbWrapper {
+public final class DbWrapper implements DbWrapperInterface{
 	
 	private final String dbURL, dbSID, dbUsername, dbPassword;
 	private final int dbPort;
@@ -123,5 +124,21 @@ public final class DbWrapper {
 	public boolean send(String query) throws SQLException {
 		PreparedStatement statement = connection().prepareStatement(query);
 		return statement.execute();
+	}
+
+	public DbWrapperInterface getInstance() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void setConnectionData(String dbURL, int dbPort, String dbSID,
+			String dbUsername, char[] dbPassword) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void connect() {
+		// TODO Auto-generated method stub
+		
 	}
 }

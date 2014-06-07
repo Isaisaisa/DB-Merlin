@@ -1,45 +1,39 @@
 package merlin.gui;
 
-import java.awt.EventQueue;
+import static merlin.gui.enums.ExitCode.DIALOG_ABORTED;
+import static merlin.gui.enums.ExitCode.LOGIN_BUTTON_PUSHED;
+import static merlin.gui.enums.ExitCode.REGISTER_BUTTON_PUSHED;
 
-import javax.swing.JFrame;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dialog.ModalExclusionType;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
-import java.awt.Color;
-
-import javax.swing.JLabel;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
-import javax.swing.JPasswordField;
-import javax.swing.JCheckBox;
-
-import merlin.logic.exception.IllegalPasswordException;
-import merlin.logic.impl.MerlinLogic;
-
-import java.awt.Font;
-import java.awt.Dialog.ModalExclusionType;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
 
 import merlin.gui.enums.ExitCode;
 import merlin.gui.enums.WindowState;
-import static merlin.gui.enums.ExitCode.*;
-
-import javax.swing.JPanel;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.EtchedBorder;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JMenu;
+import merlin.logic.exception.IllegalPasswordException;
+import merlin.logic.impl.MerlinLogic;
 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
-
-import java.awt.Component;
-
-import javax.swing.ImageIcon;
 
 public class MerlinLogin {
 
@@ -283,7 +277,20 @@ public class MerlinLogin {
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO login überprüfen
-				MerlinLogic.isRegistered(txtUsernameLog.getText().trim(), txtPasswordLog.getPassword());
+				
+				//nachhher löschen
+//				String alpha = txtUsernameLog.getText().trim();
+//				String beta =  new String(txtPasswordLog.getPassword());
+//				System.out.println(alpha);
+//				System.out.println(beta);
+				
+				try {
+					MerlinLogic.isRegistered(txtUsernameLog.getText().trim(), txtPasswordLog.getPassword());
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				exitCode = LOGIN_BUTTON_PUSHED;
 				WindowState.BIRDWATCHERLOGIN.nextState();
 			}

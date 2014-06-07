@@ -34,10 +34,13 @@ public class BirdwatcherRepository {
 	
 	
 	//TODO funktionionsfähig mit den tests machen
-	public static boolean isRegistered(String benutzername, char[] passwort ){
+	public static boolean isRegistered(String benutzername, char[] passwort ) throws ClassNotFoundException{
 		try {
 			String psw = new String(passwort);
-			ResultSet rs = Main.database.sendQuery("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = '" + benutzername + "' AND Passwort = '" + psw + "'");
+//			System.out.println(psw);
+			//TODO funkt nicht
+			DbWrapper dbWrapper = DbWrapper.valueOf(benutzername, psw);
+			ResultSet rs = dbWrapper.sendQuery("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = '" + benutzername + "' AND Passwort = '" + psw + "'");
 			if (rs != null && !rs.next()){
 				return true;
 			}
