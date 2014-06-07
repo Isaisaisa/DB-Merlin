@@ -1,7 +1,5 @@
 package merlin.gui.enums;
 
-import java.awt.Dialog;
-
 import javax.swing.UnsupportedLookAndFeelException;
 
 import merlin.gui.MerlinLogin;
