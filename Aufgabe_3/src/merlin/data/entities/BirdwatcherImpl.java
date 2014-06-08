@@ -2,43 +2,62 @@ package merlin.data.entities;
 
 public class BirdwatcherImpl implements Birdwatcher {
 
+	public final static String BWROLE = "R03";
+	
+	private final String id;
 	private final String name;
 	private final String firstname;
 	private final String username;
 	private final String password;
 	private final String email;
+	private final String role;
 	
 	
-	private BirdwatcherImpl(String name, String firstname, String username, String password, String email) {
+	private BirdwatcherImpl(String id, String name, String firstname, String username, String password, String email, String role) {
 		super();
+		this.id = id;
 		this.name = name;
 		this.firstname = firstname;
 		this.username = username;
 		this.password = password;
 		this.email = email;
+		this.role = role;
 	}
 	
-	public static Birdwatcher valueOf(String name, String firstname, String username, String password, String email){
-		return new BirdwatcherImpl(name, firstname, username, password, email);
+	public static Birdwatcher valueOf(String id, String name, String firstname, String username, String password, String email) {
+		return new BirdwatcherImpl(id, name, firstname, username, password, email, BWROLE);
 	}
 
-	public String Name() {
+	public String id() {
+		return id;
+	}
+	
+//	public void id(String id) {
+//		// SINGLE ASSIGNMENT
+//		if (id != null) {
+//			this.id = id;
+//		} else {
+//			System.out.println("Es wurde versucht, die ID des Birdwatcher-Objekts von " + this.id + " auf " + id + " zu setzen");
+//		}
+//	}
+	
+	public String name() {
 		return name;
 	}
 
-	public String Firstname() {
+	public String firstname() {
 		return firstname;
 	}
 	
-	public String Username() {
+	public String username() {
 		return username;
 	}
 	
-	public String Password() {
+	public String password() {
 		return password;
 	}
 
-	public String Email() {
+	public String email() {
 		return email;
 	}
 	

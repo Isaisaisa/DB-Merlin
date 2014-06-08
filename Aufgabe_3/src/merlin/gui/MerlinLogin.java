@@ -1,14 +1,12 @@
 package merlin.gui;
 
-import static merlin.gui.enums.ExitCode.DIALOG_ABORTED;
-import static merlin.gui.enums.ExitCode.LOGIN_BUTTON_PUSHED;
-import static merlin.gui.enums.ExitCode.REGISTER_BUTTON_PUSHED;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dialog.ModalExclusionType;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -21,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -30,12 +29,14 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
 import merlin.base.Application;
-import merlin.gui.enums.ExitCode;
 import merlin.gui.enums.WindowState;
 import merlin.logic.exception.IllegalPasswordException;
 import merlin.logic.impl.MerlinLogic;
 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
+
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class MerlinLogin {
 
@@ -52,7 +53,6 @@ public class MerlinLogin {
 	private JPasswordField txtPasswordReg;
 	private JTextField txtUsernameLog;
 
-	private static ExitCode exitCode = DIALOG_ABORTED;
 	private JLabel lblNewLabel;
 	private JPanel panelRegistration;
 	private JPanel panelLogin;
@@ -76,7 +76,7 @@ public class MerlinLogin {
 	 * @throws ClassNotFoundException
 	 * @throws IOException 
 	 */
-	public static ExitCode main() throws
+	public static void main() throws
 			ClassNotFoundException, InstantiationException,
 			IllegalAccessException, UnsupportedLookAndFeelException, IOException {
 
@@ -86,15 +86,16 @@ public class MerlinLogin {
 			public void run() {
 				try {
 					MerlinLogin window = new MerlinLogin();
+					
+					Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+					window.frmLogin.setLocation(dim.width/2 - window.frmLogin.getSize().width/2, dim.height/2 - window.frmLogin.getSize().height/2);
+					
 					window.frmLogin.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
-
-		Application.getInstance().exitCode = exitCode;
-		return exitCode;
 	}
 
 	/**
@@ -109,6 +110,19 @@ public class MerlinLogin {
 	 */
 	private void initialize() {
 		frmLogin = new JFrame();
+		frmLogin.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				try {
+					Application.getInstance().closeMerlinYesNo(frmLogin);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			@Override
+			public void windowClosed(WindowEvent arg0) {
+			}
+		});
 		frmLogin.setTitle("MERLIN - Anmeldung");
 		frmLogin.setResizable(false);
 		frmLogin.setForeground(Color.WHITE);
@@ -177,7 +191,7 @@ public class MerlinLogin {
 		lblNewLabel.setBounds(10, 11, 311, 32);
 		panelRegistration.add(lblNewLabel);
 
-		// TODO GUI für IllegalPasswordException
+		// TODO GUI für IllegalPasswordException konformitieren
 		JButton btnRegister = new JButton("Registrieren");
 		btnRegister.setBounds(117, 225, 204, 39);
 		panelRegistration.add(btnRegister);
@@ -229,7 +243,7 @@ public class MerlinLogin {
 		lblUsername.setBounds(10, 55, 86, 14);
 		panelLogin.add(lblUsername);
 
-		JCheckBox chkRememberUser = new JCheckBox(
+		final JCheckBox chkRememberUser = new JCheckBox(
 				"Anmeldedaten merken (AES verschl\u00FCsselt)");
 		chkRememberUser.setBounds(6, 103, 227, 23);
 		panelLogin.add(chkRememberUser);
@@ -260,7 +274,11 @@ public class MerlinLogin {
 		mntmBeenden = new JMenuItem("Beenden");
 		mntmBeenden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("Beenden?");
+				try {
+					Application.getInstance().closeMerlinYesNo(frmLogin);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		mntmBeenden.setIcon(new ImageIcon(MerlinLogin.class
@@ -286,17 +304,16 @@ public class MerlinLogin {
 //				System.out.println(alpha);
 //				System.out.println(beta);
 				
-				try {
-					MerlinLogic.isRegistered(txtUsernameLog.getText().trim(), txtPasswordLog.getPassword());
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				MerlinLogic.loginToMerlin(txtUsernameLog.getText(), new String(txtPasswordLog.getPassword()), chkRememberUser.isSelected());
 				
-				exitCode = LOGIN_BUTTON_PUSHED;
+//				try {
+//					MerlinLogic.isRegistered(txtUsernameLog.getText().trim(), txtPasswordLog.getPassword());
+//				} catch (ClassNotFoundException e) {
+//					e.printStackTrace();
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+				
 				WindowState.BIRDWATCHERLOGIN.nextState();
 			}
 		});
@@ -304,30 +321,27 @@ public class MerlinLogin {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					MerlinLogic.insertBirdwatcher(txtName.getText().trim(),
-							txtVorname.getText().trim(), txtUsernameReg
-									.getText().trim(), txtPasswordReg
-									.getPassword(), txtPasswordRegBest
-									.getPassword(), txtEmail.getText().trim());
+							txtVorname.getText().trim(),
+							txtUsernameReg.getText().trim(),
+							new String(txtPasswordReg.getPassword()),
+							new String(txtPasswordRegBest.getPassword()),
+							txtEmail.getText().trim());
 				} catch (IllegalPasswordException e) {
 					System.out.println("Beide Passwörter müssen übereinstimmten!");
 					e.printStackTrace();
 				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (InstantiationException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (UnsupportedLookAndFeelException e) {
-					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				exitCode = REGISTER_BUTTON_PUSHED;
 			}
 		});
 

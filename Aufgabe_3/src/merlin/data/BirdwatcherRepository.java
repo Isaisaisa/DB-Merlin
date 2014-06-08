@@ -17,37 +17,33 @@ import merlin.data.entities.BirdwatcherImpl;
 //Inserts, abfragen, update, delete usw.
 public class BirdwatcherRepository {
 	
-	// NUR ÜBERGANGSWEISE
-	public static final String BWROLE = "R03";
-	
-	
-	public static Birdwatcher create(String name, String vorname, String benutzername, char[] passwort, String email) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, UnsupportedLookAndFeelException {
+	public static Birdwatcher create(String name, String vorname, String benutzername, String passwort, String email) throws Exception {
 
-		DbWrapper database = Application.getInstance().database;
+		DbWrapper database = Application.getInstance().database();
 		
 		try {
 			database.sendUpdate("INSERT INTO Birdwatcher (Name, Vorname, Benutzername, Passwort, Email, Rolle) " +
-					 "VALUES ('" + name + "', '" + vorname + "', '" + benutzername + "', '" + new String(passwort) + "', '" + email + "', '" + "R03" + "')");
+					 "VALUES ('" + name + "', '" + vorname + "', '" + benutzername + "', '" + passwort + "', '" + email + "', '" + "R03" + "')");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
-		int id =  Integer.valueOf("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = " + benutzername);
-		String role = ("SELECT Rolle FROM Birdwatcher WHERE Benutzername = " + benutzername);
-		return BirdwatcherImpl.valueOf(name, vorname, benutzername, new String(passwort), email);
-	
+		String id   = ("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = " + benutzername);
+//		String role = ("SELECT Rolle FROM Birdwatcher WHERE Benutzername = " + benutzername);
+		
+		return BirdwatcherImpl.valueOf(id, name, vorname, benutzername, new String(passwort), email);
 	} 
 	
 	
 	//TODO funktionionsfähig mit den tests machen
-	public static boolean isRegistered(String benutzername, char[] passwort ) throws Exception{
+	public static boolean isRegistered(String benutzername, char[] passwort) throws Exception{
 		
-		DbWrapper database = Application.getInstance().database;
+		DbWrapper database = Application.getInstance().database();
 		
 		try {
-			String psw = new String(passwort);
+			String pwd = new String(passwort);
 			
-			ResultSet rs = database.sendQuery("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = '" + benutzername + "' AND Passwort = '" + psw + "'");
+			ResultSet rs = database.sendQuery("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = '" + benutzername + "' AND Passwort = '" + pwd + "'");
 			if (rs != null && !rs.next()){
 				return true;
 			}

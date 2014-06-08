@@ -8,15 +8,13 @@ import merlin.base.Application;
 import merlin.base.DbWrapper;
 import merlin.data.BirdwatcherRepository;
 import merlin.logic.exception.IllegalPasswordException;
+import static merlin.utils.ConstantElems.*;
 
 public class MerlinLogic {
 
 	//TODO Zeichen der Eingaben abfangen und auswerten
-	public static void insertBirdwatcher(String name, String vorname, String benutzername, char[] passwort, char[] passwortBest, String email) throws IllegalPasswordException, ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, UnsupportedLookAndFeelException {
+	public static void insertBirdwatcher(String name, String vorname, String benutzername, String passwort, String passwortBest, String email) throws Exception {
 
-		if (name == "Arsch") {
-			throw new IllegalArgumentException("Ein 'Arsch' ist nicht erlaubt!");
-		}
 		// Anlegen des Birdwatchers
 		if (BirdwatcherRepository.create(name, vorname, benutzername, passwort, email) == null) {
 			if (passwort == passwortBest) {
@@ -27,31 +25,27 @@ public class MerlinLogic {
 			}
 		}
 	}
-
+	
 //	TODO login überprüfen
 //
-	public static boolean isRegistered(String benutzername, char[] passwort) throws Exception {
-		BirdwatcherRepository.isRegistered(benutzername, passwort);
-		return true;
-	}
-
-	public static void loginBirdwatcher(String benutzername, char[] passwort) {
-
-	}
-
 	public static boolean loginToDatabase(String dbURL, String dbPort, String dbSID, String dbUsername, String dbPassword, boolean saveLoginData) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, UnsupportedLookAndFeelException, Exception {
 
-		DbWrapper database = Application.getInstance().database;
+		DbWrapper database = Application.getInstance().database();
 		boolean cios[] = checkInputOfSetup(dbURL, dbPort, dbSID, dbUsername, dbPassword);
 
 		boolean isValidInput = cios[0] && cios[1] && cios[2] && cios[3] && cios[4];
 
-		// falls Anmeldedaten gemerkt werden sollen ==> verschlüsselt in Properties ablegen.
+		
 		if (isValidInput) {
 			Application.getInstance().saveConnectionData(dbURL, dbPort, dbSID);
 
+			// falls Anmeldedaten gemerkt werden sollen ==> verschlüsselt in Properties ablegen.
 			if (saveLoginData) {
 				Application.getInstance().saveDatabaseLogin(dbUsername, dbPassword);
+				Application.getInstance().saveProp(rememberLoginPropKey, "true");
+			} else {
+				Application.getInstance().saveDatabaseLogin("", "");
+				Application.getInstance().saveProp(rememberLoginPropKey, "false");
 			}
 		}
 
@@ -72,8 +66,23 @@ public class MerlinLogic {
 		return true;
 
 	}
+	
+	
+	private static boolean[] checkInputOfRegisterBirdwatcher(String name, String vorname, String benutzername, String passwort, String passwortBest, String email) {
+		boolean[] result = new boolean[6];
+		
+		result[0] = isValidUsername(benutzername);
+		result[1] = isValidName(name);
+		result[2] = isValidName(vorname);
+		result[3] = isValidEmail(email);
+		result[4] = isValidPassword(passwort);
+		result[5] = isValidPassword(passwortBest);
+		
+		return result;
+	}
+	
 	public static boolean[] checkInputOfSetup(String dbURL, String dbPort, String dbSID, String dbUsername, String dbPassword) {
-		/* Eingaben aus DatabaseSetup (delegiert durch loginToDatabase) prüfen */
+		// Eingaben aus DatabaseSetup (delegiert durch loginToDatabase) prüfen
 		boolean[] result = new boolean[5];
 
 		result[0] = isValidURL(dbURL);
@@ -84,10 +93,20 @@ public class MerlinLogic {
 
 		return result;
 	}
+	
+	public static boolean[] checkInputOfMerlinLogin(String username, String password) {
+		// Eingaben aus MerlinLogin prüfen
+		boolean[] result = new boolean[2];
 
-	private static boolean isValidURL(String url) {
-		if (url != null &&
-			!url.isEmpty())
+		result[0] = isValidUsername(username);
+		result[1] = isValidPassword(password);
+
+		return result;
+	}
+
+	private static boolean isValidURL(String string) {
+		if (string != null &&
+			!string.isEmpty())
 		{
 			return true;
 		} else {
@@ -95,10 +114,10 @@ public class MerlinLogic {
 		}
 	}
 
-	private static boolean isValidPort(String port) {
-		if (port != null &&
-			!port.isEmpty() &&
-			Integer.parseInt(port) > 0)
+	private static boolean isValidPort(String string) {
+		if (string != null &&
+			!string.isEmpty() &&
+			Integer.parseInt(string) > 0)
 		{
 			return true;
 		} else {
@@ -106,9 +125,9 @@ public class MerlinLogic {
 		}
 	}
 
-	private static boolean isValidSID(String sid) {
-		if (sid != null &&
-			!sid.isEmpty())
+	private static boolean isValidSID(String string) {
+		if (string != null &&
+			!string.isEmpty())
 		{
 			return true;
 		} else {
@@ -116,9 +135,9 @@ public class MerlinLogic {
 		}
 	}
 
-	private static boolean isValidUsername(String username) {
-		if (username != null &&
-			!username.isEmpty())
+	private static boolean isValidUsername(String string) {
+		if (string != null &&
+			!string.isEmpty())
 		{
 			return true;
 		} else {
@@ -126,28 +145,70 @@ public class MerlinLogic {
 		}
 	}
 
-	private static boolean isValidPassword(String password) {
-		if (password != null &&
-			!password.isEmpty())
+	private static boolean isValidPassword(String string) {
+		if (string != null &&
+			!string.isEmpty())
 		{
 			return true;
 		} else {
 			return false;
 		}
 	}
+	
+	private static boolean isValidName(String string) {
+		if (string != null &&
+				!string.isEmpty())
+			{
+				if (string.toLowerCase() == "arsch") {
+					throw new IllegalArgumentException("'Ärsche' sind hier nicht erlaubt!");
+				}
+				return true;
+			} else {
+				return false;
+		}
+	}
+	
+	private static boolean isValidEmail(String string) {
+		if (string != null &&
+				!string.isEmpty())
+			{
+				return true;
+			} else {
+				return false;
+		}
+	}
 
-
-
-	public static boolean loginToMerlin(String username, String password) {
-
+	
+	public static boolean isRegistered(String benutzername, char[] passwort) throws Exception {
+		BirdwatcherRepository.isRegistered(benutzername, passwort);
 		return true;
 	}
+	
+	public static boolean loginToMerlin(String username, String password, boolean rememberLogin) {
+		// TODO eigentlichen login an merlin durchführen
+		boolean ciom[] = checkInputOfMerlinLogin(username, password);
+		
+		boolean isValidInput = ciom[0] && ciom[1];
 
-	public static boolean checkInputOfMerlinLogin() {
-
-
+		
+		if (isValidInput) {
+			// TODO falls Login Daten gültig ==> einloggen, sprich, per Select-Statement alle nötigen Daten des BWs holen (id...) + im BW Objekt zwischenspeichern
+			
+			
+			
+			if (rememberLogin) {
+				// TODO Merlin Login Daten merken (inkl. dem gesetzen Häkchen)
+			}
+			
+		}
+		
+		//TODO vorrübergehendes return statement, muss noch abhängig davon gemacht werden, ob ein BW vorhanden ist oder nicht.
+		// hauptsache, die methode hier behindert erstmal nicht.
 		return true;
 	}
-
-
+	
+	public boolean loginBirdwatcher(String username, String password) {
+		
+		return true;
+	}
 }

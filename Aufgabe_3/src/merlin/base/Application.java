@@ -1,80 +1,75 @@
 package merlin.base;
 
-import static merlin.gui.enums.ExitCode.*;
 import static merlin.utils.ConstantElems.*;
 
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Hashtable;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import merlin.gui.DatabaseSetup;
-import merlin.gui.MerlinLogin;
-import merlin.gui.MerlinMainWindow;
 import merlin.gui.enums.ExitCode;
 
 public final class Application {
 	
-	public DbWrapper database;
+	private DbWrapper database;
 	public ExitCode exitCode;
 	private static Application instance;
 
-	private Application() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, UnsupportedLookAndFeelException {
+	private Application() throws Exception {
+		loadProperties();
+		putPropDefaults();
+		ensurePropConsistency();
 		
+		String ret = getEncProp(loginDataPropKey);
+		System.out.println(ret);
+		
+		database = DbWrapper.getInstance();
 	}
 
-	public static Application getInstance() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, UnsupportedLookAndFeelException {
+	public static Application getInstance() throws Exception {
 		if (instance == null) {
 			instance = new Application();
 		}
 		return instance;
 	}
 	
+	/*
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
 	public void run() throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
-		// Initialisierungen
-		
-		loadProperties();
-		database = DbWrapper.getInstance();
-		
-		exitCode = null;
 		DatabaseSetup.showDialog();
-		System.out.println("ExitCode = " + exitCode);
 		
-		if (exitCode == QUIT_DIALOG || exitCode == CANCEL_BUTTON_PUSHED) {
-			shutdown();
-		} else if (exitCode == OK_BUTTON_PUSHED) {
-			// Datenbankeinrichtung wurde bestätigt
-			// GUI - Login Screen anzeigen
-			exitCode = null;
-			System.out.println("Exitcode auf null setzen --> " + exitCode);
-			MerlinLogin.main();
-			System.out.println("ExitCode = " + exitCode);
-			
-			if (exitCode == LOGIN_BUTTON_PUSHED) {
-				exitCode = MerlinMainWindow.main();
-			} else if (exitCode == REGISTER_BUTTON_PUSHED) {
-				
-			}
-		}
-//		exitCode = DatabaseSetup.showDialog();
-//		System.out.println("ExitCode = " + exitCode);
-//		if (exitCode == QUIT_DIALOG || exitCode == CANCEL_BUTTON_PUSHED) {
-//			shutdown();
-//		} else if (exitCode == OK_BUTTON_PUSHED) {
-//			// Datenbankeinrichtung wurde bestätigt
-//			// GUI - Login Screen anzeigen
-//			exitCode = MerlinLogin.main();
-//			
-//			if (exitCode == LOGIN_BUTTON_PUSHED) {
-//				exitCode = MerlinMainWindow.main();
-//			} else if (exitCode == REGISTER_BUTTON_PUSHED) {
-//				
-//			}
-//		}
-		
-		System.out.println("ups. doch schon hier? Das schreit nach: korrekte Modalitäten Behandlungen!");
-		
+//		System.out.println("hash map");
+//		
+//		System.out.println(propDefaults);
+//		
+//		System.out.println(getProp(dbURLPropKey));
+//		System.out.println(getProp(dbPortPropKey));
+//		System.out.println(getProp(dbSIDPropKey));
+//		System.out.println(getProp(rememberLoginPropKey));
+//		System.out.println(getProp(loginDataPropKey));
+//		System.out.println(getProp(loginDataBirdwatcherPropKey));
+//		
+//		shutdown();
 	}
+	/*
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
 	
 	public void shutdown(boolean saveProperties) {
 		// anything that remains to be shut down properly - will be shut down here
@@ -93,10 +88,9 @@ public final class Application {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.err.println("SQL Exception on shutdown.");
+		} finally {
+			database = null;
 		}
-		
-		// finally
-		database = null;
 		
 		if (saveProperties) {
 			try {
@@ -108,15 +102,37 @@ public final class Application {
 		}
 		
 		System.err.println("SYSTEM SHUTDOWN");
-		System.exit(0);
+		/*****/ System.exit(0); /*****/
 	}
 	
 	public void shutdown() {
-		shutdown(false);
+		shutdown(true);
 	}
 	
 	
 	/* PROPERTIES-OBJECT ACCESSORS */
+	
+	private void putPropDefaults() {
+		Hashtable<String, String> pd = propDefaults;
+		
+		pd.put(dbURLPropKey, "oracle.informatik.haw-hamburg.de");
+		pd.put(dbPortPropKey, "1521");
+		pd.put(dbSIDPropKey, "inf09");
+		pd.put(rememberLoginPropKey, "false");
+		pd.put(loginDataPropKey, "");
+		pd.put(loginDataBirdwatcherPropKey, "");
+	}
+	
+	public void ensurePropConsistency() {
+		Hashtable<String, String> pd = propDefaults;
+		
+		if (getProp(dbURLPropKey) == null) {saveProp(dbURLPropKey, pd.get(dbURLPropKey));}
+		if (getProp(dbPortPropKey) == null) {saveProp(dbPortPropKey, pd.get(dbPortPropKey));}
+		if (getProp(dbSIDPropKey) == null) {saveProp(dbSIDPropKey, pd.get(dbSIDPropKey));}
+		if (getProp(rememberLoginPropKey) == null) {saveProp(rememberLoginPropKey, pd.get(rememberLoginPropKey));}
+		if (getProp(loginDataPropKey) == null) {saveProp(loginDataPropKey, pd.get(loginDataPropKey));}
+		if (getProp(loginDataBirdwatcherPropKey) == null) {saveProp(loginDataBirdwatcherPropKey, pd.get(loginDataPropKey));}
+	}
 	
 	public void saveProp(String property, String value) {
 		properties.setProperty(property, value);
@@ -127,8 +143,10 @@ public final class Application {
 	}
 	
 	public String getProp(String property) {
-		return properties.getProperty(property);
+		String result = properties.getProperty(property);
+		return result;
 	}
+		
 	
 	
 	public void saveEncProp(String property, String value) throws Exception {
@@ -146,13 +164,27 @@ public final class Application {
 	}
 	
 	public String[] getLogin(String encLoginData) throws Exception {
-		String loginData   = getEncProp(encLoginData);		
-		String decUsername = loginData.substring(0, loginData.indexOf(loginDataSplitString));
-		String decPwd	   = loginData.substring(decUsername.length()).replaceAll(loginDataSplitString, "");
-		
-		String[] result = {decUsername, decPwd};
-		
-		return result;
+		// Login Daten String entschlüsseln
+		String loginData   = getEncProp(encLoginData);
+
+		if (!loginData.isEmpty()) {
+			String decUsername = loginData.substring(0, loginData.indexOf(loginDataSplitString));
+			String decPwd	   = loginData.substring(decUsername.length()).replaceAll(loginDataSplitString, "");
+			
+			String result[] = {decUsername, decPwd};
+			return result;
+		} else {
+			String result[] = {"",""};
+			return result;
+		}
+	}
+	
+	public String getDbUsername() throws Exception {
+		return getUsername(getLogin(loginDataPropKey));
+	}
+	
+	public String getDbPassword() throws Exception {
+		return getPassword(getLogin(loginDataPropKey));
 	}
 	
 	public String getUsername(String[] loginData) {
@@ -184,16 +216,16 @@ public final class Application {
 		return result;
 	}
 	
-	public String getURL(String[] connectionData) {
-		return connectionData[0];
+	public String getDbURL() {
+		return getConnectionData()[0];
 	}
 	
-	public String getPort(String[] connectionData) {
-		return connectionData[1];
+	public String getDbPort() {
+		return getConnectionData()[1];
 	}
 	
-	public String getSID(String[] connectionData) {
-		return connectionData[2];
+	public String getDbSID() {
+		return getConnectionData()[2];
 	}
 	
 	
@@ -204,12 +236,36 @@ public final class Application {
 	public String[] getBirdwatcherLogin() throws Exception {
 		return getLogin(loginDataBirdwatcherPropKey);
 	}
+	
+	
+	public DbWrapper database() {
+		return this.database;
+	}
 
 	
 	public void initDatabaseCompletely(String dbURL, String dbPort, String dbSID, String dbUsername, String dbPassword) throws Exception {
 		database = DbWrapper.getInstance();
 		database.setConnectionData(dbURL, dbPort, dbSID);
 		database.setLoginData(dbUsername, dbPassword);
+	}
+	
+	
+	public void closeMerlinYesNo(Frame frame) {
+		((JFrame) frame).setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		
+		int diagAnswer = JOptionPane.showConfirmDialog(frame, 
+                "Möchten Sie MERLIN wirklich beenden?", "MERLIN beenden", 
+                JOptionPane.YES_NO_OPTION); 
+        
+        // Close if user confirmed 
+        if (diagAnswer == JOptionPane.YES_OPTION) {
+        	try {
+        		((JFrame) frame).setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				Application.getInstance().shutdown(false);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        }
 	}
 
 }

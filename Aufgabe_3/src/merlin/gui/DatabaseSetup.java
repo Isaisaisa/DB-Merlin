@@ -1,20 +1,22 @@
 package merlin.gui;
 
-import static merlin.gui.enums.ExitCode.CANCEL_BUTTON_PUSHED;
-import static merlin.gui.enums.ExitCode.OK_BUTTON_PUSHED;
-import static merlin.gui.enums.ExitCode.QUIT_DIALOG;
 import static merlin.utils.ConstantElems.defaultDbPort;
 import static merlin.utils.ConstantElems.defaultDbSID;
 import static merlin.utils.ConstantElems.defaultDbURL;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
+
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -28,9 +30,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import merlin.base.Application;
-import merlin.base.DbWrapper;
-import merlin.gui.enums.ExitCode;
 import merlin.logic.impl.MerlinLogic;
+
+import java.awt.Window.Type;
 
 public class DatabaseSetup extends JDialog {
 
@@ -38,7 +40,6 @@ public class DatabaseSetup extends JDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = -1060776611286417913L;
-	private static ExitCode exitCode = CANCEL_BUTTON_PUSHED;
 	private final JPanel panelDatabaseSetup = new JPanel();
 	
 	private JTextField 		txtAKennung;
@@ -47,8 +48,10 @@ public class DatabaseSetup extends JDialog {
 	private JTextField 		txtPort;
 	private JTextField 		txtSID;
 	private JCheckBox 		chkRememberLogin;
-	private JLabel 	lblConnectionState;
-	protected DbWrapper 	database;
+	private JLabel 			lblConnectionState;
+	private static boolean 	proceedToNextDialog = false;
+	
+	private Application		app = Application.getInstance();
 	
 	/**
 	 * Launch the application.
@@ -59,43 +62,62 @@ public class DatabaseSetup extends JDialog {
 	 * @throws ClassNotFoundException 
 	 * @throws IOException 
 	 */
-	public static ExitCode showDialog(ModalityType modalityType) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException, IOException {
-		
+	public static void showDialog(ModalityType modalityType)
+			throws ClassNotFoundException, InstantiationException,
+			IllegalAccessException, UnsupportedLookAndFeelException,
+			IOException {
+
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		
+
 		try {
 			DatabaseSetup dialog = new DatabaseSetup(modalityType);
+			dialog.addWindowListener(new WindowAdapter() {
+				@Override
+				public void windowClosed(WindowEvent e) {
+					if (!proceedToNextDialog) {
+						try {
+							Application.getInstance().shutdown();
+						} catch (Exception exc) {
+							exc.printStackTrace();
+							System.out.println(exc.getMessage());
+						}
+					}
+				}
+
+				@Override
+				public void windowClosing(WindowEvent e) {
+				}
+			});
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			
+			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+			dialog.setLocation(dim.width/2 - dialog.getSize().width/2, dim.height/2 - dialog.getSize().height/2);
+			
+			
 			dialog.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		Application.getInstance().exitCode = exitCode;
-		return exitCode ;
 	}
 	
-	public static ExitCode showDialog() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException, IOException {
-		return showDialog(ModalityType.APPLICATION_MODAL);
-	}
-	
-	public static DatabaseSetup valueOf(ModalityType mt) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, UnsupportedLookAndFeelException {
+	public static DatabaseSetup valueOf(ModalityType mt) throws Exception {
 		return new DatabaseSetup(mt);
 	}
 	
-	public static DatabaseSetup valueOf() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, UnsupportedLookAndFeelException {
+	public static DatabaseSetup valueOf() throws Exception {
 		return new DatabaseSetup(ModalityType.APPLICATION_MODAL);
 	}
 	
+	public static void showDialog() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException, IOException {
+		showDialog(ModalityType.APPLICATION_MODAL);
+	}
+	
+	
 	/**
 	 * Create the dialog.
-	 * @throws UnsupportedLookAndFeelException 
-	 * @throws IOException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 * @throws ClassNotFoundException 
+	 * @throws Exception 
 	 */
-	public DatabaseSetup(ModalityType modalityType) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, UnsupportedLookAndFeelException {
+	public DatabaseSetup(ModalityType modalityType) throws Exception {
 //		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		setTitle("Datenbankverbindung einrichten");
 		setModalityType(modalityType);
@@ -109,8 +131,6 @@ public class DatabaseSetup extends JDialog {
 		getContentPane().add(panelDatabaseSetup, BorderLayout.CENTER);
 		panelDatabaseSetup.setLayout(null);
 		
-		database = Application.getInstance().database;
-		
 		JLabel label = new JLabel("");
 		label.setBounds(10, 11, 29, 20);
 		panelDatabaseSetup.add(label);
@@ -122,6 +142,12 @@ public class DatabaseSetup extends JDialog {
 		loginPanel.setLayout(null);
 		{
 			txtAKennung = new JTextField();
+			// TODO Zugriff auf verschlüsselte Daten fixen 
+			/* at merlin.base.Application.getEncProp(Application.java:97)
+			 * at merlin.base.Application.getLogin(Application.java:107)
+			 * at merlin.base.Application.getDbUsername(Application.java:117)
+			 */
+			txtAKennung.setText(app.getDbUsername());
 			txtAKennung.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusGained(FocusEvent arg0) {
@@ -129,7 +155,7 @@ public class DatabaseSetup extends JDialog {
 					txtAKennung.selectAll();
 				}
 			});
-			txtAKennung.setColumns(10);
+			txtAKennung.setColumns(20);
 			txtAKennung.setBounds(81, 19, 61, 20);
 			loginPanel.add(txtAKennung);
 		}
@@ -147,6 +173,8 @@ public class DatabaseSetup extends JDialog {
 					pwdPasswort.selectAll();
 				}
 			});
+			// TODO Zugriff auf verschlüsselte Daten fixen
+			pwdPasswort.setText(app.getDbPassword());
 			pwdPasswort.setToolTipText("Sie k\u00F6nnen uns vertrauen...!");
 			pwdPasswort.setBounds(223, 19, 144, 20);
 			loginPanel.add(pwdPasswort);
@@ -182,7 +210,8 @@ public class DatabaseSetup extends JDialog {
 				}
 			});
 			txtURL.setBackground(Color.WHITE);
-			txtURL.setText(defaultDbURL);
+			txtURL.setText(app.getDbURL());
+//			txtURL.setText(defaultDbURL);
 			txtURL.setColumns(10);
 			txtURL.setBounds(48, 19, 319, 20);
 			dbPanel.add(txtURL);
@@ -201,8 +230,9 @@ public class DatabaseSetup extends JDialog {
 					txtPort.selectAll();
 				}
 			});
-			txtPort.setText(defaultDbPort);
-			txtPort.setColumns(10);
+			txtPort.setText(app.getDbPort());
+//			txtPort.setText(defaultDbPort);
+			txtPort.setColumns(5);
 			txtPort.setBounds(48, 50, 319, 20);
 			dbPanel.add(txtPort);
 		}
@@ -220,7 +250,8 @@ public class DatabaseSetup extends JDialog {
 					txtSID.selectAll();
 				}
 			});
-			txtSID.setText(defaultDbSID);
+			txtSID.setText(app.getDbSID());
+//			txtSID.setText(defaultDbSID);
 			txtSID.setColumns(10);
 			txtSID.setBounds(48, 81, 319, 20);
 			dbPanel.add(txtSID);
@@ -250,6 +281,7 @@ public class DatabaseSetup extends JDialog {
 			{
 				JButton btnAnmelden = new JButton("OK");
 				btnAnmelden.addActionListener(new ActionListener() {
+
 					public void actionPerformed(ActionEvent arg0) {
 						
 						// Fehlerhafte Felder einfärben
@@ -261,13 +293,12 @@ public class DatabaseSetup extends JDialog {
 									txtPort.getText(), txtSID.getText(),
 									txtAKennung.getText(), new String(
 									pwdPasswort.getPassword()),
-									chkRememberLogin.isSelected()))
-							{
-								exitCode = OK_BUTTON_PUSHED;
+									chkRememberLogin.isSelected())) {
 								dispose();
+								proceedToNextDialog = true;
+								MerlinLogin.main();
 							}
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 
@@ -287,8 +318,13 @@ public class DatabaseSetup extends JDialog {
 				JButton btnBeenden = new JButton("Beenden");
 				btnBeenden.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						exitCode = QUIT_DIALOG;
 						dispose();
+						try {
+							Application.getInstance().shutdown();
+						} catch (Exception e) {
+							e.printStackTrace();
+							System.err.println("Fehler beim Beenden des DatabaseSetup Dialogs.");
+						}
 					}
 				});
 				btnBeenden.setActionCommand("Cancel");
