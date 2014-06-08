@@ -26,5 +26,4 @@ public class PropertiesTest {
 	public void testGetDbURL() throws Exception {
 		assertEquals(propDefaults.get(dbURLPropKey),Application.getInstance().getDbURL());
 	}
-
 }

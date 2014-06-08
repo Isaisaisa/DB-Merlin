@@ -14,7 +14,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
+
 
 
 import merlin.base.interfaces.DbWrapperInterface;
@@ -32,12 +34,15 @@ public final class DbWrapper implements DbWrapperInterface {
 	private String 				dbSID  = defaultDbSID;
 	private String				dbUsername;
 	private byte[]  			dbPassword; // setter auto-encrypts and getter auto-decrypts
+	
+	private Hashtable<String, PreparedStatement> preparedStatements;
 
 	
 	// PRIVATE CONSTRUCTOR USED BY SINGLETON PATTERN: DbWrapper nur instanziieren und Treiber initialisieren
 	private DbWrapper() throws ClassNotFoundException {
 //		this.resultContainer = null;
 		initDriver();
+		prepareStatements();
 	}
 	
 	// SINGLETON PATTERN INIT
@@ -46,6 +51,12 @@ public final class DbWrapper implements DbWrapperInterface {
 			instance = new DbWrapper();
 		}
 		return instance;
+	}
+	
+	private void prepareStatements() {
+		System.out.println("Preparing statements...");
+		
+		
 	}
 	
 
