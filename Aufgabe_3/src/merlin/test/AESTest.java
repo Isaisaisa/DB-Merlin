@@ -1,4 +1,4 @@
-package merlin.base;
+package merlin.test;
 
 import static org.junit.Assert.*;
 import static merlin.base.AES.*;

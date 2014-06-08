@@ -1,5 +1,7 @@
 package merlin.gui.enums;
 
+import java.io.IOException;
+
 import javax.swing.UnsupportedLookAndFeelException;
 
 import merlin.gui.MerlinLogin;
@@ -25,6 +27,9 @@ public enum WindowState implements State{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (UnsupportedLookAndFeelException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

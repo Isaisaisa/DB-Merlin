@@ -112,7 +112,7 @@ public final class Application {
 	
 	/* PROPERTIES-OBJECT ACCESSORS */
 	
-	private void putPropDefaults() {
+	public void putPropDefaults() {
 		Hashtable<String, String> pd = propDefaults;
 		
 		pd.put(dbURLPropKey, "oracle.informatik.haw-hamburg.de");

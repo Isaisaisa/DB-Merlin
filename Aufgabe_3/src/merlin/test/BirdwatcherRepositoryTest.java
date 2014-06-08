@@ -18,12 +18,9 @@ import org.junit.Test;
 
 
 public class BirdwatcherRepositoryTest {
-//	private static DbWrapper dbWrapper;
 	
 @BeforeClass
 public static void beforeClass() throws ClassNotFoundException, SQLException{
-//	dbWrapper = DbWrapper.valueOf();
-//	
 	System.out.println( "@BeforeClass" );
 	}
 @AfterClass 
@@ -41,8 +38,13 @@ public void tearDown(){
 
 @Test
 public void createTest() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, UnsupportedLookAndFeelException {
+	
+	// test repr‰sentativ??
+	
+	Birdwatcher newBw = BirdwatcherRepository.create("Watcher", "Birdy", "dimo", "merlindemo", "demo@merlin.de");
+	// TODO id des erstellten birdwatchers holen und anschlieﬂend birdwatcher Im repo aufnehmen
 	Birdwatcher bw = BirdwatcherImpl.valueOf("Watcher" , "Birdy", "dimo", "merlindemo", "demo@merlin.de");
-	Birdwatcher newBw = BirdwatcherRepository.create("Watcher", "Birdy", "dimo", "merlindemo".toCharArray(), "demo@merlin.de");
+	
 	assertEquals(bw, newBw);
 }
 
