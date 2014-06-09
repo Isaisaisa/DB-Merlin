@@ -146,7 +146,7 @@ public class MerlinLogin {
 		 * 
 		 * 
 		 */
-		panelRegistration.setVisible(false);
+		panelRegistration.setVisible(true);
 		/*
 		 * 
 		 * 
@@ -158,7 +158,7 @@ public class MerlinLogin {
 		panelRegistration.setLayout(null);
 
 		txtVorname = new JTextField();
-		txtVorname.setBounds(117, 110, 204, 20);
+		txtVorname.setBounds(117, 79, 204, 20);
 		panelRegistration.add(txtVorname);
 		txtVorname.setColumns(10);
 
@@ -226,7 +226,7 @@ public class MerlinLogin {
 						panelRegistration, lblWelcomeText }));
 
 		txtName = new JTextField();
-		txtName.setBounds(117, 82, 204, 20);
+		txtName.setBounds(117, 107, 204, 20);
 		panelRegistration.add(txtName);
 		txtName.setColumns(10);
 
@@ -343,12 +343,15 @@ public class MerlinLogin {
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					MerlinLogic.insertBirdwatcher(txtName.getText().trim(),
+					boolean isBirdwatcherInserted = MerlinLogic.insertBirdwatcher(txtName.getText().trim(),
 							txtVorname.getText().trim(),
 							txtUsernameReg.getText().trim(),
 							new String(txtPasswordReg.getPassword()),
 							new String(txtPasswordRegBest.getPassword()),
 							txtEmail.getText().trim());
+					if (isBirdwatcherInserted == true){
+						panelRegistration.setVisible(false);
+					}
 				} catch (IllegalPasswordException e) {
 					System.out.println("Beide Passwörter müssen übereinstimmten!");
 					e.printStackTrace();

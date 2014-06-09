@@ -30,19 +30,17 @@ import java.awt.Font;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.JProgressBar;
 
 import java.awt.Component;
+import javax.swing.JTabbedPane;
 
 public class MerlinMainWindow {
 
 	private JFrame frmMerlinMain;
-	private JTextPane txtpnStatement;
 	private JTable table;
-	private JProgressBar progressBar;
 	private JTable tableCheckliste;
 
 	/**
@@ -243,6 +241,10 @@ public class MerlinMainWindow {
 		));
 		tableCheckliste.setBounds(10, 11, 740, 471);
 		panel_2.add(tableCheckliste);
+		
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setBounds(0, 0, 5, 5);
+		panel_2.add(tabbedPane);
 		
 		JPanel panelBeobachtungsliste = new JPanel();
 		panelMain.add(panelBeobachtungsliste, "name_117830304432961");

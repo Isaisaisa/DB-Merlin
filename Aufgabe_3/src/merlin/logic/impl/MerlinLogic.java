@@ -13,7 +13,7 @@ import static merlin.utils.ConstantElems.*;
 public class MerlinLogic {
 
 	//TODO Zeichen der Eingaben abfangen und auswerten
-	public static void insertBirdwatcher(String name, String vorname, String benutzername, String passwort, String passwortBest, String email) throws Exception {
+	public static boolean insertBirdwatcher(String name, String vorname, String benutzername, String passwort, String passwortBest, String email) throws Exception {
 
 		// Anlegen des Birdwatchers
 		if (BirdwatcherRepository.create(name, vorname, benutzername, passwort, email) == null) {
@@ -24,6 +24,7 @@ public class MerlinLogic {
 				throw new IllegalPasswordException("Passwörter ungleich");
 			}
 		}
+		return true;
 	}
 	
 //	TODO login überprüfen
@@ -179,10 +180,10 @@ public class MerlinLogic {
 	}
 
 	
-	public static boolean isRegistered(String benutzername, char[] passwort) throws Exception {
-		BirdwatcherRepository.isRegistered(benutzername, passwort);
-		return true;
-	}
+//	public static boolean isRegistered(String benutzername, char[] passwort) throws Exception {
+//		BirdwatcherRepository.isRegistered(benutzername, passwort);
+//		return true;
+//	}
 	
 	public static boolean[] loginToMerlin(String username, String password, boolean rememberLogin) {
 		// TODO eigentlichen login an merlin durchführen
