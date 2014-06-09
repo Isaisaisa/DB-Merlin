@@ -239,7 +239,7 @@ public class MerlinMainWindow {
 				"New column", "New column"
 			}
 		));
-		tableCheckliste.setBounds(10, 11, 740, 471);
+		tableCheckliste.setBounds(10, 22, 740, 471);
 		panel_2.add(tableCheckliste);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);

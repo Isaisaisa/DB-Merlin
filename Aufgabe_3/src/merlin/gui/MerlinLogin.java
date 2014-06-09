@@ -34,6 +34,7 @@ import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.SwingConstants;
 
 public class MerlinLogin {
 
@@ -63,8 +64,11 @@ public class MerlinLogin {
 	private JLabel lblPasswort;
 	private JLabel lblUsername;
 	private JMenuBar menuBar;
+	private JPanel panelAfterRegister;
 	
 	private static boolean proceedToNextDialog = false;
+	private JPanel panel_AfterRegister;
+	private JLabel lblAfterRegister;
 
 	/**
 	 * Launch the application.
@@ -229,7 +233,21 @@ public class MerlinLogin {
 		txtName.setBounds(117, 107, 204, 20);
 		panelRegistration.add(txtName);
 		txtName.setColumns(10);
+		
+		
+		panel_AfterRegister = new JPanel();
+		panel_AfterRegister.setBounds(330, 161, 332, 276);
+		frmLogin.getContentPane().add(panel_AfterRegister);
+		panel_AfterRegister.setVisible(false);
 
+		lblAfterRegister = new JLabel("<html><b><p style=\"font-size: 12px; text-align:center;\">Sie k\u00F6nnen sich jetzt <br/> mit Ihrem Benutzernamen <br/> und Passwort anmelden</p></b>");
+		lblAfterRegister.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblAfterRegister.setForeground(new Color(50, 205, 50));
+		lblAfterRegister.setHorizontalAlignment(SwingConstants.LEFT);
+		panel_AfterRegister.add(lblAfterRegister);
+				
+		
+		
 		panelLogin = new JPanel();
 		panelLogin.setBorder(new BevelBorder(BevelBorder.RAISED, null, null,
 				null, null));
@@ -351,6 +369,8 @@ public class MerlinLogin {
 							txtEmail.getText().trim());
 					if (isBirdwatcherInserted == true){
 						panelRegistration.setVisible(false);
+						panel_AfterRegister.setVisible(true);
+						lblAfterRegister.setVisible(true);
 					}
 				} catch (IllegalPasswordException e) {
 					System.out.println("Beide Passwörter müssen übereinstimmten!");
