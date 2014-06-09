@@ -27,9 +27,6 @@ public final class Application {
 		putPropDefaults();
 		ensurePropConsistency();
 		
-		String ret = getEncProp(loginDataPropKey);
-		System.out.println(ret);
-		
 		database = DbWrapper.getInstance();
 	}
 
@@ -50,18 +47,7 @@ public final class Application {
 	public void run() throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		DatabaseSetup.showDialog();
 		
-//		System.out.println("hash map");
-//		
-//		System.out.println(propDefaults);
-//		
-//		System.out.println(getProp(dbURLPropKey));
-//		System.out.println(getProp(dbPortPropKey));
-//		System.out.println(getProp(dbSIDPropKey));
-//		System.out.println(getProp(rememberLoginPropKey));
-//		System.out.println(getProp(loginDataPropKey));
-//		System.out.println(getProp(loginDataBirdwatcherPropKey));
-//		
-//		shutdown();
+		
 	}
 	/*
 	 * 
@@ -249,6 +235,11 @@ public final class Application {
 		database.setLoginData(dbUsername, dbPassword);
 	}
 	
+	
+	public void centerWindow(JFrame jframe) {
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		jframe.setLocation(dim.width/2 - jframe.getSize().width/2, dim.height/2 - jframe.getSize().height/2);
+	}
 	
 	public void closeMerlinYesNo(Frame frame) {
 		((JFrame) frame).setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);

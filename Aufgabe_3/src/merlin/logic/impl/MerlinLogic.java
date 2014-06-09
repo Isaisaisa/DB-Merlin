@@ -184,7 +184,7 @@ public class MerlinLogic {
 		return true;
 	}
 	
-	public static boolean loginToMerlin(String username, String password, boolean rememberLogin) {
+	public static boolean[] loginToMerlin(String username, String password, boolean rememberLogin) {
 		// TODO eigentlichen login an merlin durchführen
 		boolean ciom[] = checkInputOfMerlinLogin(username, password);
 		
@@ -204,7 +204,7 @@ public class MerlinLogic {
 		
 		//TODO vorrübergehendes return statement, muss noch abhängig davon gemacht werden, ob ein BW vorhanden ist oder nicht.
 		// hauptsache, die methode hier behindert erstmal nicht.
-		return true;
+		return ciom;
 	}
 	
 	public boolean loginBirdwatcher(String username, String password) {

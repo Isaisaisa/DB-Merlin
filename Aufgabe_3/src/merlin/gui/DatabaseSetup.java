@@ -32,7 +32,6 @@ import javax.swing.border.TitledBorder;
 import merlin.base.Application;
 import merlin.logic.impl.MerlinLogic;
 
-import java.awt.Window.Type;
 
 public class DatabaseSetup extends JDialog {
 
@@ -90,11 +89,11 @@ public class DatabaseSetup extends JDialog {
 			});
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			
+			// center window on screen and make it visible
 			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 			dialog.setLocation(dim.width/2 - dialog.getSize().width/2, dim.height/2 - dialog.getSize().height/2);
-			
-			
 			dialog.setVisible(true);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -288,6 +287,7 @@ public class DatabaseSetup extends JDialog {
 						boolean badInput = false;
 						Color badColor = Color.RED;
 						
+						// TODO boolean array auswerten, um festzustellen, welche Felder aufgrund von fehlern eingefärbt werden müssen
 						try {
 							if (MerlinLogic.loginToDatabase(txtURL.getText(),
 									txtPort.getText(), txtSID.getText(),
@@ -301,7 +301,6 @@ public class DatabaseSetup extends JDialog {
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-
 					}
 
 				});

@@ -129,7 +129,7 @@ public final class DbWrapper implements DbWrapperInterface {
 	 * 
 	 * 
 	 */
-	public List<HashMap<String, Object>> resultSetToArrayList(ResultSet rs) throws SQLException {
+	public ArrayList<HashMap<String, Object>> resultSetToArrayList(ResultSet rs) throws SQLException {
 		System.out.println("Beginne ResultSet Verarbeitung...");
 		
 		ResultSetMetaData md = rs.getMetaData();
@@ -287,7 +287,10 @@ public final class DbWrapper implements DbWrapperInterface {
 	// Gibt eine Object-Matrix zurück, die aus der Ergebnismenge des Query's berechnet wird.
 	// Kann zur Erstellung von Tabellen bzw. Befüllung von JTables u.ä. benutzt werden.
 	public List<HashMap<String, Object>> getResultOfQuery(String query) throws Exception {
-		return processResultSet( sendQuery(query) );
+		ResultSet resultSet = sendQuery(query);
+		List<HashMap<String, Object>> result = processResultSet( resultSet );
+		resultSet.close();
+		return result;
 	}
 	
 	
@@ -304,12 +307,12 @@ public final class DbWrapper implements DbWrapperInterface {
 	
 	// Query an Datenbank senden
 	public ResultSet sendQuery(String query) throws Exception {
-		if (preSendChecks()) {
-			connect();
-		}
+//		if (preSendChecks()) {
+//			connect();
+//		}
 		
 		Statement statement = connection().createStatement();
-		statement.closeOnCompletion(); // Statement automatischen schließen lassen, sobald alle referenzierten Ergebnismengen (ResultSets) geschlossen wurden
+//		statement.closeOnCompletion(); // Statement automatischen schließen lassen, sobald alle referenzierten Ergebnismengen (ResultSets) geschlossen wurden
 		return statement.executeQuery(query);
 	}
 	
@@ -325,9 +328,5 @@ public final class DbWrapper implements DbWrapperInterface {
 	
 	private void debugPrint(String debugThis) {
 		debugPrint(debugThis, System.out);
-	}
-	
-	private void debugPrint(String debugThis, boolean err) {
-		debugPrint(debugThis, System.err);
 	}
 }

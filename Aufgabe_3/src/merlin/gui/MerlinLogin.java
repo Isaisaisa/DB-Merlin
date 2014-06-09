@@ -3,10 +3,8 @@ package merlin.gui;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -19,7 +17,6 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -66,6 +63,8 @@ public class MerlinLogin {
 	private JLabel lblPasswort;
 	private JLabel lblUsername;
 	private JMenuBar menuBar;
+	
+	private static boolean proceedToNextDialog = false;
 
 	/**
 	 * Launch the application.
@@ -87,9 +86,8 @@ public class MerlinLogin {
 				try {
 					MerlinLogin window = new MerlinLogin();
 					
-					Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-					window.frmLogin.setLocation(dim.width/2 - window.frmLogin.getSize().width/2, dim.height/2 - window.frmLogin.getSize().height/2);
-					
+					// center window on screen and make it visible
+					Application.getInstance().centerWindow(window.frmLogin);
 					window.frmLogin.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -121,6 +119,14 @@ public class MerlinLogin {
 			}
 			@Override
 			public void windowClosed(WindowEvent arg0) {
+				if (!proceedToNextDialog) {
+					try {
+						Application.getInstance().shutdown();
+					} catch (Exception exc) {
+						exc.printStackTrace();
+						System.out.println(exc.getMessage());
+					}
+				}
 			}
 		});
 		frmLogin.setTitle("MERLIN - Anmeldung");
@@ -136,6 +142,15 @@ public class MerlinLogin {
 		frmLogin.getContentPane().add(label);
 
 		panelRegistration = new JPanel();
+		/*
+		 * 
+		 * 
+		 */
+		panelRegistration.setVisible(false);
+		/*
+		 * 
+		 * 
+		 */
 		panelRegistration.setBorder(new EtchedBorder(EtchedBorder.LOWERED,
 				null, null));
 		panelRegistration.setBounds(330, 161, 332, 276);
@@ -304,12 +319,20 @@ public class MerlinLogin {
 //				System.out.println(alpha);
 //				System.out.println(beta);
 				
-				MerlinLogic.loginToMerlin(txtUsernameLog.getText(), new String(txtPasswordLog.getPassword()), chkRememberUser.isSelected());
+				boolean[] ret = MerlinLogic.loginToMerlin(txtUsernameLog.getText(), new String(txtPasswordLog.getPassword()), chkRememberUser.isSelected());
+				
+				if (ret[0] && ret[1]) {
+					frmLogin.dispose();
+					proceedToNextDialog = true;
+					try {
+						MerlinMainWindow.main();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 				
 //				try {
 //					MerlinLogic.isRegistered(txtUsernameLog.getText().trim(), txtPasswordLog.getPassword());
-//				} catch (ClassNotFoundException e) {
-//					e.printStackTrace();
 //				} catch (Exception e) {
 //					e.printStackTrace();
 //				}
