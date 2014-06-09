@@ -7,8 +7,10 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 
+import javax.imageio.*;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -34,7 +36,10 @@ import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import javax.swing.SwingConstants;
+
+import java.awt.SystemColor;
 
 public class MerlinLogin {
 
@@ -146,6 +151,7 @@ public class MerlinLogin {
 		frmLogin.getContentPane().add(label);
 
 		panelRegistration = new JPanel();
+		panelRegistration.setBackground(SystemColor.textHighlightText);
 		/*
 		 * 
 		 * 
@@ -292,6 +298,19 @@ public class MerlinLogin {
 		frmLogin.getContentPane().add(panel);
 		panel.setLayout(null);
 
+		
+		
+//		// Wollte Hintergrundbild haben :(
+//		JLabel j1 = new JLabel();
+//		try {
+//			j1.setIcon(new ImageIcon(ImageIO.read(new File("C:\\Users\\Louisa\\Desktop"))));
+//		} catch (IOException e1) {
+//			System.out.println("Bild existiert nicht, Image does not exctist");
+//		}
+//		panel.add(j1);
+//		j1.validate();
+		
+		
 		lblWelcomeText = new JLabel(
 				"<html><b><p style=\"font-size: 16px; text-align:center;\">MERLIN</p></b>\r\n<p style=\"font-size: 8px; text-align:center;\">\r\n\t<b>Ein integriertes Informationssystem f\u00FCr die Verwaltung und Auswertung von Naturbeobachtungen</b></p>\r\n<br/>\r\nHerzlich willkommen zu MERLIN!<br/>\r\nMERLIN ist das ideale Online-Werkzeug f\u00FCr Naturbeobachter!\r\nSchauen Sie mit Hilfe von regionalen Checklisten, was es zu Entdecken gibt und f\u00FChren Sie Ihre eigene Beobachtungsliste, die Sie einfach verwalten und auswerten k\u00F6nnen.<br/><br/>\r\n\r\nRegistrieren Sie sich jetzt und legen sofort los, oder probieren Sie unseren Demo-Login aus, um sich einen Eindruck zu verschaffen!<br/><br/>\r\nBenutzername: <b>demo</b><br/>\r\nPasswort: <b>merlindemo</b><br/><br/>\r\n\r\nSie sind bereits registrierter Beobachter? Dann k\u00F6nnen Sie sich jetzt einloggen!");
 		lblWelcomeText.setBounds(24, 0, 263, 328);
