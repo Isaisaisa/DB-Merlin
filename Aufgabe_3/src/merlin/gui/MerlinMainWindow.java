@@ -36,12 +36,16 @@ import javax.swing.JProgressBar;
 
 import java.awt.Component;
 import javax.swing.JTabbedPane;
+import javax.swing.JScrollBar;
+import javax.swing.JToggleButton;
 
 public class MerlinMainWindow {
 
 	private JFrame frmMerlinMain;
 	private JTable table;
 	private JTable tableCheckliste;
+	private JTable tbCheckliste;
+	private JPanel panelMain;
 
 	/**
 	 * Launch the application.
@@ -95,6 +99,7 @@ public class MerlinMainWindow {
 		panelUser.setLayout(null);
 		
 		JButton btnAusloggen = new JButton("Ausloggen");
+		btnAusloggen.setFocusable(false);
 		btnAusloggen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
@@ -107,18 +112,56 @@ public class MerlinMainWindow {
 		btnAusloggen.setBounds(903, 11, 95, 23);
 		panelUser.add(btnAusloggen);
 		
-		JButton btnEinstellungen = new JButton("Einstellungen");
-		btnEinstellungen.addActionListener(new ActionListener() {
+		final JToggleButton tglbtnBeobachtungsliste = new JToggleButton("Beobachtungsliste");
+		final JToggleButton tglbtnCheckliste = new JToggleButton("Checkliste");
+		final JToggleButton tglbtnStammdaten = new JToggleButton("Stammdaten");
+		
+		tglbtnBeobachtungsliste.setFocusable(false);
+		tglbtnBeobachtungsliste.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
-				/* TODO Einstellungen Dialog anzeigen */
-				/* TODO Einstlelungen Dialog GUI-Design und Implementation */
+				 CardLayout cl = (CardLayout)(panelMain.getLayout());
+			     cl.show(panelMain, "name_117830304432961");
+			     
+			     tglbtnBeobachtungsliste.setSelected(true);
+			     tglbtnCheckliste.setSelected(false);
+			     tglbtnStammdaten.setSelected(false);
 			}
 		});
-		btnEinstellungen.setBounds(798, 11, 95, 23);
-		panelUser.add(btnEinstellungen);
+		tglbtnBeobachtungsliste.setBounds(7, 11, 121, 23);
+		panelUser.add(tglbtnBeobachtungsliste);
 		
-		JPanel panelMain = new JPanel();
+		
+		
+		tglbtnCheckliste.setFocusable(false);
+		tglbtnCheckliste.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				 CardLayout cl = (CardLayout)(panelMain.getLayout());
+			     cl.show(panelMain, "name_117825363666024");
+			     
+			     tglbtnBeobachtungsliste.setSelected(false);
+			     tglbtnCheckliste.setSelected(true);
+			     tglbtnStammdaten.setSelected(false);
+			}
+		});
+		tglbtnCheckliste.setBounds(138, 11, 121, 23);
+		panelUser.add(tglbtnCheckliste);
+		
+		
+		tglbtnStammdaten.setFocusable(false);
+		tglbtnStammdaten.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CardLayout cl = (CardLayout)(panelMain.getLayout());
+			    cl.show(panelMain, "name_524734224155361");
+			    
+			    tglbtnBeobachtungsliste.setSelected(false);
+			    tglbtnCheckliste.setSelected(false);
+			    tglbtnStammdaten.setSelected(true);
+			}
+		});
+		tglbtnStammdaten.setBounds(267, 11, 121, 23);
+		panelUser.add(tglbtnStammdaten);
+		
+		panelMain = new JPanel();
 		panelMain.setBounds(0, 43, 1008, 719);
 		frmMerlinMain.getContentPane().add(panelMain);
 		panelMain.setLayout(new CardLayout(0, 0));
@@ -246,9 +289,20 @@ public class MerlinMainWindow {
 		tabbedPane.setBounds(0, 0, 5, 5);
 		panel_2.add(tabbedPane);
 		
+		JScrollBar scrollBar = new JScrollBar();
+		scrollBar.setBounds(733, 22, 17, 471);
+		panel_2.add(scrollBar);
+		
 		JPanel panelBeobachtungsliste = new JPanel();
 		panelMain.add(panelBeobachtungsliste, "name_117830304432961");
 		panelBeobachtungsliste.setLayout(null);
+		
+		tbCheckliste = new JTable();
+		tbCheckliste.setBounds(10, 22, 740, 471);
+		panelBeobachtungsliste.add(tbCheckliste);
+		
+		JPanel panelStammdaten = new JPanel();
+		panelMain.add(panelStammdaten, "name_524734224155361");
 	}
 	
 	
