@@ -10,6 +10,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.JButton;
 
 import merlin.base.Application;
+import merlin.logic.impl.MainWindowLogic;
 import merlin.utils.ConstantElems;
 
 import java.awt.event.ActionListener;
@@ -35,6 +36,7 @@ import java.util.Vector;
 import javax.swing.JProgressBar;
 
 import java.awt.Component;
+
 import javax.swing.JTabbedPane;
 import javax.swing.JScrollBar;
 import javax.swing.JToggleButton;
@@ -46,7 +48,10 @@ public class MerlinMainWindow {
 	private JTable tableCheckliste;
 	private JTable tbCheckliste;
 	private JPanel panelMain;
-
+	private String level1;
+	private String level2;
+	private String level3;
+	
 	/**
 	 * Launch the application.
 	 * @throws UnsupportedLookAndFeelException 
@@ -99,7 +104,7 @@ public class MerlinMainWindow {
 		panelUser.setLayout(null);
 		
 		JButton btnAusloggen = new JButton("Ausloggen");
-		btnAusloggen.setFocusable(false);
+		
 		btnAusloggen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
@@ -114,7 +119,7 @@ public class MerlinMainWindow {
 		
 		final JToggleButton tglbtnBeobachtungsliste = new JToggleButton("Beobachtungsliste");
 		final JToggleButton tglbtnCheckliste = new JToggleButton("Checkliste");
-		final JToggleButton tglbtnStammdaten = new JToggleButton("Stammdaten");
+		final JToggleButton tglbtnStammdaten = new JToggleButton("Verwaltung");
 		
 		tglbtnBeobachtungsliste.setFocusable(false);
 		tglbtnBeobachtungsliste.addActionListener(new ActionListener() {
@@ -188,62 +193,48 @@ public class MerlinMainWindow {
 		lblLevel3.setBounds(297, 16, 131, 20);
 		panelOrtsfilter.add(lblLevel3);
 		
-		JComboBox<?> cmbLevel1 = new JComboBox<Object>();
+		final JComboBox<?> cmbLevel1 = new JComboBox<Object>();
 		cmbLevel1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println();
+				level1 = cmbLevel1.getSelectedItem().toString();
+				MainWindowLogic.selectLocation(level1);
+			}
+			public void loadLevel1(String string) {
+				
+				
+				
+//				cmbLevel1.addItem(string);
+				
+				
+				
+				
+				
 			}
 		});
 		cmbLevel1.setBounds(10, 36, 136, 20);
 		panelOrtsfilter.add(cmbLevel1);
 		
-		JComboBox<?> cmbLevel2 = new JComboBox<Object>();
+		
+		
+		final JComboBox<?> cmbLevel2 = new JComboBox<Object>();
+		cmbLevel2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				level2 = cmbLevel2.getSelectedItem().toString();
+				MainWindowLogic.selectLocation(level1, level2);
+			}
+		});
 		cmbLevel2.setBounds(151, 36, 136, 20);
 		panelOrtsfilter.add(cmbLevel2);
 		
-		JComboBox<?> cmbLevel3 = new JComboBox<Object>();
-		cmbLevel3.setBounds(292, 36, 136, 20);
-		panelOrtsfilter.add(cmbLevel3);
-		
-		JPanel panelOptions = new JPanel();
-		panelOptions.setBorder(new TitledBorder(null, "Optionen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelOptions.setBounds(780, 90, 218, 493);
-		panelCheckliste.add(panelOptions);
-		panelOptions.setLayout(null);
-		
-		JPanel panel = new JPanel();
-		panel.setBorder(new TitledBorder(null, "Manuelles Statement", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(458, 11, 540, 68);
-		panelCheckliste.add(panel);
-		panel.setLayout(null);
-		
-		final JTextPane txtpnStatement = new JTextPane();
-		txtpnStatement.setFont(new Font("Courier New", Font.PLAIN, 12));
-		txtpnStatement.setText("SELECT * FROM Birdwatcher");
-		txtpnStatement.setBounds(10, 21, 421, 38);
-		panel.add(txtpnStatement);
-		
-		JButton btnStatement = new JButton("Ab daf\u00FCr");
-		btnStatement.addActionListener(new ActionListener() {
+		final JComboBox<?> cmbLevel3 = new JComboBox<Object>();
+		cmbLevel3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String query = txtpnStatement.getText();
-				
-				if (!query.isEmpty()) {
-					try {
-						System.out.println("Sende: " + txtpnStatement.getText());
-						ResultSet rs = Application.getInstance().database().sendQuery(query);
-						
-						tableCheckliste.setModel(getTableModel(rs));
-						
-					} catch (Exception e) {
-						e.printStackTrace();
-						System.err.println(e.getMessage());
-					}
-				}
+				level3 = cmbLevel3.getSelectedItem().toString();
+				MainWindowLogic.selectLocation(level1, level2, level3);
 			}
 		});
-		btnStatement.setBounds(441, 21, 89, 38);
-		panel.add(btnStatement);
+		cmbLevel3.setBounds(292, 36, 136, 20);
+		panelOrtsfilter.add(cmbLevel3);
 		
 		
 		JProgressBar progressBar = new JProgressBar();
@@ -303,6 +294,63 @@ public class MerlinMainWindow {
 		
 		JPanel panelStammdaten = new JPanel();
 		panelMain.add(panelStammdaten, "name_524734224155361");
+		panelStammdaten.setLayout(null);
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(null);
+		panel.setBorder(new TitledBorder(null, "Manuelles Statement", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setBounds(458, 11, 540, 68);
+		panelStammdaten.add(panel);
+		
+		JTextPane textPane = new JTextPane();
+		textPane.setText("SELECT * FROM Birdwatcher");
+		textPane.setFont(new Font("Courier New", Font.PLAIN, 12));
+		textPane.setBounds(10, 21, 421, 38);
+		panel.add(textPane);
+		
+		JButton button = new JButton("Ab daf\u00FCr");
+		button.setBounds(441, 21, 89, 38);
+		panel.add(button);
+		
+		JButton btnKonflikteErmitteln = new JButton("Konflikte ermitteln ");
+		btnKonflikteErmitteln.setBounds(303, 27, 145, 29);
+		panelStammdaten.add(btnKonflikteErmitteln);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setLayout(null);
+		panel_3.setBorder(new TitledBorder(null, "Optionen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_3.setBounds(780, 90, 218, 493);
+		panelStammdaten.add(panel_3);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(25, 60, 172, 20);
+		panel_3.add(comboBox);
+		
+		JLabel label = new JLabel("Sprache");
+		label.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		label.setBounds(25, 38, 172, 20);
+		panel_3.add(label);
+		
+		JLabel label_1 = new JLabel("Vogel");
+		label_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		label_1.setBounds(25, 91, 172, 14);
+		panel_3.add(label_1);
+		
+		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1.setBounds(25, 114, 172, 20);
+		panel_3.add(comboBox_1);
+		
+		JToggleButton toggleButton = new JToggleButton("Hinzuf\u00FCgen");
+		toggleButton.setBounds(47, 168, 121, 23);
+		panel_3.add(toggleButton);
+		
+		JToggleButton toggleButton_1 = new JToggleButton("L\u00F6schen");
+		toggleButton_1.setBounds(47, 201, 121, 23);
+		panel_3.add(toggleButton_1);
+		
+		JToggleButton toggleButton_2 = new JToggleButton("Abbrechen");
+		toggleButton_2.setBounds(47, 235, 121, 23);
+		panel_3.add(toggleButton_2);
 	}
 	
 	
