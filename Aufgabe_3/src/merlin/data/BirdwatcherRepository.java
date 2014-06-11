@@ -31,7 +31,7 @@ public class BirdwatcherRepository {
 //		ID und ROLE kommen nicht mehr beim BirdwatcherImpl vor, trotzdem hier einkommentiert dringelassen
 //		String id   = ("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = " + benutzername);
 //		String role = ("SELECT Rolle FROM Birdwatcher WHERE Benutzername = " + benutzername);
-		System.out.println("should be not null");
+//		System.out.println("should not be null");
 		return BirdwatcherImpl.valueOf(name, vorname, benutzername, new String(passwort), email);
 	} 
 	

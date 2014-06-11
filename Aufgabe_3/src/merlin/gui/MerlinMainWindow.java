@@ -154,6 +154,8 @@ public class MerlinMainWindow {
 			     tglbtnStammdaten.setSelected(false);
 			     // JcomboBox clear
 			     cmbLevel1.removeAllItems();
+//				 cmbLevel2.removeAllItems();
+//				 cmbLevel3.removeAllItems();
 			     // load first ComboBox
 			     MainWindowLogic.loadRegion();
 			}
@@ -204,16 +206,11 @@ public class MerlinMainWindow {
 		panelOrtsfilter.add(lblLevel3);
 		
 		cmbLevel1 = new JComboBox<String>();
-		cmbLevel1.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent arg0) {
-				System.out.println("item changed here");
-			}
-		});
 		cmbLevel1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println("actionPerformed");
-				cmbLevel2.removeAllItems();
 				level1 = cmbLevel1.getSelectedItem().toString();
+				System.out.println( "is this really a NullPointerException" + level1);
 				if (cmbLevel1.getSelectedItem().toString() != null){
 					MainWindowLogic.loadLand(level1);
 					System.out.println("cmbLevel2 MerlinMainWindow : "+ level1);
@@ -229,7 +226,6 @@ public class MerlinMainWindow {
 		cmbLevel2 = new JComboBox<String>();
 		cmbLevel2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-//			    cmbLevel3.removeAllItems();
 				level2 = cmbLevel2.getSelectedItem().toString();
 				if (cmbLevel2.getSelectedItem().toString() != null){
 					MainWindowLogic.loadArea(level1, level2);
@@ -298,6 +294,10 @@ public class MerlinMainWindow {
 		JScrollBar scrollBar = new JScrollBar();
 		scrollBar.setBounds(733, 22, 17, 471);
 		panel_2.add(scrollBar);
+		
+		JButton btnFiltern = new JButton("Filtern");
+		btnFiltern.setBounds(458, 45, 89, 23);
+		panelCheckliste.add(btnFiltern);
 		
 		JPanel panelBeobachtungsliste = new JPanel();
 		panelMain.add(panelBeobachtungsliste, "name_117830304432961");
