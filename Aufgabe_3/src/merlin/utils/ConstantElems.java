@@ -43,7 +43,6 @@ public final class ConstantElems {
 	public static boolean loadProperties() throws Exception {
 		FileInputStream input = null;
 		putPropDefaults();
-		ensurePropConsistency();
 		
 		if (propFile.exists()) {
 			try {
@@ -74,6 +73,9 @@ public final class ConstantElems {
 			saveProperties();
 			
 		}
+		
+		ensurePropConsistency();
+		
 		return true;
 	}
 	
@@ -119,11 +121,12 @@ public final class ConstantElems {
 		if (properties.getProperty(dbSIDPropKey) == null) {properties.setProperty(dbSIDPropKey, pd.get(dbSIDPropKey));}
 		if (properties.getProperty(rememberLoginPropKey) == null) {properties.setProperty(rememberLoginPropKey, pd.get(rememberLoginPropKey));}
 		if (properties.getProperty(loginDataPropKey) == null) {properties.setProperty(loginDataPropKey, pd.get(loginDataPropKey));}
-		if (properties.getProperty(loginDataBirdwatcherPropKey) == null) {properties.setProperty(loginDataBirdwatcherPropKey, pd.get(loginDataPropKey));}
-		if (properties.getProperty(userPropKey) == null) {properties.setProperty(loginDataBirdwatcherPropKey, pd.get(userPropKey));}
-		if (properties.getProperty(pwdPropKey) == null) {properties.setProperty(loginDataBirdwatcherPropKey, pd.get(pwdPropKey));}
+		if (properties.getProperty(loginDataBirdwatcherPropKey) == null) {properties.setProperty(loginDataBirdwatcherPropKey, pd.get(loginDataBirdwatcherPropKey));}
+		if (properties.getProperty(userPropKey) == null) {properties.setProperty(userPropKey, pd.get(userPropKey));}
+		if (properties.getProperty(pwdPropKey) == null) {properties.setProperty(pwdPropKey, pd.get(pwdPropKey));}
 		try {
 			saveProperties();
+			System.out.println("geht");
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.err.println(e.getMessage());
