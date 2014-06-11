@@ -13,7 +13,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -22,6 +21,9 @@ import java.util.List;
 
 
 import java.util.Vector;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.table.DefaultTableModel;
 
 import merlin.base.interfaces.DbWrapperInterface;
 import merlin.logic.exception.*;
@@ -127,44 +129,12 @@ public final class DbWrapper implements DbWrapperInterface {
 		System.out.println("Connection to database '" + dbURL + "' on Port " + dbPort + " established");
 	}
 	
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
-	public ArrayList<HashMap<String, Object>> resultSetToArrayList(ResultSet rs) throws SQLException {
-		System.err.println("Beginne ResultSet Verarbeitung...");
-
-		ResultSetMetaData md = rs.getMetaData();
-		int columns = md.getColumnCount();
-		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>(50);
-		
-		while (rs.next()) {
-
-			HashMap<String, Object> row = new HashMap<String, Object>(columns);
-			for (int i = 1; i <= columns; ++i) {
-				row.put(md.getColumnName(i), rs.getObject(i));
-			}
-			list.add(row);
-		}
-
-		System.err.println("ResultSet verarbeitet!");
-
-		return list;
-	}
-	
-	public Vector<Vector<Object>> getVectorOf(ResultSet resultSet) throws SQLException {
-		Vector<String> columnNames = new Vector<String>();
+	public Vector<Vector<Object>> getResultVector(ResultSet resultSet) throws SQLException {
 		Vector<Vector<Object>> result = new Vector<Vector<Object>>();
 		
 		ResultSetMetaData metaData = resultSet.getMetaData();
 		int columns = metaData.getColumnCount();
 		
-		for (int i = 1; i <= columns; i++) {
-			String colname = metaData.getColumnName(i);
-			columnNames.addElement( colname );
-		}
 		// Zeileninhalt ermitteln
 		while (resultSet.next()) {
 			Vector<Object> row = new Vector<Object>(columns);
@@ -174,25 +144,69 @@ public final class DbWrapper implements DbWrapperInterface {
 			result.addElement(row);
 		}
 
-		System.err.println("ResultSet verarbeitet!");
-		
 		return result;
 	}
 	
 	
+	public Vector<String> getColumnNames(ResultSet resultSet) throws SQLException {
+		Vector<String> columnNames = new Vector<String>();
+		
+		ResultSetMetaData metaData = resultSet.getMetaData();
+		int columns = metaData.getColumnCount();
+		
+		for (int i = 1; i <= columns; i++) {
+			String colname = metaData.getColumnName(i);
+			columnNames.addElement( colname );
+		}
+		
+		return columnNames;
+	}
+	
+	
+	public DefaultTableModel getTableModel(ResultSet resultSet) {
+		try {
+			return new DefaultTableModel(getResultVector(resultSet), getColumnNames(resultSet));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.err.println(e.getMessage());
+			return new DefaultTableModel();
+		} 
+	}
+	
+	public DefaultTableModel getTableModel(Vector<Vector<Object>> resultVector, Vector<String> columnNames) {
+		return new DefaultTableModel(resultVector, columnNames);
+	}
+	
+	// Direkteste Methode, um direkt von einem Query das volle Ergebnis in Form eines TableModels zu erhalten
+	public DefaultTableModel getTableModelOfQuery(String query) {
+		try {
+			return getTableModel(sendQuery(query));
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println(e.getMessage());
+			return new DefaultTableModel();
+		}
+	}
+	
+	public DefaultComboBoxModel<Object> getComboBoxModel(Vector<Object> input) {
+		return new DefaultComboBoxModel<Object>(input);
+	}
+	
+	
+	
 	public List<String> getListOfQuery(String query) throws Exception {
 		ResultSet rs = sendQuery(query);
-		return resultSetToList(rs);
+		return getList(rs);
 	}
 	
 	
 	// kompakter Accessor, der sich der ersten Spalte bedient
-	public List<String> resultSetToList(ResultSet resultSet) {
-		return resultSetToList(resultSet, 1);
+	public List<String> getList(ResultSet resultSet) {
+		return getList(resultSet, 1);
 	}
 	
 	// bedient sich der <column>. Spalte des Resultsets und fügt sie der resultList hinzu
-	public List<String> resultSetToList(ResultSet resultSet, int column) {
+	public List<String> getList(ResultSet resultSet, int column) {
 		List<String> resultList = new ArrayList<String>();
 		
 		try {
@@ -210,23 +224,6 @@ public final class DbWrapper implements DbWrapperInterface {
 		return resultList;
 	}
 	
-	
-	// TODO UNFINISHED!!
-	public List<HashMap<String, Object>> processResultSet(ResultSet resultSet) throws SQLException {
-		List<HashMap<String, Object>> resultTable = resultSetToArrayList(resultSet);
-		resultSet.close();
-		return resultTable;
-	}
-	
-	
-	
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
 	
 	 ////////////////
 	// PREDICATES //
@@ -334,7 +331,6 @@ public final class DbWrapper implements DbWrapperInterface {
 			e.printStackTrace();
 			System.err.println("Invalid login data.");
 			System.err.println("Username: " + dbUsername);
-			//System.err.println("Pwd: " + dbPassword());
 		}
 	}
 	
@@ -349,12 +345,12 @@ public final class DbWrapper implements DbWrapperInterface {
    //-----------------------//
 	// Gibt eine Object-Matrix zurück, die aus der Ergebnismenge des Query's berechnet wird.
 	// Kann zur Erstellung von Tabellen bzw. Befüllung von JTables u.ä. benutzt werden.
-	public List<HashMap<String, Object>> getResultOfQuery(String query) throws Exception {
-		ResultSet resultSet = sendQuery(query);
-		List<HashMap<String, Object>> result = processResultSet( resultSet );
-		resultSet.close();
-		return result;
-	}
+//	public List<HashMap<String, Object>> getResultOfQuery(String query) throws Exception {
+//		ResultSet resultSet = sendQuery(query);
+//		List<HashMap<String, Object>> result = processResultSet( resultSet );
+//		resultSet.close();
+//		return result;
+//	}
 	
 	
 //	public Vector<Vector<Object>> getResultOfQuery(String query) throws Exception {
@@ -376,17 +372,37 @@ public final class DbWrapper implements DbWrapperInterface {
 		
 		Statement statement = connection().createStatement();
 //		statement.closeOnCompletion(); // Statement automatischen schließen lassen, sobald alle referenzierten Ergebnismengen (ResultSets) geschlossen wurden
+//		^^^ funktioniert nicht. Inkompatible Version.
 		return statement.executeQuery(query);
 	}
 	
-	// Update an Datenbank senden
-	public void sendUpdate(String query) throws SQLException {
-		PreparedStatement statement = connection().prepareStatement(query); // FRAGE: Warum ein PreparedStatement statt normalem Statement? 
-		statement.executeUpdate();
+	public ResultSet sendQuery(PreparedStatement prepStatement) throws SQLException {
+		return prepStatement.executeQuery();
 	}
 	
+	// Update an Datenbank senden
+//	public void sendUpdate(String query) throws SQLException {
+//		PreparedStatement statement = connection().prepareStatement(query); // FRAGE: Warum ein PreparedStatement statt normalem Statement? 
+//		statement.executeUpdate();
+//	}
+	
+	public void sendUpdate(String query) throws SQLException {
+		connection().createStatement().executeUpdate(query);
+	}
+	
+	public void sendUpdate(PreparedStatement prepStatement) throws SQLException {
+		prepStatement.executeUpdate();
+	}
+	
+	
+	
+	/* DEBUGGING PRINTER */
 	private void debugPrint(String debugThis, PrintStream ps) {
 		ps.println("DbWrapper: " + debugThis);
+	}
+	
+	private void debugPrintErr(String debugThis) {
+		debugPrint(debugThis, System.err);
 	}
 	
 	private void debugPrint(String debugThis) {
