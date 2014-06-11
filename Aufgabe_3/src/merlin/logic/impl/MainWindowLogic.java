@@ -31,5 +31,11 @@ public class MainWindowLogic {
 			
 		}
 	}
-	
+	public static void loadArea(String string, String str){
+		
+		for (String region : SpeziesRepository.getArea(string, str)){
+			MerlinMainWindow.loadLevel3(region);
+			
+		}
+	}
 }
