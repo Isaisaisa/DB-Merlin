@@ -70,13 +70,13 @@ END;
 /*SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = 'demo' and Passwort = 'merlindemo';*/
 
 INSERT INTO Birdwatcher (Name, Vorname, Benutzername, Passwort, Email, Rolle)
-  VALUES ('Byteschubser', 'Armin', 'admin', 'ichchefdunix', 'admin@merlin.de', 'R01');
+  VALUES ('Byteschubser', 'Armin', 'admin', 'chef', 'admin@merlin.de', 'R01');
   
 INSERT INTO Birdwatcher (Name, Vorname, Benutzername, Passwort, Email, Rolle)
-  VALUES ('Inhalt', 'Carmen', 'cadmin', 'ichauchchef', 'content_admin@merlin.de', 'R02');
+  VALUES ('Inhalt', 'Carmen', 'cadmin', 'vize', 'content_admin@merlin.de', 'R02');
   
 INSERT INTO Birdwatcher (Name, Vorname, Benutzername, Passwort, Email, Rolle)
-  VALUES ('Watcher', 'Birdy', 'demo', 'merlindemo', 'demo@merlin.de', 'R03');
+  VALUES ('Watcher', 'Birdy', 'demo', 'merlin', 'demo@merlin.de', 'R03');
 
 
 /* Import aller Stammdaten:
