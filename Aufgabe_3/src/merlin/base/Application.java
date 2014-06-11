@@ -151,11 +151,13 @@ public final class Application {
 	}
 	
 	public String getDbUsername() throws Exception {
-		return getUsername(getLogin(loginDataPropKey));
+		return getProp(userPropKey);
+//TODO		return getUsername(getLogin(loginDataPropKey));
 	}
 	
 	public String getDbPassword() throws Exception {
-		return getPassword(getLogin(loginDataPropKey));
+		return getProp(pwdPropKey);
+//TODO		return getPassword(getLogin(loginDataPropKey));
 	}
 	
 	public String getUsername(String[] loginData) {
