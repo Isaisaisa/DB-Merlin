@@ -238,6 +238,7 @@ public class MerlinLogin {
 		txtName.setBounds(117, 107, 204, 20);
 		panelRegistration.add(txtName);
 		txtName.setColumns(10);
+		panelRegistration.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtUsernameReg, txtVorname, txtName, txtEmail, txtPasswordReg, txtPasswordRegBest, btnRegister}));
 		
 		
 		panel_AfterRegister = new JPanel();
