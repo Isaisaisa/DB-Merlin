@@ -1,0 +1,13 @@
+ArrayList<String> list = new ArrayList<String>();
+		
+		list.add("11");
+		list.add("11");
+		list.add("21");
+		list.add("31");
+		list.add("31");
+		list.add("31");
+		list.add("41");
+		
+		ArrayList<String> dedupped = new ArrayList<String>(new HashSet<String>(list));
+		
+		System.out.println(dedupped); // [11, 41, 31, 21]

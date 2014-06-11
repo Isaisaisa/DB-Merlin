@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Properties;
 
-import javax.swing.UnsupportedLookAndFeelException;
-
 import merlin.base.Application;
 
 public final class ConstantElems {
@@ -32,7 +30,8 @@ public final class ConstantElems {
 		
 	// Properties Object + Filepath
 	public static final Properties 	properties   = new Properties();
-	public static final String     	propFilePath = new File("").getAbsolutePath() + System.getProperty("file.separator") + "config.properties";
+	public static final String		propFileName = "config.properties";
+	public static final String     	propFilePath = new File("").getAbsolutePath() + System.getProperty("file.separator") + propFileName;
 	public static final File 		propFile 	 = new File(propFilePath);
 	
 	// GUI related constants (Strings etc.)
@@ -40,12 +39,16 @@ public final class ConstantElems {
 	
 	public static boolean loadProperties() throws Exception {
 		FileInputStream input = null;
+		putPropDefaults();
+		ensurePropConsistency();
 		
 		if (propFile.exists()) {
 			try {
 				// Versuche die Einstellungen aus der Datei zu laden
 				input = new FileInputStream(propFile);
 				properties.load(input);
+				
+				
 			} catch (IOException e) {
 				System.out.println("Cannot load properties. (" + propFile.getAbsolutePath() + ")" + "\n"
 									+ "(" + e.getMessage() + ")");
@@ -90,5 +93,27 @@ public final class ConstantElems {
 			}
 		}
 		return true;
+	}
+	
+	public static void putPropDefaults() {
+		Hashtable<String, String> pd = propDefaults; // shortcut
+		
+		pd.put(dbURLPropKey, "oracle.informatik.haw-hamburg.de");
+		pd.put(dbPortPropKey, "1521");
+		pd.put(dbSIDPropKey, "inf09");
+		pd.put(rememberLoginPropKey, "false");
+		pd.put(loginDataPropKey, "");
+		pd.put(loginDataBirdwatcherPropKey, "");
+	}
+	
+	public static void ensurePropConsistency() {
+		Hashtable<String, String> pd = propDefaults;
+		
+		if (properties.getProperty(dbURLPropKey) == null) {properties.setProperty(dbURLPropKey, pd.get(dbURLPropKey));}
+		if (properties.getProperty(dbPortPropKey) == null) {properties.setProperty(dbPortPropKey, pd.get(dbPortPropKey));}
+		if (properties.getProperty(dbSIDPropKey) == null) {properties.setProperty(dbSIDPropKey, pd.get(dbSIDPropKey));}
+		if (properties.getProperty(rememberLoginPropKey) == null) {properties.setProperty(rememberLoginPropKey, pd.get(rememberLoginPropKey));}
+		if (properties.getProperty(loginDataPropKey) == null) {properties.setProperty(loginDataPropKey, pd.get(loginDataPropKey));}
+		if (properties.getProperty(loginDataBirdwatcherPropKey) == null) {properties.setProperty(loginDataBirdwatcherPropKey, pd.get(loginDataPropKey));}
 	}
 }

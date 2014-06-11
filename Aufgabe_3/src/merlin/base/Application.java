@@ -7,7 +7,11 @@ import java.awt.Frame;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -24,9 +28,13 @@ public final class Application {
 
 	private Application() throws Exception {
 		loadProperties();
-		putPropDefaults();
-		ensurePropConsistency();
+		/*
+		 * testings	 area	
+		 */
 		
+		/*
+		 * testings area end
+		 */
 		database = DbWrapper.getInstance();
 	}
 
@@ -41,17 +49,12 @@ public final class Application {
 	 * 
 	 * 
 	 * 
-	 * 
-	 * 
 	 */
 	public void run() throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+		// ersten Dialog anzeigen
 		DatabaseSetup.showDialog();
-		
-		
 	}
 	/*
-	 * 
-	 * 
 	 * 
 	 * 
 	 * 
@@ -98,41 +101,19 @@ public final class Application {
 	
 	/* PROPERTIES-OBJECT ACCESSORS */
 	
-	public void putPropDefaults() {
-		Hashtable<String, String> pd = propDefaults;
-		
-		pd.put(dbURLPropKey, "oracle.informatik.haw-hamburg.de");
-		pd.put(dbPortPropKey, "1521");
-		pd.put(dbSIDPropKey, "inf09");
-		pd.put(rememberLoginPropKey, "false");
-		pd.put(loginDataPropKey, "");
-		pd.put(loginDataBirdwatcherPropKey, "");
-	}
-	
-	public void ensurePropConsistency() {
-		Hashtable<String, String> pd = propDefaults;
-		
-		if (getProp(dbURLPropKey) == null) {saveProp(dbURLPropKey, pd.get(dbURLPropKey));}
-		if (getProp(dbPortPropKey) == null) {saveProp(dbPortPropKey, pd.get(dbPortPropKey));}
-		if (getProp(dbSIDPropKey) == null) {saveProp(dbSIDPropKey, pd.get(dbSIDPropKey));}
-		if (getProp(rememberLoginPropKey) == null) {saveProp(rememberLoginPropKey, pd.get(rememberLoginPropKey));}
-		if (getProp(loginDataPropKey) == null) {saveProp(loginDataPropKey, pd.get(loginDataPropKey));}
-		if (getProp(loginDataBirdwatcherPropKey) == null) {saveProp(loginDataBirdwatcherPropKey, pd.get(loginDataPropKey));}
-	}
-	
 	public void saveProp(String property, String value) {
 		properties.setProperty(property, value);
 	}
 	
-	public void saveProp(String property, Integer value) {
-		saveProp(property, value.toString());
-	}
-	
 	public String getProp(String property) {
-		String result = properties.getProperty(property);
+		String result;
+		result = properties.getProperty(property);
+		
+		// Nullreferenzen vermeiden, falls Schlüssel nicht vorhanden
+		if (result == null) { result = ""; }
+		
 		return result;
 	}
-		
 	
 	
 	public void saveEncProp(String property, String value) throws Exception {
@@ -146,6 +127,9 @@ public final class Application {
 	
 	
 	public void saveLogin(String propKey, String username, String password) throws Exception {
+		System.out.println("propKey: " + propKey);
+		System.out.println("username: " + username);
+		System.out.println("password: " + "<hidden>");
 		saveEncProp(propKey, username + loginDataSplitString + password);
 	}
 	
@@ -242,6 +226,10 @@ public final class Application {
 	}
 	
 	public void closeMerlinYesNo(Frame frame) {
+		closeMerlinYesNo(frame, true);
+	}
+	
+	public void closeMerlinYesNo(Frame frame, boolean saveProperties) {
 		((JFrame) frame).setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
 		int diagAnswer = JOptionPane.showConfirmDialog(frame, 
@@ -252,7 +240,7 @@ public final class Application {
         if (diagAnswer == JOptionPane.YES_OPTION) {
         	try {
         		((JFrame) frame).setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				Application.getInstance().shutdown(false);
+				Application.getInstance().shutdown(saveProperties);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
