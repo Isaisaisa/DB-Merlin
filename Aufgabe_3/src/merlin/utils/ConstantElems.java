@@ -126,7 +126,6 @@ public final class ConstantElems {
 		if (properties.getProperty(pwdPropKey) == null) {properties.setProperty(pwdPropKey, pd.get(pwdPropKey));}
 		try {
 			saveProperties();
-			System.out.println("geht");
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.err.println(e.getMessage());
