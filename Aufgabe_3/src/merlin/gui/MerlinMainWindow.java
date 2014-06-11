@@ -295,6 +295,10 @@ public class MerlinMainWindow {
 		scrollBar.setBounds(733, 22, 17, 471);
 		panel_2.add(scrollBar);
 		
+		JButton btnFiltern = new JButton("Filtern");
+		btnFiltern.setBounds(458, 45, 89, 23);
+		panelCheckliste.add(btnFiltern);
+		
 		JPanel panelBeobachtungsliste = new JPanel();
 		panelMain.add(panelBeobachtungsliste, "name_117830304432961");
 		panelBeobachtungsliste.setLayout(null);
