@@ -154,6 +154,8 @@ public class MerlinMainWindow {
 			     tglbtnStammdaten.setSelected(false);
 			     // JcomboBox clear
 			     cmbLevel1.removeAllItems();
+//				 cmbLevel2.removeAllItems();
+//				 cmbLevel3.removeAllItems();
 			     // load first ComboBox
 			     MainWindowLogic.loadRegion();
 			}
@@ -212,7 +214,6 @@ public class MerlinMainWindow {
 		cmbLevel1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println("actionPerformed");
-				cmbLevel2.removeAllItems();
 				level1 = cmbLevel1.getSelectedItem().toString();
 				if (cmbLevel1.getSelectedItem().toString() != null){
 					MainWindowLogic.loadLand(level1);
@@ -229,7 +230,6 @@ public class MerlinMainWindow {
 		cmbLevel2 = new JComboBox<String>();
 		cmbLevel2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-//			    cmbLevel3.removeAllItems();
 				level2 = cmbLevel2.getSelectedItem().toString();
 				if (cmbLevel2.getSelectedItem().toString() != null){
 					MainWindowLogic.loadArea(level1, level2);
