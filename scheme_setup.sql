@@ -9,7 +9,10 @@ DROP TABLE beobachtet;
 DROP TABLE Beobachtunsgebiet;
 DROP TABLE Birdwatcher;
 DROP TABLE Vogelart;
+DROP SEQUENCE va_id_sequence;
+DROP SEQUENCE ort_id_sequence;
 DROP SEQUENCE bw_id_sequence;
+
 
  
 /* Implementierung des Merlin-Schemata */
@@ -49,7 +52,23 @@ CREATE TABLE kommtVor
        (Va_ID         INTEGER REFERENCES Vogelart ON DELETE CASCADE, 
         Ort_ID        INTEGER REFERENCES Beobachtunsgebiet ON DELETE CASCADE,
         PRIMARY KEY   (Va_ID, Ort_ID));
-        
+
+
+/* Sequenz und Trigger für Beobachtungsgebiete */
+CREATE SEQUENCE ort_id_sequence
+  START WITH 1
+  INCREMENT BY 1;
+  
+  
+CREATE OR REPLACE TRIGGER ort_id_sequence 
+BEFORE INSERT ON Beobachtunsgebiet
+FOR EACH ROW
+BEGIN
+  SELECT ort_id_sequence.nextval into :new.Ort_ID from dual;
+END;
+/
+
+/* Sequenz und Trigger für Birdwatcher */        
 CREATE SEQUENCE bw_id_sequence
   START WITH 1
   INCREMENT BY 1;
@@ -67,16 +86,16 @@ END;
 
  /* Standart-Birdwatcher erstellen: */
 
-/*SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = 'demo' and Passwort = 'merlindemo';*/
+/*SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = 'demo' and Passwort = 'merlin';*/
 
 INSERT INTO Birdwatcher (Name, Vorname, Benutzername, Passwort, Email, Rolle)
-  VALUES ('Byteschubser', 'Armin', 'admin', 'ichchefdunix', 'admin@merlin.de', 'R01');
+  VALUES ('Byteschubser', 'Armin', 'admin', 'cheffe', 'admin@merlin.de', 'R01');
   
 INSERT INTO Birdwatcher (Name, Vorname, Benutzername, Passwort, Email, Rolle)
-  VALUES ('Inhalt', 'Carmen', 'cadmin', 'ichauchchef', 'content_admin@merlin.de', 'R02');
+  VALUES ('Inhalt', 'Carmen', 'cadmin', 'vize', 'content_admin@merlin.de', 'R02');
   
 INSERT INTO Birdwatcher (Name, Vorname, Benutzername, Passwort, Email, Rolle)
-  VALUES ('Watcher', 'Birdy', 'demo', 'merlindemo', 'demo@merlin.de', 'R03');
+  VALUES ('Watcher', 'Birdy', 'demo', 'merlin', 'demo@merlin.de', 'R03');
 
 
 /* Import aller Stammdaten:
@@ -96,28 +115,48 @@ INSERT INTO Vogelart
   
 DELETE Vogelart
 WHERE Artentyp LIKE 'group%';
+
+/* Sequenz und Trigger für Vogelarten */
+CREATE SEQUENCE va_id_sequence
+  START WITH 40000
+  INCREMENT BY 1;
+  
+  
+CREATE OR REPLACE TRIGGER va_id_sequence 
+BEFORE INSERT ON Vogelart
+FOR EACH ROW
+BEGIN
+  SELECT va_id_sequence.nextval into :new.Va_ID from dual;
+END;
+/
   
 /* dt. Beobachtungsgebiete eintragen */
 
-INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (1,  'WP', null, null);  
-INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (2,  'WP', 'GER', null);
-INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (3,  'WP', 'GER', 'Hamburg');
-INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (4,  'WP', 'GER', 'Schleswig-Holstein');
-INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (5,  'WP', 'GER', 'Bremen');
-INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (6,  'WP', 'GER', 'Mecklenburg-Vorpommern');
-INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (7,  'WP', 'GER', 'Niedersachsen');
-INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (8,  'WP', 'GER', 'Berlin');
-INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (9,  'WP', 'GER', 'Brandenburg');
-INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (10, 'WP', 'GER', 'Sachsen-Anhalt');
-INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (11, 'WP', 'GER', 'Nordrhein-Westfalen');
-INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (12, 'WP', 'GER', 'Hessen');
-INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (13, 'WP', 'GER', 'Thüringen');
-INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (14, 'WP', 'GER', 'Sachsen');
-INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (15, 'WP', 'GER', 'Rheinland-Pfalz');
-INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (16, 'WP', 'GER', 'Saarland');
-INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (17, 'WP', 'GER', 'Baden-Württemberg');
-INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (18, 'WP', 'GER', 'Bayern');
-INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (19, 'UUA', null, null); 
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', null, null);  
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', null); /* 2 */
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Hamburg'); /* 3 */
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Schleswig-Holstein');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Bremen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Mecklenburg-Vorpommern');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Niedersachsen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Berlin');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Brandenburg');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Sachsen-Anhalt');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Nordrhein-Westfalen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Hessen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Thüringen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Sachsen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Rheinland-Pfalz');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Saarland');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Baden-Württemberg');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Bayern');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('AAA', null, null);
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('AFR', null, null);
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('AUS', null, null);
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('IND', null, null);
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('NEA', null, null);
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('NEO', null, null);
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('OPA', null, null); 
 
 
 /* wie wird ein Statement formuliert, mit dem man Anhand Level 3 auf Level 2 schließen kann?
@@ -144,7 +183,6 @@ INSERT INTO kommtVor
 /* Teil 1: Beobachtung für den deutschen Raum anlegen */  	
 
 /* Beispiel-Beobachtungen des Demo-Nutzers in seine Beobachtungsliste (pers. Checkliste) eintragen */
-
 INSERT INTO beobachtet
   VALUES (284, 3, 2, TO_DATE('08-MAI-2014 11:02', 'DD-MONTH-YYYY HH24:MI'), TO_DATE('09-MAI-2014 14:15', 'DD-MONTH-YYYY HH24:MI'), '2 m. 5 w. 3 juv.');
 	
