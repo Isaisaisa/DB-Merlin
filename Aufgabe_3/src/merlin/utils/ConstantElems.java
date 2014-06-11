@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Savepoint;
 import java.util.Hashtable;
 import java.util.Properties;
 
@@ -121,5 +122,11 @@ public final class ConstantElems {
 		if (properties.getProperty(loginDataBirdwatcherPropKey) == null) {properties.setProperty(loginDataBirdwatcherPropKey, pd.get(loginDataPropKey));}
 		if (properties.getProperty(userPropKey) == null) {properties.setProperty(loginDataBirdwatcherPropKey, pd.get(userPropKey));}
 		if (properties.getProperty(pwdPropKey) == null) {properties.setProperty(loginDataBirdwatcherPropKey, pd.get(pwdPropKey));}
+		try {
+			saveProperties();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.err.println(e.getMessage());
+		}
 	}
 }
