@@ -51,7 +51,13 @@ public class MerlinMainWindow {
 	private String level1;
 	private String level2;
 	private String level3;
+	private static JComboBox<String> cmbLevel1;
+	private static JComboBox<String> cmbLevel2;
+	private static JComboBox<String> cmbLevel3;
 	
+	public String level1(){
+		return level1;
+	}
 	/**
 	 * Launch the application.
 	 * @throws UnsupportedLookAndFeelException 
@@ -146,6 +152,7 @@ public class MerlinMainWindow {
 			     tglbtnBeobachtungsliste.setSelected(false);
 			     tglbtnCheckliste.setSelected(true);
 			     tglbtnStammdaten.setSelected(false);
+			     MainWindowLogic.loadRegion();
 			}
 		});
 		tglbtnCheckliste.setBounds(138, 11, 121, 23);
@@ -193,22 +200,12 @@ public class MerlinMainWindow {
 		lblLevel3.setBounds(297, 16, 131, 20);
 		panelOrtsfilter.add(lblLevel3);
 		
-		final JComboBox<?> cmbLevel1 = new JComboBox<Object>();
+		cmbLevel1 = new JComboBox<String>();
 		cmbLevel1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				level1 = cmbLevel1.getSelectedItem().toString();
+				System.out.println("cmbLevel1 MerlinMainWindow : "+level1);
 				MainWindowLogic.selectLocation(level1);
-			}
-			public void loadLevel1(String string) {
-				
-				
-				
-//				cmbLevel1.addItem(string);
-				
-				
-				
-				
-				
 			}
 		});
 		cmbLevel1.setBounds(10, 36, 136, 20);
@@ -216,17 +213,19 @@ public class MerlinMainWindow {
 		
 		
 		
-		final JComboBox<?> cmbLevel2 = new JComboBox<Object>();
+		cmbLevel2 = new JComboBox<String>();
 		cmbLevel2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				level2 = cmbLevel2.getSelectedItem().toString();
 				MainWindowLogic.selectLocation(level1, level2);
+				MainWindowLogic.loadLand(level1());
+				System.out.println("cmbLevel2 MerlinMainWindow : "+level1());
 			}
 		});
 		cmbLevel2.setBounds(151, 36, 136, 20);
 		panelOrtsfilter.add(cmbLevel2);
 		
-		final JComboBox<?> cmbLevel3 = new JComboBox<Object>();
+		cmbLevel3 = new JComboBox<String>();
 		cmbLevel3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				level3 = cmbLevel3.getSelectedItem().toString();
@@ -353,6 +352,13 @@ public class MerlinMainWindow {
 		panel_3.add(toggleButton_2);
 	}
 	
+	
+	public static void loadLevel1(String string) {
+		cmbLevel1.addItem(string);
+	}
+	public static void loadLevel2(String string) {
+		cmbLevel2.addItem(string);
+	}
 	
 	public DefaultTableModel getTableModel(ResultSet resultSet) throws SQLException {
 		DefaultTableModel dtm = new DefaultTableModel();

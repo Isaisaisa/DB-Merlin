@@ -1,6 +1,7 @@
 package merlin.logic.impl;
 
 import merlin.data.SpeziesRepository;
+import merlin.gui.MerlinMainWindow;
 
 public class MainWindowLogic {
 
@@ -15,11 +16,20 @@ public class MainWindowLogic {
 	}
 	
 	
-	public static void loadRegion(String string){
-//		MerlinMainWindow.loadLevel1(string);
-//		
-//
-//        jCombobox.addItem(rs.getString(1));
+//	gibt Name (String) von Level1 an GUI weiter
+	public static void loadRegion(){
+		
+		for (String region : SpeziesRepository.getRegion()){
+			MerlinMainWindow.loadLevel1(region);
+			
+		}
+	}
+	public static void loadLand(String string){
+		
+		for (String region : SpeziesRepository.getLand(string)){
+			MerlinMainWindow.loadLevel2(region);
+			
+		}
 	}
 	
 }
