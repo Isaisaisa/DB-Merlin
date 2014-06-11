@@ -40,6 +40,8 @@ import java.awt.Component;
 import javax.swing.JTabbedPane;
 import javax.swing.JScrollBar;
 import javax.swing.JToggleButton;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class MerlinMainWindow {
 
@@ -150,6 +152,9 @@ public class MerlinMainWindow {
 			     tglbtnBeobachtungsliste.setSelected(false);
 			     tglbtnCheckliste.setSelected(true);
 			     tglbtnStammdaten.setSelected(false);
+			     // JcomboBox clear
+			     cmbLevel1.removeAllItems();
+			     // load first ComboBox
 			     MainWindowLogic.loadRegion();
 			}
 		});
@@ -199,10 +204,17 @@ public class MerlinMainWindow {
 		panelOrtsfilter.add(lblLevel3);
 		
 		cmbLevel1 = new JComboBox<String>();
+		cmbLevel1.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				System.out.println("item changed here");
+			}
+		});
 		cmbLevel1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("actionPerformed");
+				cmbLevel2.removeAllItems();
 				level1 = cmbLevel1.getSelectedItem().toString();
-				if (cmbLevel1.getSelectedItem().toString().equals(level1)){
+				if (cmbLevel1.getSelectedItem().toString() != null){
 					MainWindowLogic.loadLand(level1);
 					System.out.println("cmbLevel2 MerlinMainWindow : "+ level1);
 				}
@@ -217,7 +229,12 @@ public class MerlinMainWindow {
 		cmbLevel2 = new JComboBox<String>();
 		cmbLevel2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+//			    cmbLevel3.removeAllItems();
 				level2 = cmbLevel2.getSelectedItem().toString();
+				if (cmbLevel2.getSelectedItem().toString() != null){
+					MainWindowLogic.loadArea(level1, level2);
+					System.out.println("cmbLevel3 MerlinMainWindow : "+ level2);
+				}
 				MainWindowLogic.selectLocation(level1, level2);
 			}
 		});
@@ -359,6 +376,12 @@ public class MerlinMainWindow {
 		cmbLevel2.addItem(string);
 		System.out.println("this is loadLevel2 : " + string);
 	}
+	public static void loadLevel3(String string) {
+		cmbLevel3.addItem(string);
+		System.out.println("this is loadLevel3 : " + string);
+	}
+	
+	
 	
 	public DefaultTableModel getTableModel(ResultSet resultSet) throws SQLException {
 		DefaultTableModel dtm = new DefaultTableModel();
