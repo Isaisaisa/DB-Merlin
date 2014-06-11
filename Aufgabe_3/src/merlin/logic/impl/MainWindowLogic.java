@@ -1,5 +1,7 @@
 package merlin.logic.impl;
 
+import java.util.Vector;
+
 import merlin.data.SpeziesRepository;
 import merlin.gui.MerlinMainWindow;
 
@@ -17,26 +19,16 @@ public class MainWindowLogic {
 	
 	
 //	gibt Name (String) von Level1 an GUI weiter
-	public static void loadRegion(){
-		
-		for (String region : SpeziesRepository.getRegion()){
-			MerlinMainWindow.loadLevel1(region);
-			
-		}
+	public static Vector<String> loadRegion(){
+		return SpeziesRepository.getRegion();
+	
 	}
-	public static void loadLand(String string){
-		
-		for (String region : SpeziesRepository.getLand(string)){
-			MerlinMainWindow.loadLevel2(region);
-			
-		}
+	public static Vector<String> loadLand(String level1){
+		return SpeziesRepository.getLand(level1);
 	}
-	public static void loadArea(String string, String str){
-		
-		for (String region : SpeziesRepository.getArea(string, str)){
-			MerlinMainWindow.loadLevel3(region);
-			
-		}
+	
+	public static Vector<String> loadArea(String level1, String level2){
+		return SpeziesRepository.getArea(level1, level2);
 	}
 	
 	

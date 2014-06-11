@@ -3,8 +3,10 @@ package merlin.gui;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SpinnerDateModel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.JButton;
@@ -31,29 +33,31 @@ import java.awt.Font;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Vector;
 
 import javax.swing.JProgressBar;
-
-import java.awt.Component;
-
 import javax.swing.JTabbedPane;
 import javax.swing.JScrollBar;
 import javax.swing.JToggleButton;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import javax.swing.border.EtchedBorder;
+
 import java.awt.Color;
-import javax.swing.SwingConstants;
+
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JTextArea;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.event.PopupMenuEvent;
+
+import com.toedter.calendar.JDateChooser;
+
+import javax.swing.JSpinner;
 
 public class MerlinMainWindow {
 
 	private JFrame frmMerlinMain;
 	private JTable tableCheckliste;
-	private JTable tblStammdatenCheck;
+	private JTable tblStammdatenBeob;
 	private JPanel panelMain;
 	private String level1;
 	private String level2;
@@ -62,8 +66,6 @@ public class MerlinMainWindow {
 	private static JComboBox<String> cmbLevel2;
 	private static JComboBox<String> cmbLevel3;
 	private JTable tblBeobachtungsliste;
-	private JTextField textField;
-	private JTextField textField_1;
 	private JTable table_1;
 	private JTextField textField_6;
 	private JTextField textField_2;
@@ -167,12 +169,8 @@ public class MerlinMainWindow {
 			     tglbtnBeobachtungsliste.setSelected(false);
 			     tglbtnCheckliste.setSelected(true);
 			     tglbtnStammdaten.setSelected(false);
-			     // JcomboBox clear
-			     cmbLevel1.removeAllItems();
-//				 cmbLevel2.removeAllItems();
-//				 cmbLevel3.removeAllItems();
-			     // load first ComboBox
-			     MainWindowLogic.loadRegion();
+			    
+			    
 			}
 		});
 		tglbtnCheckliste.setBounds(138, 11, 121, 23);
@@ -221,15 +219,18 @@ public class MerlinMainWindow {
 		panelOrtsfilter.add(lblLevel3);
 		
 		cmbLevel1 = new JComboBox<String>();
+		cmbLevel1.addPopupMenuListener(new PopupMenuListener() {
+			public void popupMenuCanceled(PopupMenuEvent arg0) {
+			}
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {
+			}
+			public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
+				 cmbLevel1.setModel( new DefaultComboBoxModel<String>(MainWindowLogic.loadRegion()) );	
+			}
+		});
 		cmbLevel1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("actionPerformed");
 				level1 = cmbLevel1.getSelectedItem().toString();
-				System.out.println( "is this really a NullPointerException" + level1);
-				if (cmbLevel1.getSelectedItem().toString() != null){
-					MainWindowLogic.loadLand(level1);
-					System.out.println("cmbLevel2 MerlinMainWindow : "+ level1);
-				}
 				MainWindowLogic.selectLocation(level1);
 			}
 		});
@@ -239,13 +240,18 @@ public class MerlinMainWindow {
 		
 		
 		cmbLevel2 = new JComboBox<String>();
+		cmbLevel2.addPopupMenuListener(new PopupMenuListener() {
+			public void popupMenuCanceled(PopupMenuEvent arg0) {
+			}
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {
+			}
+			public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
+				cmbLevel2.setModel( new DefaultComboBoxModel<String>(MainWindowLogic.loadLand(level1)));	
+			}
+		});
 		cmbLevel2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				level2 = cmbLevel2.getSelectedItem().toString();
-				if (cmbLevel2.getSelectedItem().toString() != null){
-					MainWindowLogic.loadArea(level1, level2);
-					System.out.println("cmbLevel3 MerlinMainWindow : "+ level2);
-				}
 				MainWindowLogic.selectLocation(level1, level2);
 			}
 		});
@@ -253,6 +259,15 @@ public class MerlinMainWindow {
 		panelOrtsfilter.add(cmbLevel2);
 		
 		cmbLevel3 = new JComboBox<String>();
+		cmbLevel3.addPopupMenuListener(new PopupMenuListener() {
+			public void popupMenuCanceled(PopupMenuEvent arg0) {
+			}
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {
+			}
+			public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
+				cmbLevel3.setModel( new DefaultComboBoxModel<String>(MainWindowLogic.loadArea(level1, level2)));
+			}
+		});
 		cmbLevel3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				level3 = cmbLevel3.getSelectedItem().toString();
@@ -295,6 +310,14 @@ public class MerlinMainWindow {
 		panelCheckliste.add(panel_1);
 		panel_1.setLayout(null);
 		
+		
+		
+		
+		
+		
+		
+		
+		
 		JPanel panelBeobachtungsliste = new JPanel();
 		panelBeobachtungsliste.setBackground(SystemColor.control);
 		panelMain.add(panelBeobachtungsliste, "name_117830304432961");
@@ -306,8 +329,8 @@ public class MerlinMainWindow {
 		scrollPane_1.setBounds(10, 22, 713, 320);
 		panelBeobachtungsliste.add(scrollPane_1);
 		
-		tblStammdatenCheck = new JTable();
-		scrollPane_1.setViewportView(tblStammdatenCheck);
+		tblStammdatenBeob = new JTable();
+		scrollPane_1.setViewportView(tblStammdatenBeob);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
 		scrollPane_2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -340,17 +363,17 @@ public class MerlinMainWindow {
 		lblGebiet.setBounds(11, 80, 65, 16);
 		panel_4.add(lblGebiet);
 		
-		JComboBox comboBox_3 = new JComboBox();
-		comboBox_3.setBounds(81, 27, 152, 16);
-		panel_4.add(comboBox_3);
+		JComboBox cbRegionBeo = new JComboBox();
+		cbRegionBeo.setBounds(81, 27, 152, 18);
+		panel_4.add(cbRegionBeo);
 		
-		JComboBox comboBox_4 = new JComboBox();
-		comboBox_4.setBounds(81, 53, 152, 16);
-		panel_4.add(comboBox_4);
+		JComboBox cbLandBeo = new JComboBox();
+		cbLandBeo.setBounds(81, 53, 152, 18);
+		panel_4.add(cbLandBeo);
 		
-		JComboBox comboBox_5 = new JComboBox();
-		comboBox_5.setBounds(81, 81, 152, 16);
-		panel_4.add(comboBox_5);
+		JComboBox cbGebietBeo = new JComboBox();
+		cbGebietBeo.setBounds(81, 81, 152, 18);
+		panel_4.add(cbGebietBeo);
 		
 		JLabel lblDatum = new JLabel("Datum");
 		lblDatum.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -366,16 +389,6 @@ public class MerlinMainWindow {
 		lblBis.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblBis.setBounds(11, 157, 46, 14);
 		panel_4.add(lblBis);
-		
-		textField = new JTextField();
-		textField.setBounds(81, 131, 152, 17);
-		panel_4.add(textField);
-		textField.setColumns(10);
-		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(81, 159, 152, 17);
-		panel_4.add(textField_1);
 		
 		JLabel lblBemerkung = new JLabel("Bemerkung");
 		lblBemerkung.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -398,16 +411,52 @@ public class MerlinMainWindow {
 		toggleButton_3.setBounds(155, 272, 93, 23);
 		panel_4.add(toggleButton_3);
 		
+		JPanel datumVon = new JDateChooser();
+		datumVon.setBounds(81, 123, 89, 23);
+		panel_4.add(datumVon);
+		
+		JDateChooser datumBis = new JDateChooser();
+		datumBis.setBounds(81, 153, 89, 23);
+		panel_4.add(datumBis);
+		
+		
+		
+		
+		// TODO 
+		
+		SpinnerDateModel model1 = new SpinnerDateModel();
+		model1.setCalendarField(Calendar.MINUTE);
+		
+		JSpinner spinner = new JSpinner();
+		spinner.setBounds(197, 130, 58, 20);
+		spinner.setModel(model1);
+		spinner.setEditor(new JSpinner.DateEditor(spinner, "hh:mm"));
+		panel_4.add(spinner);
+		
+		SpinnerDateModel model2 = new SpinnerDateModel();
+		model2.setCalendarField(Calendar.MINUTE);
+		
+		JSpinner spinner_1 = new JSpinner();
+		spinner_1.setBounds(197, 155, 58, 20);
+		spinner_1.setModel(model2);
+		spinner_1.setEditor(new JSpinner.DateEditor(spinner, "hh:mm"));
+		panel_4.add(spinner_1);
+		
+		
+		
+		
+		
+		
 		JPanel panelBeoVerwalten = new JPanel();
 		panelBeoVerwalten.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Beobachtung verwalten", TitledBorder.LEFT, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panelBeoVerwalten.setBounds(733, 373, 265, 321);
+		panelBeoVerwalten.setBounds(733, 504, 265, 190);
 		panelBeobachtungsliste.add(panelBeoVerwalten);
 		panelBeoVerwalten.setLayout(null);
 		
-		JButton btnBeobachtungLschen = new JButton("Beobachtung l\u00F6schen");
-		btnBeobachtungLschen.setFocusable(false);
-		btnBeobachtungLschen.setBounds(43, 141, 176, 23);
-		panelBeoVerwalten.add(btnBeobachtungLschen);
+		JButton btnBeobachtungLoeschen = new JButton("Beobachtung l\u00F6schen");
+		btnBeobachtungLoeschen.setFocusable(false);
+		btnBeobachtungLoeschen.setBounds(43, 141, 176, 23);
+		panelBeoVerwalten.add(btnBeobachtungLoeschen);
 		
 		JButton btnBeobachtungBearbeiten = new JButton("Beobachtung bearbeiten");
 		btnBeobachtungBearbeiten.addActionListener(new ActionListener() {
@@ -417,6 +466,12 @@ public class MerlinMainWindow {
 		btnBeobachtungBearbeiten.setFocusable(false);
 		btnBeobachtungBearbeiten.setBounds(43, 103, 176, 23);
 		panelBeoVerwalten.add(btnBeobachtungBearbeiten);
+		
+		
+		
+		
+		
+		
 		
 		JPanel panelStammdaten = new JPanel();
 		panelMain.add(panelStammdaten, "name_524734224155361");
@@ -514,20 +569,6 @@ public class MerlinMainWindow {
 		table_1 = new JTable();
 		scrollPane_4.setViewportView(table_1);
 	}
-	
-	
-	public static void loadLevel1(String string) {
-		cmbLevel1.addItem(string);
-	}
-	public static void loadLevel2(String string) {
-		cmbLevel2.addItem(string);
-		System.out.println("this is loadLevel2 : " + string);
-	}
-	public static void loadLevel3(String string) {
-		cmbLevel3.addItem(string);
-		System.out.println("this is loadLevel3 : " + string);
-	}
-	
 	
 	
 	

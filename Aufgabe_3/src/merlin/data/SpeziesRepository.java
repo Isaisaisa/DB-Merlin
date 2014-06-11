@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import merlin.base.Application;
 import merlin.logic.impl.MainWindowLogic;
@@ -40,28 +41,28 @@ public class SpeziesRepository {
 //       
 //	}
 	//Holt alle Level1 aus Beobachtung
-		public static List<String> getRegion(){
+		public static Vector<String> getRegion(){
 			ResultSet rs;
-			List<String> list = new LinkedList<String>();
+			Vector<String> list = new Vector<String>();
 			list.add("");
 			try {
 				rs = Application.getInstance().database().sendQuery("SELECT Level_1 FROM Beobachtunsgebiet WHERE Level_2 is null and Level_3 is null"); 
 				while (rs.next()) {
 			        list.add(rs.getString(1));
-			        System.out.println("resultSet fromLevel_1 : " + list.toString());
 			     }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			list = new Vector<String>(new HashSet<String>(list));
 			return list;
 	       
 		}
 		
 		// Quelle: stackoverflow.com/question --> (iterating over ResultSet and adding its value in an Arraylist)
-		public static List<String> getLand(String string){
+		public static Vector<String> getLand(String string){
 			ResultSet rs;
-			List<String> list = new LinkedList<String>();
+			Vector<String> list = new Vector<String>();
 			list.add("");
 			try {
 				rs = Application.getInstance().database().sendQuery("SELECT Level_2 FROM Beobachtunsgebiet WHERE Level_1 = " + "'" + string + "'" + "AND Level_2 is not null AND Level_3 is null" );
@@ -74,13 +75,13 @@ public class SpeziesRepository {
 				e.printStackTrace();
 			}
 			System.out.println(list);
-			list = new ArrayList<String>(new HashSet<String>(list));
+			list = new Vector<String>(new HashSet<String>(list));
 			return list;
 		}
 		
-		public static List<String> getArea(String string, String str){
+		public static Vector<String> getArea(String string, String str){
 			ResultSet rs;
-			List<String> list = new LinkedList<String>();
+			Vector<String> list = new Vector<String>();
 			list.add("");
 			try {
 				rs = Application.getInstance().database().sendQuery("SELECT Level_3 FROM Beobachtunsgebiet WHERE Level_1 = " + "'" + string + "'" + "AND Level_2 = " +  "'" + str + "'" + " AND Level_3 is not null" );
@@ -93,7 +94,7 @@ public class SpeziesRepository {
 				e.printStackTrace();
 			}
 			System.out.println(list);
-			list = new ArrayList<String>(new HashSet<String>(list));
+			list = new Vector<String>(new HashSet<String>(list));
 			return list;
 		}
 			
