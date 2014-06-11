@@ -21,6 +21,8 @@ import java.util.List;
 
 
 
+import java.util.Vector;
+
 import merlin.base.interfaces.DbWrapperInterface;
 import merlin.logic.exception.*;
 
@@ -132,22 +134,49 @@ public final class DbWrapper implements DbWrapperInterface {
 	 * 
 	 */
 	public ArrayList<HashMap<String, Object>> resultSetToArrayList(ResultSet rs) throws SQLException {
-		System.out.println("Beginne ResultSet Verarbeitung...");
-		
+		System.err.println("Beginne ResultSet Verarbeitung...");
+
 		ResultSetMetaData md = rs.getMetaData();
 		int columns = md.getColumnCount();
 		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>(50);
+		
 		while (rs.next()) {
+
 			HashMap<String, Object> row = new HashMap<String, Object>(columns);
 			for (int i = 1; i <= columns; ++i) {
 				row.put(md.getColumnName(i), rs.getObject(i));
 			}
 			list.add(row);
 		}
-		
-		System.out.println("ResultSet verarbeitet!");
+
+		System.err.println("ResultSet verarbeitet!");
 
 		return list;
+	}
+	
+	public Vector<Vector<Object>> getVectorOf(ResultSet resultSet) throws SQLException {
+		Vector<String> columnNames = new Vector<String>();
+		Vector<Vector<Object>> result = new Vector<Vector<Object>>();
+		
+		ResultSetMetaData metaData = resultSet.getMetaData();
+		int columns = metaData.getColumnCount();
+		
+		for (int i = 1; i <= columns; i++) {
+			String colname = metaData.getColumnName(i);
+			columnNames.addElement( colname );
+		}
+		// Zeileninhalt ermitteln
+		while (resultSet.next()) {
+			Vector<Object> row = new Vector<Object>(columns);
+			for (int i = 1; i <= columns; i++) {
+				row.addElement(resultSet.getObject(i));
+			}
+			result.addElement(row);
+		}
+
+		System.err.println("ResultSet verarbeitet!");
+		
+		return result;
 	}
 	
 	

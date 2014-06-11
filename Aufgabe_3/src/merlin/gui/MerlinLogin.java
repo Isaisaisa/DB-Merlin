@@ -28,7 +28,6 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
 import merlin.base.Application;
-import merlin.gui.enums.WindowState;
 import merlin.logic.exception.IllegalPasswordException;
 import merlin.logic.impl.MerlinLogic;
 
@@ -355,7 +354,6 @@ public class MerlinLogin {
 //				String beta =  new String(txtPasswordLog.getPassword());
 //				System.out.println(alpha);
 //				System.out.println(beta);
-				
 				boolean[] ret = MerlinLogic.loginToMerlin(txtUsernameLog.getText(), new String(txtPasswordLog.getPassword()), chkRememberUser.isSelected());
 				
 				if (ret[0] && ret[1]) {
@@ -373,8 +371,6 @@ public class MerlinLogin {
 //				} catch (Exception e) {
 //					e.printStackTrace();
 //				}
-				
-				WindowState.BIRDWATCHERLOGIN.nextState();
 			}
 		});
 		btnRegister.addActionListener(new ActionListener() {

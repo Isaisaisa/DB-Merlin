@@ -210,7 +210,6 @@ public class DatabaseSetup extends JDialog {
 			});
 			txtURL.setBackground(Color.WHITE);
 			txtURL.setText(app.getDbURL());
-//			txtURL.setText(defaultDbURL);
 			txtURL.setColumns(10);
 			txtURL.setBounds(48, 19, 319, 20);
 			dbPanel.add(txtURL);
@@ -230,7 +229,6 @@ public class DatabaseSetup extends JDialog {
 				}
 			});
 			txtPort.setText(app.getDbPort());
-//			txtPort.setText(defaultDbPort);
 			txtPort.setColumns(5);
 			txtPort.setBounds(48, 50, 319, 20);
 			dbPanel.add(txtPort);
@@ -250,7 +248,6 @@ public class DatabaseSetup extends JDialog {
 				}
 			});
 			txtSID.setText(app.getDbSID());
-//			txtSID.setText(defaultDbSID);
 			txtSID.setColumns(10);
 			txtSID.setBounds(48, 81, 319, 20);
 			dbPanel.add(txtSID);
@@ -289,14 +286,24 @@ public class DatabaseSetup extends JDialog {
 						
 						// TODO boolean array auswerten, um festzustellen, welche Felder aufgrund von fehlern eingefärbt werden müssen
 						try {
-							if (MerlinLogic.loginToDatabase(txtURL.getText(),
+							boolean[] loginResult = MerlinLogic.loginToDatabase(
+									txtURL.getText(),
 									txtPort.getText(), txtSID.getText(),
 									txtAKennung.getText(), new String(
 									pwdPasswort.getPassword()),
-									chkRememberLogin.isSelected())) {
+									chkRememberLogin.isSelected());
+							
+							if (loginResult[0] && loginResult[1] && loginResult[2] && loginResult[3] && loginResult[4] && loginResult[5]) {
 								dispose();
 								proceedToNextDialog = true;
 								MerlinLogin.main();
+							} else {
+								//login fehlgeschlagen
+								if (loginResult[0]) txtURL.setBackground(badColor);
+								if (loginResult[1]) txtPort.setBackground(badColor);
+								if (loginResult[2]) txtSID.setBackground(badColor);
+								if (loginResult[3]) txtAKennung.setBackground(badColor);
+								if (loginResult[4]) pwdPasswort.setBackground(badColor);
 							}
 						} catch (Exception e) {
 							e.printStackTrace();

@@ -28,14 +28,15 @@ public final class Application {
 
 	private Application() throws Exception {
 		loadProperties();
+		database = DbWrapper.getInstance();
 		/*
 		 * testings	 area	
 		 */
 		
+		
 		/*
 		 * testings area end
 		 */
-		database = DbWrapper.getInstance();
 	}
 
 	public static Application getInstance() throws Exception {
@@ -95,7 +96,7 @@ public final class Application {
 	}
 	
 	public void shutdown() {
-		shutdown(true);
+		shutdown(false);
 	}
 	
 	
