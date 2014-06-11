@@ -29,8 +29,9 @@ public class MerlinLogic {
 	
 //	TODO login überprüfen
 //
-	public static boolean loginToDatabase(String dbURL, String dbPort, String dbSID, String dbUsername, String dbPassword, boolean saveLoginData) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, UnsupportedLookAndFeelException, Exception {
-
+	public static boolean[] loginToDatabase(String dbURL, String dbPort, String dbSID, String dbUsername, String dbPassword, boolean saveLoginData) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, UnsupportedLookAndFeelException, Exception {
+		boolean loginSucceed = false;
+		
 		DbWrapper database = Application.getInstance().database();
 		boolean cios[] = checkInputOfSetup(dbURL, dbPort, dbSID, dbUsername, dbPassword);
 
@@ -57,14 +58,17 @@ public class MerlinLogic {
 		// CONNECT
 		try {
 			database.connect();
+			loginSucceed = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println(e.getMessage());
 			System.err.println("MerlinLogic: loginToDatabase failed.");
-			return false;
+			loginSucceed = false;
 		}
+		
+		boolean[] result = {cios[0], cios[1], cios[2], cios[3], cios[4], loginSucceed};
 
-		return true;
+		return result;
 
 	}
 	
@@ -180,12 +184,8 @@ public class MerlinLogic {
 	}
 
 	
-//	public static boolean isRegistered(String benutzername, char[] passwort) throws Exception {
-//		BirdwatcherRepository.isRegistered(benutzername, passwort);
-//		return true;
-//	}
-	
 	public static boolean[] loginToMerlin(String username, String password, boolean rememberLogin) {
+		boolean loginSucceed = false;
 		// TODO eigentlichen login an merlin durchführen
 		boolean ciom[] = checkInputOfMerlinLogin(username, password);
 		
@@ -203,9 +203,22 @@ public class MerlinLogic {
 			
 		}
 		
-		//TODO vorrübergehendes return statement, muss noch abhängig davon gemacht werden, ob ein BW vorhanden ist oder nicht.
-		// hauptsache, die methode hier behindert erstmal nicht.
-		return ciom;
+		try {
+			if (BirdwatcherRepository.isRegistered(username, password)) {
+				loginSucceed = true;
+			} else {
+				// TODO Sinnvollere Maßnahmen oder Fehler werfen (?)
+				System.out.println("Birdwatcher login failed. Passwort falsch oder Birdwatcher nicht vorhanden.");
+//				loginSucceed = false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// Ergebnisse kumulieren
+		boolean[] result = {ciom[0], ciom[1], loginSucceed};
+
+		return result;
 	}
 	
 	public boolean loginBirdwatcher(String username, String password) {
