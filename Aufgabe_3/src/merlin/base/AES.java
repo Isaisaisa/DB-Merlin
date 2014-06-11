@@ -30,7 +30,9 @@ public class AES {
 		SecretKeySpec key = new SecretKeySpec(encryptionKey.getBytes("UTF-8"), "AES");
 		cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(IV.getBytes("UTF-8")));
 		
+		// trim führt evtl. zu fehlern
 		return (new String(cipher.doFinal(cipherText), "UTF-8")).trim();
+//		return (new String(cipher.doFinal(cipherText), "UTF-8"));
 	}
 	
 	public static String decrypt(byte[] cipherText) throws Exception {
