@@ -52,7 +52,6 @@ import javax.swing.JTextArea;
 public class MerlinMainWindow {
 
 	private JFrame frmMerlinMain;
-	private JTable table;
 	private JTable tableCheckliste;
 	private JTable tblStammdatenCheck;
 	private JPanel panelMain;
@@ -65,6 +64,12 @@ public class MerlinMainWindow {
 	private JTable tblBeobachtungsliste;
 	private JTextField textField;
 	private JTextField textField_1;
+	private JTable table_1;
+	private JTextField textField_6;
+	private JTextField textField_2;
+	private JTextField textField_3;
+	private JTextField textField_4;
+	private JTextField textField_5;
 	
 	
 	/**
@@ -263,22 +268,6 @@ public class MerlinMainWindow {
 		progressBar.setBounds(10, 694, 760, 14);
 		panelCheckliste.add(progressBar);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(10, 594, 760, 89);
-		panelCheckliste.add(panel_1);
-		panel_1.setLayout(null);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setAlignmentY(Component.TOP_ALIGNMENT);
-		scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
-		scrollPane.setDoubleBuffered(true);
-		scrollPane.setLayout(null);
-		scrollPane.setBounds(0, 0, 760, 89);
-		panel_1.add(scrollPane);
-		
-		table = new JTable();
-		scrollPane.setColumnHeaderView(table);
-		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBounds(10, 90, 760, 493);
 		panelCheckliste.add(panel_2);
@@ -300,7 +289,14 @@ public class MerlinMainWindow {
 		btnFiltern.setBounds(458, 45, 89, 23);
 		panelCheckliste.add(btnFiltern);
 		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Bearbeitung", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel_1.setBounds(780, 95, 218, 488);
+		panelCheckliste.add(panel_1);
+		panel_1.setLayout(null);
+		
 		JPanel panelBeobachtungsliste = new JPanel();
+		panelBeobachtungsliste.setBackground(SystemColor.control);
 		panelMain.add(panelBeobachtungsliste, "name_117830304432961");
 		panelBeobachtungsliste.setLayout(null);
 		
@@ -323,8 +319,9 @@ public class MerlinMainWindow {
 		scrollPane_2.setViewportView(tblBeobachtungsliste);
 		
 		JPanel panel_4 = new JPanel();
-		panel_4.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Beobachtung hinzuf\u00FCgen", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_4.setBounds(733, 23, 265, 320);
+		panel_4.setBackground(SystemColor.control);
+		panel_4.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Beobachtung hinzuf\u00FCgen", TitledBorder.LEFT, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel_4.setBounds(733, 22, 265, 320);
 		panelBeobachtungsliste.add(panel_4);
 		panel_4.setLayout(null);
 		
@@ -394,13 +391,32 @@ public class MerlinMainWindow {
 		
 		JButton btnHinzufgen = new JButton("Hinzuf\u00FCgen");
 		btnHinzufgen.setFocusable(false);
-		btnHinzufgen.setBounds(108, 274, 89, 23);
+		btnHinzufgen.setBounds(56, 272, 89, 23);
 		panel_4.add(btnHinzufgen);
 		
-		JPanel panel_5 = new JPanel();
-		panel_5.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Beobachtung hinzuf\u00FCgen", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_5.setBounds(733, 373, 265, 320);
-		panelBeobachtungsliste.add(panel_5);
+		JToggleButton toggleButton_3 = new JToggleButton("Abbrechen");
+		toggleButton_3.setBounds(155, 272, 93, 23);
+		panel_4.add(toggleButton_3);
+		
+		JPanel panelBeoVerwalten = new JPanel();
+		panelBeoVerwalten.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Beobachtung verwalten", TitledBorder.LEFT, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelBeoVerwalten.setBounds(733, 373, 265, 321);
+		panelBeobachtungsliste.add(panelBeoVerwalten);
+		panelBeoVerwalten.setLayout(null);
+		
+		JButton btnBeobachtungLschen = new JButton("Beobachtung l\u00F6schen");
+		btnBeobachtungLschen.setFocusable(false);
+		btnBeobachtungLschen.setBounds(43, 141, 176, 23);
+		panelBeoVerwalten.add(btnBeobachtungLschen);
+		
+		JButton btnBeobachtungBearbeiten = new JButton("Beobachtung bearbeiten");
+		btnBeobachtungBearbeiten.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnBeobachtungBearbeiten.setFocusable(false);
+		btnBeobachtungBearbeiten.setBounds(43, 103, 176, 23);
+		panelBeoVerwalten.add(btnBeobachtungBearbeiten);
 		
 		JPanel panelStammdaten = new JPanel();
 		panelMain.add(panelStammdaten, "name_524734224155361");
@@ -409,7 +425,7 @@ public class MerlinMainWindow {
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBorder(new TitledBorder(null, "Manuelles Statement", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(458, 11, 540, 68);
+		panel.setBounds(24, 11, 540, 68);
 		panelStammdaten.add(panel);
 		
 		JTextPane textPane = new JTextPane();
@@ -419,48 +435,84 @@ public class MerlinMainWindow {
 		panel.add(textPane);
 		
 		JButton button = new JButton("Ab daf\u00FCr");
+		button.setFocusable(false);
 		button.setBounds(441, 21, 89, 38);
 		panel.add(button);
-		
-		JButton btnKonflikteErmitteln = new JButton("Konflikte ermitteln ");
-		btnKonflikteErmitteln.setBounds(303, 27, 145, 29);
-		panelStammdaten.add(btnKonflikteErmitteln);
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setLayout(null);
 		panel_3.setBorder(new TitledBorder(null, "Optionen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_3.setBounds(780, 90, 218, 493);
+		panel_3.setBounds(780, 90, 218, 543);
 		panelStammdaten.add(panel_3);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(25, 60, 172, 20);
-		panel_3.add(comboBox);
-		
-		JLabel label = new JLabel("Sprache");
-		label.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		label.setBounds(25, 38, 172, 20);
-		panel_3.add(label);
-		
-		JLabel label_1 = new JLabel("Vogel");
-		label_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		label_1.setBounds(25, 91, 172, 14);
-		panel_3.add(label_1);
-		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(25, 114, 172, 20);
-		panel_3.add(comboBox_1);
-		
 		JToggleButton toggleButton = new JToggleButton("Hinzuf\u00FCgen");
-		toggleButton.setBounds(47, 168, 121, 23);
+		toggleButton.setFocusable(false);
+		toggleButton.setBounds(47, 376, 121, 23);
 		panel_3.add(toggleButton);
 		
 		JToggleButton toggleButton_1 = new JToggleButton("L\u00F6schen");
-		toggleButton_1.setBounds(47, 201, 121, 23);
+		toggleButton_1.setFocusable(false);
+		toggleButton_1.setBounds(47, 410, 121, 23);
 		panel_3.add(toggleButton_1);
 		
 		JToggleButton toggleButton_2 = new JToggleButton("Abbrechen");
-		toggleButton_2.setBounds(47, 235, 121, 23);
+		toggleButton_2.setFocusable(false);
+		toggleButton_2.setBounds(47, 444, 121, 23);
 		panel_3.add(toggleButton_2);
+		
+		textField_6 = new JTextField();
+		textField_6.setColumns(10);
+		textField_6.setBounds(26, 63, 170, 29);
+		panel_3.add(textField_6);
+		
+		JLabel lblVogelId = new JLabel("Vogel ID");
+		lblVogelId.setBounds(26, 38, 170, 14);
+		panel_3.add(lblVogelId);
+		
+		JLabel lblArtentyp = new JLabel("Artentyp");
+		lblArtentyp.setBounds(26, 103, 170, 14);
+		panel_3.add(lblArtentyp);
+		
+		JLabel lblDeutscherName = new JLabel("Deutscher Name");
+		lblDeutscherName.setBounds(26, 168, 170, 14);
+		panel_3.add(lblDeutscherName);
+		
+		JLabel lblEnglischerName = new JLabel("Englischer Name");
+		lblEnglischerName.setBounds(26, 233, 170, 14);
+		panel_3.add(lblEnglischerName);
+		
+		JLabel lblLateinischerName = new JLabel("Lateinischer Name");
+		lblLateinischerName.setBounds(26, 298, 170, 14);
+		panel_3.add(lblLateinischerName);
+		
+		textField_2 = new JTextField();
+		textField_2.setColumns(10);
+		textField_2.setBounds(26, 128, 170, 29);
+		panel_3.add(textField_2);
+		
+		textField_3 = new JTextField();
+		textField_3.setColumns(10);
+		textField_3.setBounds(26, 193, 170, 29);
+		panel_3.add(textField_3);
+		
+		textField_4 = new JTextField();
+		textField_4.setColumns(10);
+		textField_4.setBounds(26, 258, 170, 29);
+		panel_3.add(textField_4);
+		
+		textField_5 = new JTextField();
+		textField_5.setColumns(10);
+		textField_5.setBounds(26, 323, 170, 29);
+		panel_3.add(textField_5);
+		
+		JScrollPane scrollPane_4 = new JScrollPane();
+		scrollPane_4.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane_4.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane_4.setBounds(24, 90, 746, 543);
+		panelStammdaten.add(scrollPane_4);
+		
+		table_1 = new JTable();
+		scrollPane_4.setViewportView(table_1);
 	}
 	
 	
