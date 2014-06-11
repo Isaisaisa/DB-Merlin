@@ -32,5 +32,8 @@ public class MainWindowLogic {
 	}
 	
 	
+	public static void addObservation(String level1, String level2, String level3, String dateFrom, String dateUntil, String notice){
+		addObservation(level1, level2, level3, dateFrom, dateUntil, notice);
+	}
 	
 }

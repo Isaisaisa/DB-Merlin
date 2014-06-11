@@ -99,4 +99,12 @@ public class SpeziesRepository {
 		}
 			
 		
+		
+		
+		public static void addObservation(String level1, String level2, String level3, String dateFrom, String dateUntil, String notice){
+			
+			
+			
+		}
+		
 }
