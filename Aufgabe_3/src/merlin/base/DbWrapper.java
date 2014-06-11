@@ -19,6 +19,8 @@ import java.util.List;
 
 
 
+
+
 import merlin.base.interfaces.DbWrapperInterface;
 import merlin.logic.exception.*;
 
@@ -149,6 +151,38 @@ public final class DbWrapper implements DbWrapperInterface {
 	}
 	
 	
+	public List<String> getListOfQuery(String query) throws Exception {
+		ResultSet rs = sendQuery(query);
+		return resultSetToList(rs);
+	}
+	
+	
+	// kompakter Accessor, der sich der ersten Spalte bedient
+	public List<String> resultSetToList(ResultSet resultSet) {
+		return resultSetToList(resultSet, 1);
+	}
+	
+	// bedient sich der <column>. Spalte des Resultsets und fügt sie der resultList hinzu
+	public List<String> resultSetToList(ResultSet resultSet, int column) {
+		List<String> resultList = new ArrayList<String>();
+		
+		try {
+			while (resultSet.next()) {
+				try {
+					resultList.add(resultSet.getString(column));
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return resultList;
+	}
+	
+	
+	// TODO UNFINISHED!!
 	public List<HashMap<String, Object>> processResultSet(ResultSet resultSet) throws SQLException {
 		List<HashMap<String, Object>> resultTable = resultSetToArrayList(resultSet);
 		resultSet.close();
