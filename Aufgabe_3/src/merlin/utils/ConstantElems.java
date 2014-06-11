@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Savepoint;
 import java.util.Hashtable;
 import java.util.Properties;
 
@@ -20,6 +21,8 @@ public final class ConstantElems {
 	// Properties Key Constants
 	public static final String 	loginDataPropKey 			= "LD"; // value encrypted!
 	public static final String 	loginDataBirdwatcherPropKey = "BW"; // value encrypted!
+	public static final String 	userPropKey					= "User"; // value encrypted!
+	public static final String 	pwdPropKey 					= "Pwd"; // value encrypted!
 	public static final String 	loginDataSplitString 		= "\0";
 	public static final String 	rememberLoginPropKey		= "RL";
 	public static final String 	dbURLPropKey				= "dbURL";
@@ -104,6 +107,8 @@ public final class ConstantElems {
 		pd.put(rememberLoginPropKey, "false");
 		pd.put(loginDataPropKey, "");
 		pd.put(loginDataBirdwatcherPropKey, "");
+		pd.put(userPropKey, "");
+		pd.put(pwdPropKey, "");
 	}
 	
 	public static void ensurePropConsistency() {
@@ -115,5 +120,13 @@ public final class ConstantElems {
 		if (properties.getProperty(rememberLoginPropKey) == null) {properties.setProperty(rememberLoginPropKey, pd.get(rememberLoginPropKey));}
 		if (properties.getProperty(loginDataPropKey) == null) {properties.setProperty(loginDataPropKey, pd.get(loginDataPropKey));}
 		if (properties.getProperty(loginDataBirdwatcherPropKey) == null) {properties.setProperty(loginDataBirdwatcherPropKey, pd.get(loginDataPropKey));}
+		if (properties.getProperty(userPropKey) == null) {properties.setProperty(loginDataBirdwatcherPropKey, pd.get(userPropKey));}
+		if (properties.getProperty(pwdPropKey) == null) {properties.setProperty(loginDataBirdwatcherPropKey, pd.get(pwdPropKey));}
+		try {
+			saveProperties();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.err.println(e.getMessage());
+		}
 	}
 }
