@@ -35,6 +35,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.JProgressBar;
@@ -79,8 +80,8 @@ public class MerlinMainWindow {
 	private String level_1;
 	private String level_2;
 	private String level_3;
-	private JSpinner dateFrom;
-	private JSpinner dateUntil;
+	private JSpinner uhrzeitVon;
+	private JSpinner uhrzeitBis;
 	private JDateChooser datumVon;
 	private JDateChooser datumBis;
 	private JTextArea txtNotice;
@@ -478,30 +479,33 @@ public class MerlinMainWindow {
 		
 		
 		
+		
+		
+		
 		JButton btnHinzufgen = new JButton("Hinzuf\u00FCgen");
 		btnHinzufgen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
-				SimpleDateFormat format1 = new SimpleDateFormat("dd.MM.yyyy"); 
-				System.out.println(format1.format(datumVon.getCalendar().getTime()));
 				
-				String date1 = dateFrom.getValue().toString();
-				String day1 = datumVon.getCalendar().toString();
-				String dateFrom1 = date1 + day1;
-				
-				String date2 = dateUntil.getValue().toString();
-				System.out.println("489 MerlinMainWindow : " + date2);
-				String day2 = datumBis.getCalendar().toString();
-				System.out.println("491 MerlinMainWindow : " + day2);
-				String dateUntil1 = date2 + day2;
-				
-				
-				
+			
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+			SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+			
+			String formatVon = dateFormat.format(datumVon.getDate()) + " " + timeFormat.format((Date)uhrzeitVon.getValue());
+			String formatBis = dateFormat.format(datumBis.getDate()) + " " + timeFormat.format((Date)uhrzeitBis.getValue());
+			
+			System.out.println(formatVon);
+			System.out.println(formatBis);
+			
 				String notice = txtNotice.getText();
 				
-				MainWindowLogic.addObservation(level_1, level_2, level_3,  dateFrom1, dateUntil1, notice);
+				MainWindowLogic.addObservation(level_1, level_2, level_3,  formatVon, formatBis, notice);
 			}
 		});
+		
+		
+		
+		
+		
 		btnHinzufgen.setFocusable(false);
 		btnHinzufgen.setBounds(56, 272, 89, 23);
 		panel_4.add(btnHinzufgen);
@@ -526,20 +530,20 @@ public class MerlinMainWindow {
 		SpinnerDateModel model1 = new SpinnerDateModel();
 		model1.setCalendarField(Calendar.MINUTE);
 		
-		dateFrom = new JSpinner();
-		dateFrom.setBounds(197, 130, 58, 20);
-		dateFrom.setModel(model1);
-		dateFrom.setEditor(new JSpinner.DateEditor(dateFrom, "HH:mm"));
-		panel_4.add(dateFrom);
+		uhrzeitVon = new JSpinner();
+		uhrzeitVon.setBounds(197, 130, 58, 20);
+		uhrzeitVon.setModel(model1);
+		uhrzeitVon.setEditor(new JSpinner.DateEditor(uhrzeitVon, "HH:mm"));
+		panel_4.add(uhrzeitVon);
 		
 		SpinnerDateModel model2 = new SpinnerDateModel();
 		model2.setCalendarField(Calendar.MINUTE);
 		
-		dateUntil = new JSpinner();
-		dateUntil.setBounds(197, 155, 58, 20);
-		dateUntil.setModel(model2);
-		dateUntil.setEditor(new JSpinner.DateEditor(dateUntil, "HH:mm"));
-		panel_4.add(dateUntil);
+		uhrzeitBis = new JSpinner();
+		uhrzeitBis.setBounds(197, 155, 58, 20);
+		uhrzeitBis.setModel(model2);
+		uhrzeitBis.setEditor(new JSpinner.DateEditor(uhrzeitBis, "HH:mm"));
+		panel_4.add(uhrzeitBis);
 		
 		
 		
