@@ -151,7 +151,7 @@ public class MerlinLogin {
 		frmLogin.getContentPane().add(label);
 
 		panelRegistration = new JPanel();
-		panelRegistration.setBackground(SystemColor.textHighlightText);
+		panelRegistration.setBackground(SystemColor.control);
 		/*
 		 * 
 		 * 

@@ -98,7 +98,7 @@ DELETE Vogelart
 WHERE Artentyp LIKE 'group%';
   
 /* dt. Beobachtungsgebiete eintragen */
-	
+
 INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (1,  'WP', null, null);  
 INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (2,  'WP', 'GER', null);
 INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (3,  'WP', 'GER', 'Hamburg');
@@ -117,6 +117,7 @@ INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (15, 'W
 INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (16, 'WP', 'GER', 'Saarland');
 INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (17, 'WP', 'GER', 'Baden-Württemberg');
 INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (18, 'WP', 'GER', 'Bayern');
+INSERT INTO Beobachtunsgebiet (Ort_ID, Level_1, Level_2, Level_3) Values (19, 'UUA', null, null); 
 
 
 /* wie wird ein Statement formuliert, mit dem man Anhand Level 3 auf Level 2 schließen kann?
