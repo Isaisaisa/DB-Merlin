@@ -206,15 +206,11 @@ public class MerlinMainWindow {
 		panelOrtsfilter.add(lblLevel3);
 		
 		cmbLevel1 = new JComboBox<String>();
-		cmbLevel1.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent arg0) {
-				System.out.println("item changed here");
-			}
-		});
 		cmbLevel1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println("actionPerformed");
 				level1 = cmbLevel1.getSelectedItem().toString();
+				System.out.println( "is this really a NullPointerException" + level1);
 				if (cmbLevel1.getSelectedItem().toString() != null){
 					MainWindowLogic.loadLand(level1);
 					System.out.println("cmbLevel2 MerlinMainWindow : "+ level1);
