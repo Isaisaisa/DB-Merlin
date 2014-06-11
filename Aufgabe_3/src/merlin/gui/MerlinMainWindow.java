@@ -55,9 +55,7 @@ public class MerlinMainWindow {
 	private static JComboBox<String> cmbLevel2;
 	private static JComboBox<String> cmbLevel3;
 	
-	public String level1(){
-		return level1;
-	}
+	
 	/**
 	 * Launch the application.
 	 * @throws UnsupportedLookAndFeelException 
@@ -204,7 +202,10 @@ public class MerlinMainWindow {
 		cmbLevel1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				level1 = cmbLevel1.getSelectedItem().toString();
-				System.out.println("cmbLevel1 MerlinMainWindow : "+level1);
+				if (cmbLevel1.getSelectedItem().toString().equals(level1)){
+					MainWindowLogic.loadLand(level1);
+					System.out.println("cmbLevel2 MerlinMainWindow : "+ level1);
+				}
 				MainWindowLogic.selectLocation(level1);
 			}
 		});
@@ -218,8 +219,6 @@ public class MerlinMainWindow {
 			public void actionPerformed(ActionEvent arg0) {
 				level2 = cmbLevel2.getSelectedItem().toString();
 				MainWindowLogic.selectLocation(level1, level2);
-				MainWindowLogic.loadLand(level1());
-				System.out.println("cmbLevel2 MerlinMainWindow : "+level1());
 			}
 		});
 		cmbLevel2.setBounds(151, 36, 136, 20);
@@ -358,6 +357,7 @@ public class MerlinMainWindow {
 	}
 	public static void loadLevel2(String string) {
 		cmbLevel2.addItem(string);
+		System.out.println("this is loadLevel2 : " + string);
 	}
 	
 	public DefaultTableModel getTableModel(ResultSet resultSet) throws SQLException {

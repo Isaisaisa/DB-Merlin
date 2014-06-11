@@ -41,9 +41,10 @@ public class SpeziesRepository {
 			ResultSet rs;
 			List<String> list = new LinkedList<String>();
 			try {
-				rs = Application.getInstance().database().sendQuery("SELECT Level_1 FROM Beobachtunsgebiet WHERE Level_2 is null and Level_3 is null"); /* WHERE LEVEL_2 = Null and Level_3 = Null*/
-				 while (rs.next()) {
-			        	list.add(rs.getString(1));
+				rs = Application.getInstance().database().sendQuery("SELECT Level_1 FROM Beobachtunsgebiet WHERE Level_2 is null and Level_3 is null"); 
+				while (rs.next()) {
+			        list.add(rs.getString(1));
+			        System.out.println("resultSet fromLevel_1 : " + list.toString());
 			     }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -56,8 +57,8 @@ public class SpeziesRepository {
 			ResultSet rs;
 			List<String> list = new LinkedList<String>();
 			try {
-				rs = Application.getInstance().database().sendQuery("SELECT Level_2 FROM Beobachtunsgebiet WHERE Level_1 = " + string + "AND Level_3 is null" );
-				
+				rs = Application.getInstance().database().sendQuery("SELECT Level_2 FROM Beobachtunsgebiet WHERE Level_1 = " + "'" + string + "'" + "AND Level_2 is not null AND Level_3 is null" );
+				System.out.println(rs);
 				 while (rs.next()) {
 			        	list.add(rs.getString(1));
 			     }
