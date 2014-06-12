@@ -5,12 +5,13 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 
-import javax.imageio.*;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -22,6 +23,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.BevelBorder;
@@ -33,13 +35,6 @@ import merlin.logic.impl.MerlinLogic;
 import merlin.utils.ConstantElems;
 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
-
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-import javax.swing.SwingConstants;
-
-import java.awt.SystemColor;
 
 public class MerlinLogin {
 
@@ -293,6 +288,7 @@ public class MerlinLogin {
 
 		final JCheckBox chkRememberUser = new JCheckBox(
 				"Anmeldedaten merken (AES verschl\u00FCsselt)");
+		chkRememberUser.setEnabled(false);
 		chkRememberUser.setBounds(6, 103, 227, 23);
 		panelLogin.add(chkRememberUser);
 

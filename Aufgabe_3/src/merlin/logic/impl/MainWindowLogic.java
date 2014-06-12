@@ -44,7 +44,7 @@ public class MainWindowLogic {
 	public static DefaultTableModel loadTableDataIntoGui() {
 //		return SpeziesRepository.getTableData();
 		try {
-			return Application.getInstance().database().getTableModelOfQuery("select * from beobachtunsgebiet");
+			return Application.getInstance().database().getTableModelOfQuery("select rownum, b.level_1 as Region, b.level_2 as Land, b.level_3 as Gebiet from beobachtunsgebiet b");
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMessageBox(e);

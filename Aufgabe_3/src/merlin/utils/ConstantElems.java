@@ -114,8 +114,8 @@ public final class ConstantElems {
 		pd.put(rememberLoginPropKey, "false");
 		pd.put(loginDataPropKey, "");
 		pd.put(loginDataBirdwatcherPropKey, "");
-		pd.put(userPropKey, "");
-		pd.put(pwdPropKey, "");
+//		pd.put(userPropKey, "");
+//		pd.put(pwdPropKey, "");
 	}
 	
 	public static void ensurePropConsistency() {
@@ -127,8 +127,8 @@ public final class ConstantElems {
 		if (properties.getProperty(rememberLoginPropKey) == null) {properties.setProperty(rememberLoginPropKey, pd.get(rememberLoginPropKey));}
 		if (properties.getProperty(loginDataPropKey) == null) {properties.setProperty(loginDataPropKey, pd.get(loginDataPropKey));}
 		if (properties.getProperty(loginDataBirdwatcherPropKey) == null) {properties.setProperty(loginDataBirdwatcherPropKey, pd.get(loginDataBirdwatcherPropKey));}
-		if (properties.getProperty(userPropKey) == null) {properties.setProperty(userPropKey, pd.get(userPropKey));}
-		if (properties.getProperty(pwdPropKey) == null) {properties.setProperty(pwdPropKey, pd.get(pwdPropKey));}
+//		if (properties.getProperty(userPropKey) == null) {properties.setProperty(userPropKey, pd.get(userPropKey));}
+//		if (properties.getProperty(pwdPropKey) == null) {properties.setProperty(pwdPropKey, pd.get(pwdPropKey));}
 		try {
 			saveProperties();
 		} catch (IOException e) {

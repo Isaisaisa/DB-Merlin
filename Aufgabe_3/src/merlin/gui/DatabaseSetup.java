@@ -185,6 +185,7 @@ public class DatabaseSetup extends JDialog {
 		}
 		{
 			chkRememberLogin = new JCheckBox("Anmeldedaten merken (AES verschl\u00FCsselt)");
+			chkRememberLogin.setEnabled(false);
 			chkRememberLogin.setBounds(6, 46, 357, 23);
 			loginPanel.add(chkRememberLogin);
 		}
@@ -265,6 +266,7 @@ public class DatabaseSetup extends JDialog {
 		dbPanel.add(btnReset);
 		
 			final JLabel lblError = new JLabel("Markierte Felder enthalten fehlerhafte Eingaben oder sind leer");
+			lblError.setEnabled(false);
 			lblError.setForeground(Color.RED);
 			lblError.setBounds(43, 250, 309, 14);
 			panelDatabaseSetup.add(lblError);
@@ -313,6 +315,7 @@ public class DatabaseSetup extends JDialog {
 				});
 				{
 					lblConnectionState = new JLabel("Verbindung wird hergestellt. Bitte warten!");
+					lblConnectionState.setEnabled(false);
 					buttonPane.add(lblConnectionState);
 					lblConnectionState.setVisible(false);
 				}

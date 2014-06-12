@@ -34,8 +34,8 @@ CREATE TABLE Birdwatcher
         
 CREATE TABLE Beobachtunsgebiet 
        (Ort_ID        INTEGER PRIMARY KEY, 
-        LEVEL_1       VARCHAR(5) NOT NULL, 
-        LEVEL_2       VARCHAR(5), 
+        LEVEL_1       VARCHAR(150) NOT NULL, 
+        LEVEL_2       VARCHAR(150), 
         LEVEL_3       VARCHAR(150));
         
 CREATE TABLE beobachtet   
@@ -131,24 +131,24 @@ END;
   
 /* dt. Beobachtungsgebiete eintragen */
 
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', null, null);  
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', null); /* 2 */
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Hamburg'); /* 3 */
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Schleswig-Holstein');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Bremen');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Mecklenburg-Vorpommern');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Niedersachsen');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Berlin');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Brandenburg');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Sachsen-Anhalt');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Nordrhein-Westfalen');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Hessen');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Thüringen');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Sachsen');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Rheinland-Pfalz');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Saarland');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Baden-Württemberg');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Bayern');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', null, null);  
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', null); /* 2 */
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Hamburg'); /* 3 */
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Schleswig-Holstein');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Bremen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Mecklenburg-Vorpommern');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Niedersachsen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Berlin');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Brandenburg');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Sachsen-Anhalt');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Nordrhein-Westfalen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Hessen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Thüringen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Sachsen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Rheinland-Pfalz');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Saarland');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Baden-Württemberg');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Bayern');
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('AAA', null, null);
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('AFR', null, null);
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('AUS', null, null);
