@@ -2,6 +2,7 @@ package merlin.data.entities;
 
 public interface Birdwatcher {
 	
+	public String id();
 	
 	public String name();
 
@@ -12,4 +13,6 @@ public interface Birdwatcher {
 	public String password();
 
 	public String email();
+	
+	public String role();
 }

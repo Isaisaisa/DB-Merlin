@@ -19,6 +19,9 @@ public class BirdwatcherRepository {
 	public static Birdwatcher create(String name, String vorname, String benutzername, String passwort, String email) throws Exception {
 
 		DbWrapper database = Application.getInstance().database();
+		// Selectstatement richtig machen mit sendquery
+		String id   = ("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = " + benutzername);
+		String role = ("SELECT Rolle FROM Birdwatcher WHERE Benutzername = " + benutzername);
 		
 		try {
 			database.sendUpdate("INSERT INTO Birdwatcher (Name, Vorname, Benutzername, Passwort, Email, Rolle) " +
@@ -26,14 +29,11 @@ public class BirdwatcherRepository {
 			System.out.println("is it null?");
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return BirdwatcherImpl.valueOf(name, vorname, benutzername, new String(passwort), email);
+			return BirdwatcherImpl.valueOf(id, name, vorname, benutzername, new String(passwort), email, role);
 		}
 		
-//		ID und ROLE kommen nicht mehr beim BirdwatcherImpl vor, trotzdem hier einkommentiert dringelassen
-//		String id   = ("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = " + benutzername);
-//		String role = ("SELECT Rolle FROM Birdwatcher WHERE Benutzername = " + benutzername);
-//		System.out.println("should not be null");
-		return BirdwatcherImpl.valueOf(name, vorname, benutzername, new String(passwort), email);
+
+		return BirdwatcherImpl.valueOf(id, name, vorname, benutzername, new String(passwort), email, role);
 	} 
 	
 	
