@@ -97,7 +97,6 @@ INSERT INTO Birdwatcher (Name, Vorname, Benutzername, Passwort, Email, Rolle)
 INSERT INTO Birdwatcher (Name, Vorname, Benutzername, Passwort, Email, Rolle)
   VALUES ('Watcher', 'Birdy', 'demo', 'merlin', 'demo@merlin.de', 'R03');
 
-
 /* Import aller Stammdaten:
 
 externen Attribute      eigene Attribute
@@ -184,17 +183,17 @@ INSERT INTO kommtVor
 
 /* Beispiel-Beobachtungen des Demo-Nutzers in seine Beobachtungsliste (pers. Checkliste) eintragen */
 INSERT INTO beobachtet
-  VALUES (284, 3, 2, TO_DATE('08-MAI-2014 11:02', 'DD-MONTH-YYYY HH24:MI'), TO_DATE('09-MAI-2014 14:15', 'DD-MONTH-YYYY HH24:MI'), '2 m. 5 w. 3 juv.');
+  VALUES (284, 3, 2, TO_DATE('08-05-2014 11:02', 'DD-MM-YYYY HH24:MI'), TO_DATE('09-MAI-2014 14:15', 'DD-MONTH-YYYY HH24:MI'), '2 m. 5 w. 3 juv.');
 	
 INSERT INTO beobachtet
-  VALUES (300, 3, 3, TO_DATE('28-MAI-2014 21:02', 'DD-MONTH-YYYY HH24:MI'), null, '...');
+  VALUES (300, 3, 3, TO_DATE('28-05-2014 21:02', 'DD-MM-YYYY HH24:MI'), null, '...');
 	
 INSERT INTO beobachtet
-  VALUES (397, 3, 2, TO_DATE('14-MAI-2014 13:14', 'DD-MONTH-YYYY HH24:MI'), null, 'Stürmisches Wetter');
+  VALUES (397, 3, 2, TO_DATE('14-06-2014 13:14', 'DD-MM-YYYY HH24:MI'), null, 'Stürmisches Wetter');
 	
 INSERT INTO beobachtet
-  VALUES (256, 3, 2, TO_DATE('08-MAI-2014 11:27', 'DD-MONTH-YYYY HH24:MI'), null, '3 m. 5 w.');
+  VALUES (256, 3, 2, TO_DATE('08-07-2014 11:27', 'DD-MM-YYYY HH24:MI'), null, '3 m. 5 w.');
 	
 INSERT INTO beobachtet
-  VALUES (284, 3, 2, TO_DATE('08-MAI-2014 11:03', 'DD-MONTH-YYYY HH24:MI'), null, '2 m. im Kampf');
+  VALUES (284, 3, 2, TO_DATE('08-07-2014 11:03', 'DD-MM-YYYY HH24:MI'), null, '2 m. im Kampf');
     

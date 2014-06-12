@@ -6,12 +6,8 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Toolkit;
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -26,14 +22,18 @@ public final class Application {
 	public ExitCode exitCode;
 	private static Application instance;
 
-	private Application() throws Exception {
-		loadProperties();
-		database = DbWrapper.getInstance();
+	private Application() {
+		try {
+			loadProperties();
+			database = DbWrapper.getInstance();
+		} catch (Exception e) {
+			e.printStackTrace();
+			errorMessageBox(e);
+		}
 		/*
 		 * testings	 area	
 		 */
-		
-		
+
 		/*
 		 * testings area end
 		 */
@@ -249,5 +249,4 @@ public final class Application {
 			}
         }
 	}
-
 }

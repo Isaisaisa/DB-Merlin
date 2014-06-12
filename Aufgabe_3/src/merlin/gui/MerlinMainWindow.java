@@ -53,6 +53,9 @@ import com.toedter.calendar.JDateChooser;
 
 import javax.swing.JSpinner;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 public class MerlinMainWindow {
 
 	private JFrame frmMerlinMain;
@@ -113,6 +116,16 @@ public class MerlinMainWindow {
 	 */
 	private void initialize() {
 		frmMerlinMain = new JFrame();
+		frmMerlinMain.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				try {
+					Application.getInstance().closeMerlinYesNo(frmMerlinMain);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		frmMerlinMain.setIconImage(Toolkit.getDefaultToolkit().getImage(MerlinMainWindow.class.getResource("/javax/swing/plaf/metal/icons/ocean/hardDrive.gif")));
 		frmMerlinMain.setTitle(ConstantElems.windowMainTitle);
 		frmMerlinMain.setBounds(50, 50, 1024, 800);
@@ -128,15 +141,6 @@ public class MerlinMainWindow {
 		JButton btnAusloggen = new JButton("Ausloggen");
 		btnAusloggen.setFocusable(false);
 		
-		btnAusloggen.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				try {
-					Application.getInstance().closeMerlinYesNo(frmMerlinMain);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 		btnAusloggen.setBounds(903, 11, 95, 23);
 		panelUser.add(btnAusloggen);
 		
@@ -568,6 +572,14 @@ public class MerlinMainWindow {
 		
 		table_1 = new JTable();
 		scrollPane_4.setViewportView(table_1);
+		
+		/*
+		 * AFTER-INITIALIZATION AREA
+		 */
+		
+		tglbtnBeobachtungsliste.doClick();
+		
+		
 	}
 	
 	

@@ -23,10 +23,14 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+
+import org.junit.runner.Result;
 
 import merlin.base.interfaces.DbWrapperInterface;
 import merlin.logic.exception.*;
+import merlin.utils.ConstantElems;
 
 public final class DbWrapper implements DbWrapperInterface {
 
@@ -77,7 +81,7 @@ public final class DbWrapper implements DbWrapperInterface {
 			throw new InvalidConnectionDataException();
 		}
 		if (dbUsername != null && dbPassword != null) {
-			setLoginData(dbUsername, dbPassword);
+			setLoginData(dbUsername, new String(dbPassword));
 		}
 	}
 	
@@ -86,12 +90,8 @@ public final class DbWrapper implements DbWrapperInterface {
 	}
 
 	public void setLoginData(String dbUsername, String dbPassword) throws Exception {
-		dbUsername(dbUsername);
-		dbPassword(dbPassword);
-	}
-
-	public void setLoginData(String dbUsername, char[] dbPassword) throws Exception {
-		setLoginData(dbUsername, new String(dbPassword));
+		this.dbUsername(dbUsername);
+		this.dbPassword(dbPassword);
 	}
 
 	/* ACCESSORS */
@@ -106,11 +106,9 @@ public final class DbWrapper implements DbWrapperInterface {
 
 	private void dbPassword(String dbPassword) throws Exception {
 		this.dbPassword = AES.encrypt(dbPassword);
+		// TODO debug
+		System.out.println("DbWrapper#dbPassword(): encrypted PW: " + this.dbPassword);
 	}
-
-//	private void dbPassword(char[] dbPassword) throws Exception {
-//		dbPassword(new String(dbPassword));
-//	}
 
 	private String dbPassword() throws Exception {
 		return AES.decrypt(dbPassword);
@@ -128,6 +126,27 @@ public final class DbWrapper implements DbWrapperInterface {
 		this.connection = connection;
 		System.out.println("Connection to database '" + dbURL + "' on Port " + dbPort + " established");
 	}
+	
+	/**
+	 * @throws SQLException *************************************************************************************************************/
+	
+	public boolean isEmptyResultSet(ResultSet resultSet) throws SQLException {
+		return !resultSet.next();
+	}
+	
+	public boolean hasResults(ResultSet resultSet) throws SQLException {
+		return !isEmptyResultSet(resultSet);
+	}
+	
+	// Gibt einen einzigen Wert zur¸ck ==> erster Attributwert des ersten Tupels des Abfrageergebnisses 
+	public String getSingleValue(ResultSet rs) {
+		return getList(rs).get(0);
+	}
+	
+	public String getSingleValue(String query) {
+		return getSingleValue(sendQuery(query));
+	}
+	
 	
 	public Vector<Vector<Object>> getResultVector(ResultSet resultSet) throws SQLException {
 		Vector<Vector<Object>> result = new Vector<Vector<Object>>();
@@ -162,6 +181,17 @@ public final class DbWrapper implements DbWrapperInterface {
 		return columnNames;
 	}
 	
+	// Direkteste Methode, um direkt von einem Query das volle Ergebnis in Form
+	// eines TableModels zu erhalten
+	public DefaultTableModel getTableModelOfQuery(String query) {
+		try {
+			return getTableModel(sendQuery(query));
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println(e.getMessage());
+			return new DefaultTableModel();
+		}
+	}
 	
 	public DefaultTableModel getTableModel(ResultSet resultSet) {
 		try {
@@ -173,20 +203,11 @@ public final class DbWrapper implements DbWrapperInterface {
 		} 
 	}
 	
+	
 	public DefaultTableModel getTableModel(Vector<Vector<Object>> resultVector, Vector<String> columnNames) {
 		return new DefaultTableModel(resultVector, columnNames);
 	}
 	
-	// Direkteste Methode, um direkt von einem Query das volle Ergebnis in Form eines TableModels zu erhalten
-	public DefaultTableModel getTableModelOfQuery(String query) {
-		try {
-			return getTableModel(sendQuery(query));
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println(e.getMessage());
-			return new DefaultTableModel();
-		}
-	}
 	
 	public DefaultComboBoxModel<Object> getComboBoxModel(Vector<Object> input) {
 		return new DefaultComboBoxModel<Object>(input);
@@ -365,15 +386,32 @@ public final class DbWrapper implements DbWrapperInterface {
 	}
 	
 	// Query an Datenbank senden
-	public ResultSet sendQuery(String query) throws Exception {
-//		if (preSendChecks()) {
-//			connect();
-//		}
+	public ResultSet sendQuery(String query) {
 		
-		Statement statement = connection().createStatement();
+		Statement statement = null;
+		try {
+			statement = connection().createStatement();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 //		statement.closeOnCompletion(); // Statement automatischen schlieﬂen lassen, sobald alle referenzierten Ergebnismengen (ResultSets) geschlossen wurden
 //		^^^ funktioniert nicht. Inkompatible Version.
-		return statement.executeQuery(query);
+		try {
+			return statement.executeQuery(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.err.println(e.getMessage());
+			System.err.println("ErrorCode: " + e.getErrorCode());
+			try {
+				ConstantElems.errorMessageBox(e);
+			} catch (Exception e1) {
+				errorMessageBox(e);;
+			}
+			
+			// TODO aufpassen, dass dann auf den null Wert passend reagiert wird
+			return null;
+		}
 	}
 	
 	public ResultSet sendQuery(PreparedStatement prepStatement) throws SQLException {
@@ -407,5 +445,18 @@ public final class DbWrapper implements DbWrapperInterface {
 	
 	private void debugPrint(String debugThis) {
 		debugPrint(debugThis, System.out);
+	}
+	
+	public void errorMessageBox(SQLException e) {
+		JOptionPane.showMessageDialog(null,
+			    "Fehler: " + e.getErrorCode() + "\n" +
+			    e.getMessage(),
+			    // TODO e.getClass().getName().... hm...
+			    e.getClass().getName(),
+			    JOptionPane.ERROR_MESSAGE);
+	}
+	
+	public void messageBox(String msg) {
+		JOptionPane.showMessageDialog(null, msg);
 	}
 }

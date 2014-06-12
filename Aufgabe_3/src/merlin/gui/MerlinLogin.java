@@ -30,6 +30,7 @@ import javax.swing.border.EtchedBorder;
 import merlin.base.Application;
 import merlin.logic.exception.IllegalPasswordException;
 import merlin.logic.impl.MerlinLogic;
+import merlin.utils.ConstantElems;
 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
@@ -172,6 +173,7 @@ public class MerlinLogin {
 		txtVorname.setColumns(10);
 
 		JLabel lblEmail = new JLabel("E-Mail");
+		lblEmail.setFocusable(false);
 		lblEmail.setBounds(10, 141, 70, 14);
 		panelRegistration.add(lblEmail);
 		lblEmail.setLabelFor(txtName);
@@ -182,10 +184,12 @@ public class MerlinLogin {
 		txtEmail.setColumns(10);
 
 		JLabel lblName = new JLabel("Name");
+		lblName.setFocusable(false);
 		lblName.setBounds(10, 113, 70, 14);
 		panelRegistration.add(lblName);
 
 		JLabel lblUsernameReg = new JLabel("Benutzername");
+		lblUsernameReg.setFocusable(false);
 		lblUsernameReg.setBounds(10, 57, 70, 14);
 		panelRegistration.add(lblUsernameReg);
 
@@ -195,6 +199,7 @@ public class MerlinLogin {
 		txtUsernameReg.setColumns(10);
 
 		JLabel lblPasswortReg = new JLabel("Passwort");
+		lblPasswortReg.setFocusable(false);
 		lblPasswortReg.setBounds(10, 169, 70, 14);
 		panelRegistration.add(lblPasswortReg);
 
@@ -203,6 +208,7 @@ public class MerlinLogin {
 		panelRegistration.add(txtPasswordReg);
 
 		JLabel lblPasswortBestReg = new JLabel("Passwort best\u00E4tigen");
+		lblPasswortBestReg.setFocusable(false);
 		lblPasswortBestReg.setBounds(10, 197, 101, 14);
 		panelRegistration.add(lblPasswortBestReg);
 
@@ -221,6 +227,7 @@ public class MerlinLogin {
 		panelRegistration.add(btnRegister);
 
 		JLabel lblVorname = new JLabel("Vorname");
+		lblVorname.setFocusable(false);
 		lblVorname.setBounds(10, 85, 70, 14);
 		panelRegistration.add(lblVorname);
 		frmLogin.setFocusTraversalPolicy(new FocusTraversalOnArray(
@@ -270,10 +277,12 @@ public class MerlinLogin {
 		panelLogin.add(lblPasswort);
 
 		txtPasswordLog = new JPasswordField();
+		txtPasswordLog.setText(ConstantElems.demoPassword);
 		txtPasswordLog.setBounds(126, 74, 99, 20);
 		panelLogin.add(txtPasswordLog);
 
 		txtUsernameLog = new JTextField();
+		txtUsernameLog.setText(ConstantElems.demoUsername);
 		txtUsernameLog.setBounds(10, 74, 99, 20);
 		panelLogin.add(txtUsernameLog);
 		txtUsernameLog.setColumns(10);
@@ -312,10 +321,11 @@ public class MerlinLogin {
 		
 		
 		lblWelcomeText = new JLabel(
-				"<html><b><p style=\"font-size: 16px; text-align:center;\">MERLIN</p></b>\r\n<p style=\"font-size: 8px; text-align:center;\">\r\n\t<b>Ein integriertes Informationssystem f\u00FCr die Verwaltung und Auswertung von Naturbeobachtungen</b></p>\r\n<br/>\r\nHerzlich willkommen zu MERLIN!<br/>\r\nMERLIN ist das ideale Online-Werkzeug f\u00FCr Naturbeobachter!\r\nSchauen Sie mit Hilfe von regionalen Checklisten, was es zu Entdecken gibt und f\u00FChren Sie Ihre eigene Beobachtungsliste, die Sie einfach verwalten und auswerten k\u00F6nnen.<br/><br/>\r\n\r\nRegistrieren Sie sich jetzt und legen sofort los, oder probieren Sie unseren Demo-Login aus, um sich einen Eindruck zu verschaffen!<br/><br/>\r\nBenutzername: <b>demo</b><br/>\r\nPasswort: <b>merlindemo</b><br/><br/>\r\n\r\nSie sind bereits registrierter Beobachter? Dann k\u00F6nnen Sie sich jetzt einloggen!");
+				"<html><b><p style=\"font-size: 16px; text-align:center;\">MERLIN</p></b>\r\n<p style=\"font-size: 8px; text-align:center;\">\r\n\t<b>Ein integriertes Informationssystem f\u00FCr die Verwaltung und Auswertung von Naturbeobachtungen</b></p>\r\n<br/>\r\nHerzlich willkommen zu MERLIN!<br/>\r\nMERLIN ist das ideale Online-Werkzeug f\u00FCr Naturbeobachter!\r\nSchauen Sie mit Hilfe von regionalen Checklisten, was es zu Entdecken gibt und f\u00FChren Sie Ihre eigene Beobachtungsliste, die Sie einfach verwalten und auswerten k\u00F6nnen.<br/><br/>\r\n\r\nRegistrieren Sie sich jetzt und legen sofort los, oder probieren Sie unseren Demo-Login aus, um sich einen Eindruck zu verschaffen!<br/><br/>\r\nBenutzername: <b>" + ConstantElems.demoUsername + "</b><br/>\r\nPasswort: <b>" + ConstantElems.demoPassword + "</b><br/><br/>\r\n\r\nSie sind bereits registrierter Beobachter? Dann k\u00F6nnen Sie sich jetzt einloggen!");
 		lblWelcomeText.setBounds(24, 0, 263, 328);
 		panel.add(lblWelcomeText);
 		lblWelcomeText.setFont(new Font("Candara", Font.PLAIN, 12));
+		frmLogin.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtUsernameLog, txtPasswordLog, btnLogin, txtUsernameReg, txtVorname, txtName, txtEmail, txtPasswordReg, txtPasswordRegBest, btnRegister, label, panelRegistration, lblEmail, lblName, lblUsernameReg, lblPasswortReg, lblPasswortBestReg, lblNewLabel, lblVorname, panel_AfterRegister, lblAfterRegister, panelLogin, lblPasswort, lblUsername, chkRememberUser, lblbereitsRegistriert, panel, lblWelcomeText}));
 
 		JMenuBar menuBar = new JMenuBar();
 		frmLogin.setJMenuBar(menuBar);

@@ -204,11 +204,12 @@ public class MerlinLogic {
 		}
 		
 		try {
-			if (BirdwatcherRepository.isRegistered(username, password)) {
+			boolean isRegistered = BirdwatcherRepository.isRegistered(username, password);
+			if (isRegistered) {
 				loginSucceed = true;
 			} else {
 				// TODO Sinnvollere Maﬂnahmen oder Fehler werfen (?)
-				System.out.println("Birdwatcher login failed. Passwort falsch oder Birdwatcher nicht vorhanden.");
+//				System.err.println("MerlinLogic#loginToMerlin: Birdwatcher login failed. Passwort falsch oder Birdwatcher nicht vorhanden.");
 //				loginSucceed = false;
 			}
 		} catch (Exception e) {
@@ -219,6 +220,7 @@ public class MerlinLogic {
 		boolean[] result = {ciom[0], ciom[1], loginSucceed};
 
 		return result;
+		
 	}
 	
 	public boolean loginBirdwatcher(String username, String password) {

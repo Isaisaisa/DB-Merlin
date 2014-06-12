@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.sql.Savepoint;
 import java.util.Hashtable;
 import java.util.Properties;
+
+import javax.swing.JOptionPane;
 
 import merlin.base.Application;
 
@@ -17,6 +20,8 @@ public final class ConstantElems {
 	public static final String 	defaultDbPort 				= "1521";
 	public static final String 	defaultDbSID  				= "inf09";
 	public static final String	defaultRememberLogin 		= "false";
+	public static final String  demoUsername				= "demo";
+	public static final String  demoPassword				= "merlin";
 	
 	// Properties Key Constants
 	public static final String 	loginDataPropKey 			= "LD"; // value encrypted!
@@ -130,5 +135,20 @@ public final class ConstantElems {
 			e.printStackTrace();
 			System.err.println(e.getMessage());
 		}
+	}
+	
+	public static void errorMessageBox(SQLException e) {
+		JOptionPane.showMessageDialog(null,
+			    "Fehler: " + e.getErrorCode() + "\n" +
+			    e.getMessage(),
+			    e.getClass().getName(),
+			    JOptionPane.ERROR_MESSAGE);
+	}
+	
+	public static void errorMessageBox(Exception e) {
+		JOptionPane.showMessageDialog(null,
+			    e.getMessage(),
+			    e.getClass().getName(),
+			    JOptionPane.ERROR_MESSAGE);
 	}
 }
