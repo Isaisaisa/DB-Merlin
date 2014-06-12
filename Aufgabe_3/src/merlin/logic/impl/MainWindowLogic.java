@@ -1,9 +1,12 @@
 package merlin.logic.impl;
 
+import static merlin.utils.ConstantElems.errorMessageBox;
+
 import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
 
+import merlin.base.Application;
 import merlin.data.SpeziesRepository;
 
 public class MainWindowLogic {
@@ -38,8 +41,15 @@ public class MainWindowLogic {
 		
 	}
 	
-	public static DefaultTableModel loadTableDataIntoGui() throws Exception{
-		return SpeziesRepository.getTableData();
+	public static DefaultTableModel loadTableDataIntoGui() {
+//		return SpeziesRepository.getTableData();
+		try {
+			return Application.getInstance().database().getTableModelOfQuery("select * from beobachtunsgebiet");
+		} catch (Exception e) {
+			e.printStackTrace();
+			errorMessageBox(e);
+			return new DefaultTableModel();
+		}
 		
 	}
 	
