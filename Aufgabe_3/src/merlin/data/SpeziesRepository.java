@@ -123,10 +123,12 @@ public class SpeziesRepository {
 			if (!level2.isEmpty()) { template2 = level2; }
 			if (!level3.isEmpty()) { template3 = level3; }
 			
-			ResultSet rs;
+//			ResultSet rs;
+			String query = "SELECT Ort_ID FROM Beobachtunsgebiete WHERE Level_1 = '" + template1 + "' AND Level_2 = '" + template2 + "' AND Level_3 = '" + template3 + "'";
 			try {
-				rs = Application.getInstance().database().sendQuery("SELECT Ort_ID FROM Beobachtunsgebiete WHERE Level_1 = '" + template1 + "' AND Level_2 = '" + template2 + "' AND Level_3 = '" + template3 + "'");
-				return Application.getInstance().database().getList(rs).get(0);
+				return Application.getInstance().database().getSingleValue(query);
+//				rs = Application.getInstance().database().sendQuery("SELECT Ort_ID FROM Beobachtunsgebiete WHERE Level_1 = '" + template1 + "' AND Level_2 = '" + template2 + "' AND Level_3 = '" + template3 + "'");
+//				return Application.getInstance().database().getList(rs).get(0); // TODO refaktorisieren
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
