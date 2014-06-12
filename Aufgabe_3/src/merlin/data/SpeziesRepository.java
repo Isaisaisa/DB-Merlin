@@ -1,20 +1,15 @@
 package merlin.data;
 
+import static merlin.utils.ConstantElems.errorMessageBox;
+
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
 
 import merlin.base.Application;
 import merlin.base.DbWrapper;
-import merlin.data.entities.BirdwatcherImpl;
-import merlin.logic.impl.MainWindowLogic;
 
 
 
@@ -30,20 +25,6 @@ public class SpeziesRepository {
 		
 	}
 	
-//	public static void loadRegion(){
-//		ResultSet rs;
-//		try {
-//			rs = Application.getInstance().database().sendQuery("SELECT Level1 FROM Beobachtungsgebiet");
-//			 while (rs.next()) {
-//		        	MainWindowLogic.loadRegion(rs.getString(1));
-//		     }
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//       
-//	}
 	//Holt alle Level1 aus Beobachtung
 		public static Vector<String> getRegion(){
 			ResultSet rs;
@@ -63,7 +44,7 @@ public class SpeziesRepository {
 	       
 		}
 		
-		// Quelle: stackoverflow.com/question --> (iterating over ResultSet and adding its value in an Arraylist)
+		
 		public static Vector<String> getLand(String string){
 			ResultSet rs;
 			Vector<String> list = new Vector<String>();
@@ -105,14 +86,30 @@ public class SpeziesRepository {
 		
 		
 
-//		INSERT INTO beobachtet
-//		  VALUES (VA_ID, BW_ID, ORT_ID, TO_DATE('08-MAI-2014 11:02', 'DD-MONTH-YYYY HH24:MI'), TO_DATE('09-MAI-2014 14:15', 'DD-MONTH-YYYY HH24:MI'), '2 m. 5 w. 3 juv.');
-
 		
-		public static void addDataObservation(int birdId, String level1, String level2, String level3, String dateFrom, String dateUntil, String notice){
+		public static void addDataObservation(String birdId, String level1, String level2, String level3, String dateFrom, String dateUntil, String notice){
 			String str = getLocationId(level1, level2, level3);
-			
 			//TODO birdwatcherid holen
+			
+			DbWrapper database;
+			try {
+				database = Application.getInstance().database();
+				if (dateUntil.equals("null")){
+					database.sendUpdate("INSERT INTO beobachtet"
+							+ "	VALUES ( '" + birdId + "', '3', '" + "', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), 'null', '" + notice + "'");
+				}else{
+				database.sendUpdate("INSERT INTO beobachtet"
+						+ "	VALUES ( '" + birdId + "', '3', '" + "', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), TO_DATE('" + dateUntil + "', 'DD-MM-YYYY HH24:MI'), '" + notice + "'");
+//				database.sendUpdate("INSERT INTO beobachtet"
+//						+ "	VALUES ( '" + birdId + "', '" + bw_Id + "', '" + "', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), TO_DATE('" + dateUntil + "', 'DD-MM-YYYY HH24:MI'), '" + notice + "'");
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				errorMessageBox(e);
+			}
+			
+			
 		}
 			
 		
@@ -143,6 +140,11 @@ public class SpeziesRepository {
 //			return Application.getInstance().database().getTableModelOfQuery("SELECT * FROM Birdwatcher");
 		}
 		
+		//Methode um "beobachtet" in Gui zu laden
+//		public static DefaultTableModel getDataObservation() throws Exception{
+//			return Application.getInstance().database().getTableModelOfQuery("SELECT * FROM beobachtet");
+////			
+//		}
 		
 		
 }

@@ -57,6 +57,9 @@ import javax.swing.JSpinner;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.ListSelectionModel;
 
 public class MerlinMainWindow {
 
@@ -88,6 +91,14 @@ public class MerlinMainWindow {
 	private JDateChooser datumVon;
 	private JDateChooser datumBis;
 	private JTextArea txtNotice;
+	private String stringBirdId;
+	
+	public String stringBirdId(){
+		return stringBirdId;
+	}
+	public void stringBirdId(String s){
+		
+	}
 	
 	/**
 	 * Launch the application.
@@ -346,6 +357,15 @@ public class MerlinMainWindow {
 		
 		
 		tblStammdatenBeob = new JTable();
+		tblStammdatenBeob.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tblStammdatenBeob.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				//VogelId aus der Tabelle holen
+				stringBirdId(tblStammdatenBeob.getValueAt(tblStammdatenBeob.getSelectedRow(), 0).toString());
+					
+			}
+		});
 		tblStammdatenBeob.setBackground(SystemColor.menu);
 		scrollPane_1.setViewportView(tblStammdatenBeob);
 		try {
@@ -495,7 +515,8 @@ public class MerlinMainWindow {
 		btnHinzufgen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-			
+				tblStammdatenBeob.getSelectedRow();
+				
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 				SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 				
@@ -506,8 +527,9 @@ public class MerlinMainWindow {
 				System.out.println(formatBis);
 				
 				String notice = txtNotice.getText();
-				// y_id kommt aus der Tabelle
-//				MainWindowLogic.addObservation(v_id, level_1, level_2, level_3,  formatVon, formatBis, notice);
+				
+				MainWindowLogic.addObservation(stringBirdId(), level_1, level_2, level_3,  formatVon, formatBis, notice);
+				
 			}
 		});
 		

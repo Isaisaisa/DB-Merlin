@@ -395,8 +395,6 @@ public final class DbWrapper implements DbWrapperInterface {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-//		statement.closeOnCompletion(); // Statement automatischen schlieﬂen lassen, sobald alle referenzierten Ergebnismengen (ResultSets) geschlossen wurden
-//		^^^ funktioniert nicht. Inkompatible Version.
 		try {
 			return statement.executeQuery(query);
 		} catch (SQLException e) {
@@ -417,13 +415,7 @@ public final class DbWrapper implements DbWrapperInterface {
 	public ResultSet sendQuery(PreparedStatement prepStatement) throws SQLException {
 		return prepStatement.executeQuery();
 	}
-	
-	// Update an Datenbank senden
-//	public void sendUpdate(String query) throws SQLException {
-//		PreparedStatement statement = connection().prepareStatement(query); // FRAGE: Warum ein PreparedStatement statt normalem Statement? 
-//		statement.executeUpdate();
-//	}
-	
+
 	public void sendUpdate(String query) throws SQLException {
 		connection().createStatement().executeUpdate(query);
 	}
