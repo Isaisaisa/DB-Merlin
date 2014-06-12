@@ -487,15 +487,15 @@ public class MerlinMainWindow {
 			public void actionPerformed(ActionEvent arg0) {
 				
 			
-			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-			SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-			
-			String formatVon = dateFormat.format(datumVon.getDate()) + " " + timeFormat.format((Date)uhrzeitVon.getValue());
-			String formatBis = dateFormat.format(datumBis.getDate()) + " " + timeFormat.format((Date)uhrzeitBis.getValue());
-			
-			System.out.println(formatVon);
-			System.out.println(formatBis);
-			
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+				SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+				
+				String formatVon = dateFormat.format(datumVon.getDate()) + " " + timeFormat.format((Date)uhrzeitVon.getValue());
+				String formatBis = dateFormat.format(datumBis.getDate()) + " " + timeFormat.format((Date)uhrzeitBis.getValue());
+				
+				System.out.println(formatVon);
+				System.out.println(formatBis);
+				
 				String notice = txtNotice.getText();
 				
 				MainWindowLogic.addObservation(level_1, level_2, level_3,  formatVon, formatBis, notice);

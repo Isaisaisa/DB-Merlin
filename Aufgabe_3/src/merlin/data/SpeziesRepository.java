@@ -10,6 +10,8 @@ import java.util.Set;
 import java.util.Vector;
 
 import merlin.base.Application;
+import merlin.base.DbWrapper;
+import merlin.data.entities.BirdwatcherImpl;
 import merlin.logic.impl.MainWindowLogic;
 
 
@@ -101,10 +103,31 @@ public class SpeziesRepository {
 		
 		
 		
+//		DbWrapper database = Application.getInstance().database();
+//		
+//		try {
+//			database.sendUpdate("INSERT INTO Birdwatcher (Name, Vorname, Benutzername, Passwort, Email, Rolle) " +
+//					 "VALUES ('" + name + "', '" + vorname + "', '" + benutzername + "', '" + passwort + "', '" + email + "', '" + "R03" + "')");
+//			System.out.println("is it null?");
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			return BirdwatcherImpl.valueOf(name, vorname, benutzername, new String(passwort), email);
+//		}
+		
+//		INSERT INTO beobachtet
+//		  VALUES (VA_ID, BW_ID, ORT_ID, TO_DATE('08-MAI-2014 11:02', 'DD-MONTH-YYYY HH24:MI'), TO_DATE('09-MAI-2014 14:15', 'DD-MONTH-YYYY HH24:MI'), '2 m. 5 w. 3 juv.');
+
+		
 		public static void addDataObservation(String level1, String level2, String level3, String dateFrom, String dateUntil, String notice){
-			
-			
-			
+//			DbWrapper database = Application.getInstance().database();
+//			database.sendUpdate
+//				
 		}
+		
+		
+		
+		
+		
+		
 		
 }

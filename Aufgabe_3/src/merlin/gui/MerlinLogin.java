@@ -361,6 +361,7 @@ public class MerlinLogin {
 					}
 				}
 				
+				
 //				try {
 //					MerlinLogic.isRegistered(txtUsernameLog.getText().trim(), txtPasswordLog.getPassword());
 //				} catch (Exception e) {
