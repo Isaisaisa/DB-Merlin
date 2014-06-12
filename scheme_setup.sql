@@ -34,8 +34,8 @@ CREATE TABLE Birdwatcher
         
 CREATE TABLE Beobachtunsgebiet 
        (Ort_ID        INTEGER PRIMARY KEY, 
-        LEVEL_1       VARCHAR(3) NOT NULL, 
-        LEVEL_2       VARCHAR(3), 
+        LEVEL_1       VARCHAR(5) NOT NULL, 
+        LEVEL_2       VARCHAR(5), 
         LEVEL_3       VARCHAR(150));
         
 CREATE TABLE beobachtet   

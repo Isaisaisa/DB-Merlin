@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import merlin.base.Application;
 import merlin.logic.impl.MainWindowLogic;
 import merlin.utils.ConstantElems;
+import static merlin.utils.ConstantElems.errorMessageBox;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -151,6 +152,15 @@ public class MerlinMainWindow {
 		panelUser.setLayout(null);
 		
 		JButton btnAusloggen = new JButton("Ausloggen");
+		btnAusloggen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					Application.getInstance().closeMerlinYesNo(frmMerlinMain);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		btnAusloggen.setFocusable(false);
 		
 		btnAusloggen.setBounds(903, 11, 95, 23);
@@ -347,13 +357,20 @@ public class MerlinMainWindow {
 		
 		tblStammdatenBeob = new JTable();
 		tblStammdatenBeob.setBackground(SystemColor.menu);
+		
 		scrollPane_1.setViewportView(tblStammdatenBeob);
 		try {
 			tblStammdatenBeob.setModel(MainWindowLogic.loadTableDataIntoGui());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			errorMessageBox(e);
 			e.printStackTrace();
 		}
+		tblStammdatenBeob.getColumnModel().getColumn(0).setPreferredWidth(0);
+		tblStammdatenBeob.getColumnModel().getColumn(0).setMinWidth(0);
+		tblStammdatenBeob.getColumnModel().getColumn(0).setMaxWidth(0);
+		tblStammdatenBeob.getColumnModel().getColumn(0).setWidth(0);
+		tblStammdatenBeob.getColumnModel().getColumn(0).setResizable(false);
+		
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
 		scrollPane_2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -798,7 +815,6 @@ public class MerlinMainWindow {
 		}
 	}
 
-	
 	public void debugPrint(String message) {
 		// TODO nachricht zu debug fenster hinzufügen können
 	}
