@@ -2,6 +2,8 @@ package merlin.logic.impl;
 
 import java.util.Vector;
 
+import javax.swing.table.DefaultTableModel;
+
 import merlin.data.SpeziesRepository;
 import merlin.gui.MerlinMainWindow;
 
@@ -32,8 +34,14 @@ public class MainWindowLogic {
 	}
 	
 	
-	public static void addObservation(String level1, String level2, String level3, String dateFrom, String dateUntil, String notice){
-		SpeziesRepository.addDataObservation(level1, level2, level3, dateFrom, dateUntil, notice);
+	public static void addObservation(int birdId, String level1, String level2, String level3, String dateFrom, String dateUntil, String notice){
+		SpeziesRepository.addDataObservation(birdId, level1, level2, level3, dateFrom, dateUntil, notice);
+		
+	}
+	
+	public static DefaultTableModel loadTableDataIntoGui() throws Exception{
+		return SpeziesRepository.getTableData();
+		
 	}
 	
 }

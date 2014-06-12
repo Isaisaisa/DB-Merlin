@@ -2,38 +2,35 @@ package merlin.data.entities;
 
 public class BirdwatcherImpl implements Birdwatcher {
 
-	public final static String BWROLE = "R03";
-	
+	private final String id;
 	private final String name;
 	private final String firstname;
 	private final String username;
 	private final String password;
 	private final String email;
+	private final String role;
+	public final static String BWROLE = "R03";
 	
-	
-	private BirdwatcherImpl(String name, String firstname, String username, String password, String email) {
+	private BirdwatcherImpl(String id, String name, String firstname, String username, String password, String email, String role) {
 		super();
+		this.id = id;
 		this.name = name;
 		this.firstname = firstname;
 		this.username = username;
 		this.password = password;
 		this.email = email;
+		this.role = role;
 	}
 	
-	public static Birdwatcher valueOf(String name, String firstname, String username, String password, String email) {
-		return new BirdwatcherImpl(name, firstname, username, password, email);
+	public static Birdwatcher valueOf(String id, String name, String firstname, String username, String password, String email, String role){
+		return new BirdwatcherImpl(id, name, firstname, username, password, email, role);
 	}
 
 	
-//	public void id(String id) {
-//		// SINGLE ASSIGNMENT
-//		if (id != null) {
-//			this.id = id;
-//		} else {
-//			System.out.println("Es wurde versucht, die ID des Birdwatcher-Objekts von " + this.id + " auf " + id + " zu setzen");
-//		}
-//	}
-	
+	public String id() {
+		return id;
+	}
+
 	public String name() {
 		return name;
 	}
@@ -41,11 +38,11 @@ public class BirdwatcherImpl implements Birdwatcher {
 	public String firstname() {
 		return firstname;
 	}
-	
+
 	public String username() {
 		return username;
 	}
-	
+
 	public String password() {
 		return password;
 	}
@@ -53,9 +50,13 @@ public class BirdwatcherImpl implements Birdwatcher {
 	public String email() {
 		return email;
 	}
+
+	public String role() {
+		return role;
+	}
+
 	
-	
-	
+
 
 	@Override
 	public int hashCode() {
@@ -67,6 +68,7 @@ public class BirdwatcherImpl implements Birdwatcher {
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result
 				+ ((password == null) ? 0 : password.hashCode());
+		result = prime * result + ((role == null) ? 0 : role.hashCode());
 		result = prime * result
 				+ ((username == null) ? 0 : username.hashCode());
 		return result;
@@ -101,6 +103,11 @@ public class BirdwatcherImpl implements Birdwatcher {
 				return false;
 		} else if (!password.equals(other.password))
 			return false;
+		if (role == null) {
+			if (other.role != null)
+				return false;
+		} else if (!role.equals(other.role))
+			return false;
 		if (username == null) {
 			if (other.username != null)
 				return false;
@@ -110,8 +117,7 @@ public class BirdwatcherImpl implements Birdwatcher {
 	}
 
 	
-
 	
 
-
 }
+

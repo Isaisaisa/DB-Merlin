@@ -328,23 +328,28 @@ public class MerlinMainWindow {
 		
 		
 		
-		
-		
-		
-		
 		JPanel panelBeobachtungsliste = new JPanel();
-		panelBeobachtungsliste.setBackground(SystemColor.control);
+		panelBeobachtungsliste.setBackground(SystemColor.menu);
 		panelMain.add(panelBeobachtungsliste, "name_117830304432961");
 		panelBeobachtungsliste.setLayout(null);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBackground(SystemColor.menu);
 		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane_1.setBounds(10, 22, 713, 320);
 		panelBeobachtungsliste.add(scrollPane_1);
 		
+		
 		tblStammdatenBeob = new JTable();
+		tblStammdatenBeob.setBackground(SystemColor.menu);
 		scrollPane_1.setViewportView(tblStammdatenBeob);
+		try {
+			tblStammdatenBeob.setModel(MainWindowLogic.loadTableDataIntoGui());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
 		scrollPane_2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -497,8 +502,8 @@ public class MerlinMainWindow {
 				System.out.println(formatBis);
 				
 				String notice = txtNotice.getText();
-				
-				MainWindowLogic.addObservation(level_1, level_2, level_3,  formatVon, formatBis, notice);
+				// y_id kommt aus der Tabelle
+//				MainWindowLogic.addObservation(v_id, level_1, level_2, level_3,  formatVon, formatBis, notice);
 			}
 		});
 		
@@ -673,6 +678,10 @@ public class MerlinMainWindow {
 		
 		table_1 = new JTable();
 		scrollPane_4.setViewportView(table_1);
+		
+		
+		
+		
 	}
 	
 	

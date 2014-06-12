@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import javax.swing.table.DefaultTableModel;
+
 import merlin.base.Application;
 import merlin.base.DbWrapper;
 import merlin.data.entities.BirdwatcherImpl;
@@ -102,31 +104,44 @@ public class SpeziesRepository {
 			
 		
 		
-		
-//		DbWrapper database = Application.getInstance().database();
-//		
-//		try {
-//			database.sendUpdate("INSERT INTO Birdwatcher (Name, Vorname, Benutzername, Passwort, Email, Rolle) " +
-//					 "VALUES ('" + name + "', '" + vorname + "', '" + benutzername + "', '" + passwort + "', '" + email + "', '" + "R03" + "')");
-//			System.out.println("is it null?");
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//			return BirdwatcherImpl.valueOf(name, vorname, benutzername, new String(passwort), email);
-//		}
-		
+
 //		INSERT INTO beobachtet
 //		  VALUES (VA_ID, BW_ID, ORT_ID, TO_DATE('08-MAI-2014 11:02', 'DD-MONTH-YYYY HH24:MI'), TO_DATE('09-MAI-2014 14:15', 'DD-MONTH-YYYY HH24:MI'), '2 m. 5 w. 3 juv.');
 
 		
-		public static void addDataObservation(String level1, String level2, String level3, String dateFrom, String dateUntil, String notice){
-//			DbWrapper database = Application.getInstance().database();
-//			database.sendUpdate
-//				
+		public static void addDataObservation(int birdId, String level1, String level2, String level3, String dateFrom, String dateUntil, String notice){
+			String str = getLocationId(level1, level2, level3);
+			
+			//TODO birdwatcherid holen
 		}
+			
+		
+		private static String getLocationId(String level1, String level2, String level3) {
+			 String template1 = level1, template2 = "null", template3 = "null";
+			
+			if ( level1.isEmpty()) { return "-1"; } // fehler
+			if (!level2.isEmpty()) { template2 = level2; }
+			if (!level3.isEmpty()) { template3 = level3; }
+			
+			ResultSet rs;
+			try {
+				rs = Application.getInstance().database().sendQuery("SELECT Ort_ID FROM Beobachtunsgebiete WHERE Level_1 = '" + template1 + "' AND Level_2 = '" + template2 + "' AND Level_3 = '" + template3 + "'");
+				return Application.getInstance().database().getList(rs).get(0);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				
+				return "";
+			}
+			
+		} 
 		
 		
-		
-		
+		public static DefaultTableModel getTableData() throws Exception{
+			return Application.getInstance().database().getTableModelOfQuery("SELECT * FROM VOGELART ORDER BY NAME_LAT ASC");
+//			Beispiel nur um nicht die lange Wartezeit zu haben.
+//			return Application.getInstance().database().getTableModelOfQuery("SELECT * FROM Birdwatcher");
+		}
 		
 		
 		
