@@ -138,6 +138,7 @@ public class SpeziesRepository {
 		
 		
 		public static DefaultTableModel getTableData() throws Exception{
+//			return Application.getInstance().database().getTableModelOfQuery("SELECT * FROM VOGELART WHERE NAME_LAT LIKE 'X%' ORDER BY NAME_LAT ASC");
 			return Application.getInstance().database().getTableModelOfQuery("SELECT * FROM VOGELART ORDER BY NAME_LAT ASC");
 //			Beispiel nur um nicht die lange Wartezeit zu haben.
 //			return Application.getInstance().database().getTableModelOfQuery("SELECT * FROM Birdwatcher");

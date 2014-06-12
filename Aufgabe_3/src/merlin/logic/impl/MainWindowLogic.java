@@ -42,14 +42,23 @@ public class MainWindowLogic {
 	}
 	
 	public static DefaultTableModel loadTableDataIntoGui() {
-//		return SpeziesRepository.getTableData();
 		try {
-			return Application.getInstance().database().getTableModelOfQuery("select rownum, b.level_1 as Region, b.level_2 as Land, b.level_3 as Gebiet from beobachtunsgebiet b");
+			return SpeziesRepository.getTableData();
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMessageBox(e);
 			return new DefaultTableModel();
 		}
+		
+		
+//		Test-Query
+//		try {
+//			return Application.getInstance().database().getTableModelOfQuery("select rownum, b.level_1 as Region, b.level_2 as Land, b.level_3 as Gebiet from beobachtunsgebiet b");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			errorMessageBox(e);
+//			return new DefaultTableModel();
+//		}
 		
 	}
 	
