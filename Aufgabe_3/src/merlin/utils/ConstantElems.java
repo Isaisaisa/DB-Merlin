@@ -5,11 +5,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.sql.Savepoint;
 import java.util.Hashtable;
 import java.util.Properties;
 
 import javax.swing.JOptionPane;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import merlin.base.Application;
 
@@ -24,10 +24,10 @@ public final class ConstantElems {
 	public static final String  demoPassword				= "merlin";
 	
 	// Properties Key Constants
-	public static final String 	loginDataPropKey 			= "LD"; // value encrypted!
-	public static final String 	loginDataBirdwatcherPropKey = "BW"; // value encrypted!
-	public static final String 	userPropKey					= "User"; // value encrypted!
-	public static final String 	pwdPropKey 					= "Pwd"; // value encrypted!
+	public static final String 	loginDataPropKey 			= "LD"; 	// value encrypted!
+	public static final String 	loginDataBirdwatcherPropKey = "BW"; 	// value encrypted!
+	public static final String 	userPropKey					= "User";
+	public static final String 	pwdPropKey 					= "Pwd";
 	public static final String 	loginDataSplitString 		= "\0";
 	public static final String 	rememberLoginPropKey		= "RL";
 	public static final String 	dbURLPropKey				= "dbURL";
@@ -98,6 +98,7 @@ public final class ConstantElems {
 				try {
 					output.close();
 				} catch (IOException e) {
+					showMsgBox(e);
 					e.printStackTrace();
 				}
 			}
@@ -106,29 +107,30 @@ public final class ConstantElems {
 	}
 	
 	public static void putPropDefaults() {
-		Hashtable<String, String> pd = propDefaults; // shortcut
+		Hashtable<String, String> pd = propDefaults; // convenience shortcut...
 		
-		pd.put(dbURLPropKey, "oracle.informatik.haw-hamburg.de");
-		pd.put(dbPortPropKey, "1521");
-		pd.put(dbSIDPropKey, "inf09");
-		pd.put(rememberLoginPropKey, "false");
-		pd.put(loginDataPropKey, "");
+		pd.put(dbURLPropKey, 				defaultDbURL);
+		pd.put(dbPortPropKey, 				defaultDbPort);
+		pd.put(dbSIDPropKey, 				defaultDbSID);
+		pd.put(rememberLoginPropKey, 		"false");
+		pd.put(loginDataPropKey, 			"");
 		pd.put(loginDataBirdwatcherPropKey, "");
-//		pd.put(userPropKey, "");
-//		pd.put(pwdPropKey, "");
+		pd.put(userPropKey, 				"");
+		pd.put(pwdPropKey, 					"");
 	}
 	
 	public static void ensurePropConsistency() {
-		Hashtable<String, String> pd = propDefaults;
+		Hashtable<String, String> pd = propDefaults; // ...same here
 		
-		if (properties.getProperty(dbURLPropKey) == null) {properties.setProperty(dbURLPropKey, pd.get(dbURLPropKey));}
-		if (properties.getProperty(dbPortPropKey) == null) {properties.setProperty(dbPortPropKey, pd.get(dbPortPropKey));}
-		if (properties.getProperty(dbSIDPropKey) == null) {properties.setProperty(dbSIDPropKey, pd.get(dbSIDPropKey));}
-		if (properties.getProperty(rememberLoginPropKey) == null) {properties.setProperty(rememberLoginPropKey, pd.get(rememberLoginPropKey));}
-		if (properties.getProperty(loginDataPropKey) == null) {properties.setProperty(loginDataPropKey, pd.get(loginDataPropKey));}
+		if (properties.getProperty(dbURLPropKey) 				== null) {properties.setProperty(dbURLPropKey, pd.get(dbURLPropKey));}
+		if (properties.getProperty(dbPortPropKey) 				== null) {properties.setProperty(dbPortPropKey, pd.get(dbPortPropKey));}
+		if (properties.getProperty(dbSIDPropKey) 				== null) {properties.setProperty(dbSIDPropKey, pd.get(dbSIDPropKey));}
+		if (properties.getProperty(rememberLoginPropKey) 		== null) {properties.setProperty(rememberLoginPropKey, pd.get(rememberLoginPropKey));}
+		if (properties.getProperty(loginDataPropKey) 			== null) {properties.setProperty(loginDataPropKey, pd.get(loginDataPropKey));}
 		if (properties.getProperty(loginDataBirdwatcherPropKey) == null) {properties.setProperty(loginDataBirdwatcherPropKey, pd.get(loginDataBirdwatcherPropKey));}
-//		if (properties.getProperty(userPropKey) == null) {properties.setProperty(userPropKey, pd.get(userPropKey));}
-//		if (properties.getProperty(pwdPropKey) == null) {properties.setProperty(pwdPropKey, pd.get(pwdPropKey));}
+		if (properties.getProperty(userPropKey) 				== null) {properties.setProperty(userPropKey, pd.get(userPropKey));}
+		if (properties.getProperty(pwdPropKey) 					== null) {properties.setProperty(pwdPropKey, pd.get(pwdPropKey));}
+		
 		try {
 			saveProperties();
 		} catch (IOException e) {
@@ -137,18 +139,50 @@ public final class ConstantElems {
 		}
 	}
 	
-	public static void errorMessageBox(SQLException e) {
-		JOptionPane.showMessageDialog(null,
+	// TODO stelle finden, durch die die ganze zeit die nullpointer exception im windowbuilder geworfen wird
+	
+	public static void showMsgBox(Exception e) {
+		JOptionPane.showMessageDialog(
+				null,
+			    e.getMessage(),
+			    e.getClass().getName(),
+			    JOptionPane.ERROR_MESSAGE);
+	}
+	
+	
+	
+	public static void showMsgBox(SQLException e) {
+		JOptionPane.showMessageDialog(
+				null,
 			    "Fehler: " + e.getErrorCode() + "\n" +
 			    e.getMessage(),
 			    e.getClass().getName(),
 			    JOptionPane.ERROR_MESSAGE);
 	}
 	
-	public static void errorMessageBox(Exception e) {
-		JOptionPane.showMessageDialog(null,
-			    e.getMessage(),
-			    e.getClass().getName(),
-			    JOptionPane.ERROR_MESSAGE);
+	public static void showMsgBox(String msg, boolean modal) {
+		if (modal) {
+			try {
+				DialogExample.show(msg);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+				showMsgBox(e);
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+				showMsgBox(e);
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+				showMsgBox(e);
+			} catch (UnsupportedLookAndFeelException e) {
+				e.printStackTrace();
+				showMsgBox(e);
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, msg);
+		}
+	}
+	
+	public static void showMsgBox(String msg) {
+		showMsgBox(msg, false);
 	}
 }

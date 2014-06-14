@@ -3,7 +3,7 @@ package merlin.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import static merlin.utils.ConstantElems.errorMessageBox;
+import static merlin.utils.ConstantElems.showMsgBox;
 
 
 
@@ -48,7 +48,7 @@ public class BirdwatcherRepository {
 		
 		} catch (SQLException e) {
 			e.printStackTrace();
-			errorMessageBox(e);
+			showMsgBox(e); //TODO
 			return false;
 		}
 	}

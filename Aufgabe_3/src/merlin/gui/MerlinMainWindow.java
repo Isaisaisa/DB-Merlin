@@ -1,36 +1,17 @@
 package merlin.gui;
 
-import java.awt.EventQueue;
-import java.awt.Toolkit;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SpinnerDateModel;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.JButton;
-
-import merlin.base.Application;
-import merlin.logic.impl.MainWindowLogic;
-import merlin.utils.ConstantElems;
-import static merlin.utils.ConstantElems.errorMessageBox;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.SystemColor;
 import java.awt.CardLayout;
-
-import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextPane;
-
+import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.SystemColor;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -39,25 +20,38 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
 
-import javax.swing.JProgressBar;
-import javax.swing.JTabbedPane;
-import javax.swing.JScrollBar;
-import javax.swing.JToggleButton;
-
-import java.awt.Color;
-
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
-import javax.swing.event.PopupMenuListener;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.JToggleButton;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SpinnerDateModel;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
+import merlin.base.Application;
+import merlin.logic.impl.MainWindowLogic;
+import merlin.utils.ConstantElems;
 
 import com.toedter.calendar.JDateChooser;
-
-import javax.swing.JSpinner;
-
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class MerlinMainWindow {
 
@@ -84,11 +78,18 @@ public class MerlinMainWindow {
 	private String level_1;
 	private String level_2;
 	private String level_3;
-	private JSpinner uhrzeitVon;
+	private JSpinner uhrzeitVom;
 	private JSpinner uhrzeitBis;
-	private JDateChooser datumVon;
+	private JDateChooser datumVom;
 	private JDateChooser datumBis;
-	private JTextArea txtNotice;
+	private JTextArea txtComment;
+	private JTextField txtFilterCoreData;
+	private JTextField txtFilterObservation;
+	
+	private final Color btnNormalHover 		= new Color(34,153,176);
+	private final Color btnNormalNoHover 	= new Color(0,0,0);
+	private final Color btnCriticalHover	= new Color(255,0,0);
+	private final Color btnCriticalNoHover 	= new Color(0,0,0);
 	
 	/**
 	 * Launch the application.
@@ -129,6 +130,7 @@ public class MerlinMainWindow {
 	 */
 	private void initialize() {
 		frmMerlinMain = new JFrame();
+		frmMerlinMain.setResizable(false);
 		frmMerlinMain.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
@@ -141,18 +143,29 @@ public class MerlinMainWindow {
 		});
 		frmMerlinMain.setIconImage(Toolkit.getDefaultToolkit().getImage(MerlinMainWindow.class.getResource("/javax/swing/plaf/metal/icons/ocean/hardDrive.gif")));
 		frmMerlinMain.setTitle(ConstantElems.windowMainTitle);
-		frmMerlinMain.setBounds(50, 50, 1024, 800);
+		frmMerlinMain.setBounds(50, 50, 1105, 796);
 		frmMerlinMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMerlinMain.getContentPane().setLayout(null);
 		
 		JPanel panelUser = new JPanel();
 		panelUser.setBackground(SystemColor.inactiveCaption);
-		panelUser.setBounds(0, 0, 1008, 43);
+		panelUser.setBounds(0, 0, 1100, 43);
 		frmMerlinMain.getContentPane().add(panelUser);
 		panelUser.setLayout(null);
 		
-		JButton btnAusloggen = new JButton("Ausloggen");
-		btnAusloggen.addActionListener(new ActionListener() {
+		final JButton btnBeenden = new JButton("Beenden");
+		btnBeenden.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				btnBeenden.setForeground(btnCriticalHover);
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				btnBeenden.setForeground(btnCriticalNoHover);
+			}
+		});
+		btnBeenden.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnBeenden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					Application.getInstance().closeMerlinYesNo(frmMerlinMain);
@@ -161,14 +174,47 @@ public class MerlinMainWindow {
 				}
 			}
 		});
-		btnAusloggen.setFocusable(false);
+		btnBeenden.setFocusable(false);
 		
-		btnAusloggen.setBounds(903, 11, 95, 23);
-		panelUser.add(btnAusloggen);
+		btnBeenden.setBounds(930, 9, 160, 25);
+		panelUser.add(btnBeenden);
 		
 		final JToggleButton tglbtnBeobachtungsliste = new JToggleButton("Beobachtungsliste");
+		tglbtnBeobachtungsliste.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				tglbtnBeobachtungsliste.setForeground(btnNormalHover);
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				tglbtnBeobachtungsliste.setForeground(btnNormalNoHover);
+			}
+		});
+		tglbtnBeobachtungsliste.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		final JToggleButton tglbtnCheckliste = new JToggleButton("Checkliste");
-		final JToggleButton tglbtnStammdaten = new JToggleButton("Verwaltung");
+		tglbtnCheckliste.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				tglbtnCheckliste.setForeground(btnNormalHover);
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				tglbtnCheckliste.setForeground(btnNormalNoHover);
+			}
+		});
+		tglbtnCheckliste.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		final JToggleButton tglbtnVerwaltung = new JToggleButton("Verwaltung");
+		tglbtnVerwaltung.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				tglbtnVerwaltung.setForeground(btnNormalHover);
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				tglbtnVerwaltung.setForeground(btnNormalNoHover);
+			}
+		});
+		tglbtnVerwaltung.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		tglbtnBeobachtungsliste.setFocusable(false);
 		tglbtnBeobachtungsliste.addActionListener(new ActionListener() {
@@ -178,10 +224,10 @@ public class MerlinMainWindow {
 			     
 			     tglbtnBeobachtungsliste.setSelected(true);
 			     tglbtnCheckliste.setSelected(false);
-			     tglbtnStammdaten.setSelected(false);
+			     tglbtnVerwaltung.setSelected(false);
 			}
 		});
-		tglbtnBeobachtungsliste.setBounds(7, 11, 121, 23);
+		tglbtnBeobachtungsliste.setBounds(7, 9, 160, 25);
 		panelUser.add(tglbtnBeobachtungsliste);
 		
 		
@@ -194,31 +240,31 @@ public class MerlinMainWindow {
 			     
 			     tglbtnBeobachtungsliste.setSelected(false);
 			     tglbtnCheckliste.setSelected(true);
-			     tglbtnStammdaten.setSelected(false);
+			     tglbtnVerwaltung.setSelected(false);
 			    
 			    
 			}
 		});
-		tglbtnCheckliste.setBounds(138, 11, 121, 23);
+		tglbtnCheckliste.setBounds(177, 9, 160, 25);
 		panelUser.add(tglbtnCheckliste);
 		
 		
-		tglbtnStammdaten.setFocusable(false);
-		tglbtnStammdaten.addActionListener(new ActionListener() {
+		tglbtnVerwaltung.setFocusable(false);
+		tglbtnVerwaltung.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				CardLayout cl = (CardLayout)(panelMain.getLayout());
 			    cl.show(panelMain, "name_524734224155361");
 			    
 			    tglbtnBeobachtungsliste.setSelected(false);
 			    tglbtnCheckliste.setSelected(false);
-			    tglbtnStammdaten.setSelected(true);
+			    tglbtnVerwaltung.setSelected(true);
 			}
 		});
-		tglbtnStammdaten.setBounds(267, 11, 121, 23);
-		panelUser.add(tglbtnStammdaten);
+		tglbtnVerwaltung.setBounds(347, 9, 160, 25);
+		panelUser.add(tglbtnVerwaltung);
 		
 		panelMain = new JPanel();
-		panelMain.setBounds(0, 43, 1008, 719);
+		panelMain.setBounds(0, 43, 1100, 725);
 		frmMerlinMain.getContentPane().add(panelMain);
 		panelMain.setLayout(new CardLayout(0, 0));
 		
@@ -228,11 +274,11 @@ public class MerlinMainWindow {
 		
 		JPanel panelOrtsfilter = new JPanel();
 		panelOrtsfilter.setBorder(new TitledBorder(null, "Nach Ort filtern", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelOrtsfilter.setBounds(10, 11, 438, 68);
+		panelOrtsfilter.setBounds(10, 11, 750, 68);
 		panelCheckliste.add(panelOrtsfilter);
 		panelOrtsfilter.setLayout(null);
 		
-		JLabel lblLevel1 = new JLabel("Region");
+		JLabel lblLevel1 = new JLabel("Zoo\u00F6kologische Region");
 		lblLevel1.setBounds(14, 16, 132, 20);
 		panelOrtsfilter.add(lblLevel1);
 		
@@ -240,7 +286,7 @@ public class MerlinMainWindow {
 		lblLevel2.setBounds(155, 16, 132, 20);
 		panelOrtsfilter.add(lblLevel2);
 		
-		JLabel lblLevel3 = new JLabel("Gebiet");
+		JLabel lblLevel3 = new JLabel("Lokation");
 		lblLevel3.setBounds(297, 16, 131, 20);
 		panelOrtsfilter.add(lblLevel3);
 		
@@ -305,38 +351,16 @@ public class MerlinMainWindow {
 		cmbLevel3.setBounds(292, 36, 136, 20);
 		panelOrtsfilter.add(cmbLevel3);
 		
+		JButton btnFiltern = new JButton("Filtern");
+		btnFiltern.setBounds(438, 35, 89, 23);
+		panelOrtsfilter.add(btnFiltern);
 		
-		JProgressBar progressBar = new JProgressBar();
-		progressBar.setStringPainted(true);
-		progressBar.setBounds(10, 694, 760, 14);
-		panelCheckliste.add(progressBar);
-		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(10, 90, 760, 493);
-		panelCheckliste.add(panel_2);
-		panel_2.setLayout(null);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(20, 95, 740, 471);
+		panelCheckliste.add(scrollPane);
 		
 		tableCheckliste = new JTable();
-		tableCheckliste.setBounds(10, 22, 740, 471);
-		panel_2.add(tableCheckliste);
-		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(0, 0, 5, 5);
-		panel_2.add(tabbedPane);
-		
-		JScrollBar scrollBar = new JScrollBar();
-		scrollBar.setBounds(733, 22, 17, 471);
-		panel_2.add(scrollBar);
-		
-		JButton btnFiltern = new JButton("Filtern");
-		btnFiltern.setBounds(458, 45, 89, 23);
-		panelCheckliste.add(btnFiltern);
-		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Bearbeitung", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_1.setBounds(780, 95, 218, 488);
-		panelCheckliste.add(panel_1);
-		panel_1.setLayout(null);
+		scrollPane.setViewportView(tableCheckliste);
 		
 		
 		
@@ -347,87 +371,129 @@ public class MerlinMainWindow {
 		panelMain.add(panelBeobachtungsliste, "name_117830304432961");
 		panelBeobachtungsliste.setLayout(null);
 		
+		JPanel panelCoreDataTable = new JPanel();
+		panelCoreDataTable.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Stammdaten", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelCoreDataTable.setBounds(4, 11, 810, 350);
+		panelBeobachtungsliste.add(panelCoreDataTable);
+		panelCoreDataTable.setLayout(null);
+		
 		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(10, 59, 790, 280);
+		panelCoreDataTable.add(scrollPane_1);
 		scrollPane_1.setBackground(SystemColor.menu);
 		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scrollPane_1.setBounds(10, 22, 713, 320);
-		panelBeobachtungsliste.add(scrollPane_1);
 		
 		
 		tblStammdatenBeob = new JTable();
 		tblStammdatenBeob.setBackground(SystemColor.menu);
 		
 		scrollPane_1.setViewportView(tblStammdatenBeob);
-		try {
-			tblStammdatenBeob.setModel(MainWindowLogic.loadTableDataIntoGui());
-		} catch (Exception e) {
-			errorMessageBox(e);
-			e.printStackTrace();
-		}
+		tblStammdatenBeob.setModel(MainWindowLogic.loadTableDataIntoGui());
+		
+		txtFilterCoreData = new JTextField();
+		txtFilterCoreData.setBounds(82, 28, 230, 20);
+		panelCoreDataTable.add(txtFilterCoreData);
+		txtFilterCoreData.setColumns(10);
+		
+		JLabel lblVolltextfilter = new JLabel("Volltextfilter:");
+		lblVolltextfilter.setBounds(10, 31, 62, 14);
+		panelCoreDataTable.add(lblVolltextfilter);
 		tblStammdatenBeob.getColumnModel().getColumn(0).setPreferredWidth(0);
 		tblStammdatenBeob.getColumnModel().getColumn(0).setMinWidth(0);
 		tblStammdatenBeob.getColumnModel().getColumn(0).setMaxWidth(0);
 		tblStammdatenBeob.getColumnModel().getColumn(0).setWidth(0);
 		tblStammdatenBeob.getColumnModel().getColumn(0).setResizable(false);
+		try {
+		} catch (Exception e) {
+			e.printStackTrace();
+//			showMsgBox(e);
+		}
+		
+		JPanel panelObservationTable = new JPanel();
+		panelObservationTable.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Beobachtungen", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelObservationTable.setBounds(6, 369, 808, 350);
+		panelBeobachtungsliste.add(panelObservationTable);
+		panelObservationTable.setLayout(null);
 		
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(10, 59, 788, 280);
+		panelObservationTable.add(scrollPane_2);
 		scrollPane_2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scrollPane_2.setBounds(10, 373, 713, 320);
-		panelBeobachtungsliste.add(scrollPane_2);
 		
 		tblBeobachtungsliste = new JTable();
 		scrollPane_2.setViewportView(tblBeobachtungsliste);
 		
-		JPanel panel_4 = new JPanel();
-		panel_4.setBackground(SystemColor.control);
-		panel_4.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Beobachtung hinzuf\u00FCgen", TitledBorder.LEFT, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_4.setBounds(733, 22, 265, 320);
-		panelBeobachtungsliste.add(panel_4);
-		panel_4.setLayout(null);
+		JLabel label = new JLabel("Volltextfilter:");
+		label.setBounds(10, 31, 62, 14);
+		panelObservationTable.add(label);
 		
-		JLabel lbRegion = new JLabel("Region");
+		txtFilterObservation = new JTextField();
+		txtFilterObservation.setColumns(10);
+		txtFilterObservation.setBounds(82, 28, 230, 20);
+		panelObservationTable.add(txtFilterObservation);
+		
+		JPanel panelAddObservation = new JPanel();
+		panelAddObservation.setBackground(SystemColor.control);
+		panelAddObservation.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Beobachtung hinzuf\u00FCgen", TitledBorder.LEFT, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelAddObservation.setBounds(824, 11, 266, 350);
+		panelBeobachtungsliste.add(panelAddObservation);
+		panelAddObservation.setLayout(null);
+		
+		JPanel panelAddObLocation = new JPanel();
+		panelAddObLocation.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Ort", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelAddObLocation.setBounds(10, 20, 247, 103);
+		panelAddObservation.add(panelAddObLocation);
+		panelAddObLocation.setLayout(null);
+		
+		JLabel lbRegion = new JLabel("Z.-Region:");
+		lbRegion.setBounds(10, 18, 65, 20);
+		panelAddObLocation.add(lbRegion);
 		lbRegion.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lbRegion.setBounds(11, 26, 65, 16);
-		panel_4.add(lbRegion);
 		
-		JLabel lblLand = new JLabel("Land");
+		JLabel lblLand = new JLabel("Land:");
+		lblLand.setBounds(10, 45, 65, 20);
+		panelAddObLocation.add(lblLand);
 		lblLand.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblLand.setBounds(11, 53, 65, 16);
-		panel_4.add(lblLand);
 		
-		JLabel lblGebiet = new JLabel("Gebiet");
+		JLabel lblGebiet = new JLabel("Lokation:");
+		lblGebiet.setBounds(10, 72, 65, 20);
+		panelAddObLocation.add(lblGebiet);
 		lblGebiet.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblGebiet.setBounds(11, 80, 65, 16);
-		panel_4.add(lblGebiet);
 	
 		
 		
 
 		cbRegionBeo = new  JComboBox<String>();
-		cbRegionBeo.addPopupMenuListener(new PopupMenuListener() {
+		cbRegionBeo.setBounds(85, 18, 152, 20);
+		panelAddObLocation.add(cbRegionBeo);
+		
+		
+		
+		cbLandBeo = new JComboBox<String>();
+		cbLandBeo.setBounds(85, 46, 152, 20);
+		panelAddObLocation.add(cbLandBeo);
+		
+		
+		
+		cbGebietBeo = new JComboBox<String>();
+		cbGebietBeo.setBounds(85, 73, 152, 20);
+		panelAddObLocation.add(cbGebietBeo);
+		cbGebietBeo.addPopupMenuListener(new PopupMenuListener() {
 			public void popupMenuCanceled(PopupMenuEvent arg0) {
 			}
 			public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {
 			}
 			public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
-				cbRegionBeo.setModel( new DefaultComboBoxModel<String>(MainWindowLogic.loadRegion()) );
+				cbGebietBeo.setModel( new DefaultComboBoxModel<String>(MainWindowLogic.loadArea(level_1, level_2)));
 			}
 		});
-		cbRegionBeo.addActionListener(new ActionListener() {
+		cbGebietBeo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				level_1 = cbRegionBeo.getSelectedItem().toString();
-				MainWindowLogic.selectLocation(level_1);
+				level_3 = cbGebietBeo.getSelectedItem().toString();
+				MainWindowLogic.selectLocation(level_1, level_2, level_3);
 			}
 		});
-		cbRegionBeo.setBounds(81, 27, 152, 18);
-		panel_4.add(cbRegionBeo);
-		
-		
-		
-		cbLandBeo = new JComboBox<String>();
 		cbLandBeo.addPopupMenuListener(new PopupMenuListener() {
 			public void popupMenuCanceled(PopupMenuEvent arg0) {
 			}
@@ -445,62 +511,103 @@ public class MerlinMainWindow {
 				
 			}
 		});
-		cbLandBeo.setBounds(81, 53, 152, 18);
-		panel_4.add(cbLandBeo);
-		
-		
-		
-		cbGebietBeo = new JComboBox<String>();
-		cbGebietBeo.addPopupMenuListener(new PopupMenuListener() {
+		cbRegionBeo.addPopupMenuListener(new PopupMenuListener() {
 			public void popupMenuCanceled(PopupMenuEvent arg0) {
 			}
 			public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {
 			}
 			public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
-				cbGebietBeo.setModel( new DefaultComboBoxModel<String>(MainWindowLogic.loadArea(level_1, level_2)));
+				cbRegionBeo.setModel( new DefaultComboBoxModel<String>(MainWindowLogic.loadRegion()) );
 			}
 		});
-		cbGebietBeo.addActionListener(new ActionListener() {
+		cbRegionBeo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				level_3 = cbGebietBeo.getSelectedItem().toString();
-				MainWindowLogic.selectLocation(level_1, level_2, level_3);
+				level_1 = cbRegionBeo.getSelectedItem().toString();
+				MainWindowLogic.selectLocation(level_1);
 			}
 		});
-		cbGebietBeo.setBounds(81, 81, 152, 18);
-		panel_4.add(cbGebietBeo);
 		
+		JPanel panelAddObDate = new JPanel();
+		panelAddObDate.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Datum", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelAddObDate.setBounds(10, 134, 247, 79);
+		panelAddObservation.add(panelAddObDate);
+		panelAddObDate.setLayout(null);
 		
+		JLabel lblVom = new JLabel("Vom:");
+		lblVom.setBounds(31, 18, 31, 20);
+		panelAddObDate.add(lblVom);
+		lblVom.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblVom.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		
-		
-		
-		
-		
-		JLabel lblDatum = new JLabel("Datum");
-		lblDatum.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblDatum.setBounds(11, 107, 46, 14);
-		panel_4.add(lblDatum);
-		
-		JLabel lblVon = new JLabel("Von");
-		lblVon.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblVon.setBounds(11, 132, 46, 14);
-		panel_4.add(lblVon);
-		
-		JLabel lblBis = new JLabel("Bis");
+		final JLabel lblBis = new JLabel("Bis:");
+		lblBis.setEnabled(false);
+		lblBis.setBounds(31, 48, 21, 20);
+		panelAddObDate.add(lblBis);
+		lblBis.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblBis.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblBis.setBounds(11, 157, 46, 14);
-		panel_4.add(lblBis);
 		
-		JLabel lblBemerkung = new JLabel("Bemerkung");
-		lblBemerkung.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblBemerkung.setBounds(11, 187, 83, 17);
-		panel_4.add(lblBemerkung);
+		datumVom = new JDateChooser();
+		datumVom.setBounds(86, 18, 89, 20);
+		panelAddObDate.add(datumVom);
 		
-		JScrollPane scrollPane_3 = new JScrollPane();
-		scrollPane_3.setBounds(81, 187, 150, 74);
-		panel_4.add(scrollPane_3);
+		datumBis = new JDateChooser();
+		datumBis.getCalendarButton().setEnabled(false);
+		datumBis.setBounds(86, 48, 89, 20);
+		panelAddObDate.add(datumBis);
 		
-		txtNotice = new JTextArea();
-		scrollPane_3.setViewportView(txtNotice);
+		SpinnerDateModel model1 = new SpinnerDateModel();
+		model1.setCalendarField(Calendar.MINUTE);
+		
+		uhrzeitVom = new JSpinner();
+		uhrzeitVom.setBounds(185, 18, 52, 20);
+		panelAddObDate.add(uhrzeitVom);
+		uhrzeitVom.setModel(model1);
+		uhrzeitVom.setEditor(new JSpinner.DateEditor(uhrzeitVom, "HH:mm"));
+		
+		SpinnerDateModel model2 = new SpinnerDateModel();
+		model2.setCalendarField(Calendar.MINUTE);
+		
+		uhrzeitBis = new JSpinner();
+		uhrzeitBis.setEnabled(false);
+		uhrzeitBis.setBounds(185, 48, 52, 20);
+		panelAddObDate.add(uhrzeitBis);
+		uhrzeitBis.setModel(model2);
+		uhrzeitBis.setEditor(new JSpinner.DateEditor(uhrzeitBis, "HH:mm"));
+		
+		final JCheckBox chkDatumBis = new JCheckBox("");
+		chkDatumBis.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				lblBis.setEnabled(chkDatumBis.isSelected());
+				datumBis.setEnabled(chkDatumBis.isSelected());
+				uhrzeitBis.setEnabled(chkDatumBis.isSelected());
+			}
+		});
+		chkDatumBis.setBounds(6, 48, 20, 20);
+		panelAddObDate.add(chkDatumBis);
+		chkDatumBis.setToolTipText("Akivieren ");
+		
+		JCheckBox checkBox = new JCheckBox("");
+		checkBox.setEnabled(false);
+		checkBox.setSelected(true);
+		checkBox.setToolTipText("Akivieren ");
+		checkBox.setBounds(6, 18, 20, 20);
+		panelAddObDate.add(checkBox);
+		
+		JPanel panelComment = new JPanel();
+		panelComment.setBounds(10, 224, 247, 87);
+		panelAddObservation.add(panelComment);
+		panelComment.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Bemerkung", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelComment.setLayout(null);
+		
+		JScrollPane scrollpanelComment = new JScrollPane();
+		scrollpanelComment.setBounds(10, 18, 226, 58);
+		panelComment.add(scrollpanelComment);
+		
+		txtComment = new JTextArea();
+		txtComment.setWrapStyleWord(true);
+		txtComment.setLineWrap(true);
+		txtComment.setFont(new Font("Arial", Font.PLAIN, 11));
+		scrollpanelComment.setViewportView(txtComment);
 		
 		
 		
@@ -508,21 +615,25 @@ public class MerlinMainWindow {
 		
 		
 		
-		JButton btnHinzufgen = new JButton("Hinzuf\u00FCgen");
-		btnHinzufgen.addActionListener(new ActionListener() {
+		JButton btnAddObservation = new JButton("Eintrag Hinzuf\u00FCgen");
+		btnAddObservation.setBounds(20, 316, 226, 23);
+		panelAddObservation.add(btnAddObservation);
+		btnAddObservation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
 			
+				//TODO Eintrag korrekt hinzufügen
+				
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 				SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 				
-				String formatVon = dateFormat.format(datumVon.getDate()) + " " + timeFormat.format((Date)uhrzeitVon.getValue());
+				String formatVon = dateFormat.format(datumVom.getDate()) + " " + timeFormat.format((Date)uhrzeitVom.getValue());
 				String formatBis = dateFormat.format(datumBis.getDate()) + " " + timeFormat.format((Date)uhrzeitBis.getValue());
 				
 				System.out.println(formatVon);
 				System.out.println(formatBis);
 				
-				String notice = txtNotice.getText();
+				String notice = txtComment.getText();
 				// y_id kommt aus der Tabelle
 //				MainWindowLogic.addObservation(v_id, level_1, level_2, level_3,  formatVon, formatBis, notice);
 			}
@@ -532,71 +643,30 @@ public class MerlinMainWindow {
 		
 		
 		
-		btnHinzufgen.setFocusable(false);
-		btnHinzufgen.setBounds(56, 272, 89, 23);
-		panel_4.add(btnHinzufgen);
-		
-		JToggleButton toggleButton_3 = new JToggleButton("Abbrechen");
-		toggleButton_3.setBounds(155, 272, 93, 23);
-		panel_4.add(toggleButton_3);
-		
-		datumVon = new JDateChooser();
-		datumVon.setBounds(81, 123, 89, 23);
-		panel_4.add(datumVon);
-		
-		datumBis = new JDateChooser();
-		datumBis.setBounds(81, 153, 89, 23);
-		panel_4.add(datumBis);
+		btnAddObservation.setFocusable(false);
 		
 		
+		JPanel panelMaintainObservation = new JPanel();
+		panelMaintainObservation.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Beobachtung verwalten", TitledBorder.LEFT, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelMaintainObservation.setBounds(824, 369, 266, 350);
+		panelBeobachtungsliste.add(panelMaintainObservation);
+		panelMaintainObservation.setLayout(null);
 		
 		
+		JButton btnDeleteObservation = new JButton("Eintrag l\u00F6schen");
+		btnDeleteObservation.setFocusable(false);
+		btnDeleteObservation.setBounds(20, 227, 226, 23);
+		panelMaintainObservation.add(btnDeleteObservation);
 		
 		
-		SpinnerDateModel model1 = new SpinnerDateModel();
-		model1.setCalendarField(Calendar.MINUTE);
-		
-		uhrzeitVon = new JSpinner();
-		uhrzeitVon.setBounds(197, 130, 58, 20);
-		uhrzeitVon.setModel(model1);
-		uhrzeitVon.setEditor(new JSpinner.DateEditor(uhrzeitVon, "HH:mm"));
-		panel_4.add(uhrzeitVon);
-		
-		SpinnerDateModel model2 = new SpinnerDateModel();
-		model2.setCalendarField(Calendar.MINUTE);
-		
-		uhrzeitBis = new JSpinner();
-		uhrzeitBis.setBounds(197, 155, 58, 20);
-		uhrzeitBis.setModel(model2);
-		uhrzeitBis.setEditor(new JSpinner.DateEditor(uhrzeitBis, "HH:mm"));
-		panel_4.add(uhrzeitBis);
-		
-		
-		
-		
-		
-		
-		JPanel panelBeoVerwalten = new JPanel();
-		panelBeoVerwalten.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Beobachtung verwalten", TitledBorder.LEFT, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panelBeoVerwalten.setBounds(733, 374, 265, 233);
-		panelBeobachtungsliste.add(panelBeoVerwalten);
-		panelBeoVerwalten.setLayout(null);
-		
-		
-		JButton btnBeobachtungLoeschen = new JButton("Beobachtung l\u00F6schen");
-		btnBeobachtungLoeschen.setFocusable(false);
-		btnBeobachtungLoeschen.setBounds(43, 141, 176, 23);
-		panelBeoVerwalten.add(btnBeobachtungLoeschen);
-		
-		
-		JButton btnBeobachtungBearbeiten = new JButton("Beobachtung bearbeiten");
-		btnBeobachtungBearbeiten.addActionListener(new ActionListener() {
+		JButton btnChangeObservation = new JButton("Eintrag bearbeiten");
+		btnChangeObservation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		btnBeobachtungBearbeiten.setFocusable(false);
-		btnBeobachtungBearbeiten.setBounds(43, 103, 176, 23);
-		panelBeoVerwalten.add(btnBeobachtungBearbeiten);
+		btnChangeObservation.setFocusable(false);
+		btnChangeObservation.setBounds(20, 193, 226, 23);
+		panelMaintainObservation.add(btnChangeObservation);
 		
 		
 		
