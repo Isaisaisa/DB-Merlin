@@ -16,13 +16,13 @@ public class MerlinLogic {
 	public static boolean insertBirdwatcher(String name, String vorname, String benutzername, String passwort, String passwortBest, String email) throws Exception {
 
 		// Anlegen des Birdwatchers
-		if (BirdwatcherRepository.create(name, vorname, benutzername, passwort, email) == null) {
-			if (passwort == passwortBest) {
+		if (passwort.equals(passwortBest)) {
+			if (BirdwatcherRepository.create(name, vorname, benutzername, passwort, email) == null) {
 				throw new IllegalArgumentException(
-						"Birdwatcher konnte nicht angelegt werden.");
-			} else {
-				throw new IllegalPasswordException("Passwörter ungleich");
+						"Birdwatcher konnte nicht angelegt werden.");	
 			}
+		}else{
+			throw new IllegalPasswordException("Passwörter ungleich");
 		}
 		return true;
 	}
