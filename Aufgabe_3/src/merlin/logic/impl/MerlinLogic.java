@@ -7,6 +7,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import merlin.base.Application;
 import merlin.base.DbWrapper;
 import merlin.data.BirdwatcherRepository;
+import merlin.data.entities.BirdwatcherImpl;
 import merlin.logic.exception.IllegalPasswordException;
 import static merlin.utils.ConstantElems.*;
 
@@ -206,6 +207,10 @@ public class MerlinLogic {
 		try {
 			boolean isRegistered = BirdwatcherRepository.isRegistered(username, password);
 			if (isRegistered) {
+				
+				//testweise immer den demo account aktiv schalten. TODO!
+				BirdwatcherRepository.setActiveUser(BirdwatcherImpl.valueOf("3", "Watcher", "Birdy", "demo", "merlin", "demo@merlin.de", "R03"));
+				
 				loginSucceed = true;
 			} else {
 				// TODO Sinnvollere Maﬂnahmen oder Fehler werfen (?)

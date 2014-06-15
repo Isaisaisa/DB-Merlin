@@ -1,5 +1,7 @@
 package merlin.gui;
 
+import static merlin.utils.ConstantElems.showMsgBox;
+
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -34,6 +36,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
+import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SwingConstants;
@@ -48,15 +51,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import merlin.base.Application;
+import merlin.data.BirdwatcherRepository;
 import merlin.logic.impl.MainWindowLogic;
 import merlin.utils.ConstantElems;
-
-
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.ListSelectionModel;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -161,7 +158,7 @@ public class MerlinMainWindow {
 		});
 		frmMerlinMain.setIconImage(Toolkit.getDefaultToolkit().getImage(MerlinMainWindow.class.getResource("/javax/swing/plaf/metal/icons/ocean/hardDrive.gif")));
 		frmMerlinMain.setTitle(ConstantElems.windowMainTitle);
-		frmMerlinMain.setBounds(50, 50, 1105, 796);
+		frmMerlinMain.setBounds(50, 50, 1116, 806);
 		frmMerlinMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMerlinMain.getContentPane().setLayout(null);
 		
@@ -845,10 +842,35 @@ public class MerlinMainWindow {
 		
 		tglbtnBeobachtungsliste.doClick();
 		
+		showMsgBox(applyRolePermissions());
+//		applyRolePermissions();
+		
 		
 	}
 	
+	// Abhängig vom Attribut 'Role' des aktiven Users, Felder (in)aktiv schalten oder aus-/einblenden
+	public String applyRolePermissions() {
+		String role = BirdwatcherRepository.getActiveUser().role();
+		
+		// Einrichten, welche Funktionen freigeschaltet bzw. deaktiviert werden sollen
+//		userIsAdmin(role);
+//		userIsContentAdmin(role);
+//		userIsBirdwatcher(role);
+		
+		return role;
+	}
 	
+	public boolean userIsAdmin(String role) {
+		return (role.toLowerCase().equals("r01"))?(true):(false);
+	}
+	
+	public boolean userIsContentAdmin(String role) {
+		return (role.toLowerCase().equals("r02"))?(true):(false);
+	}
+	
+	public boolean userIsBirdwatcher(String role) {
+		return (role.toLowerCase().equals("r03"))?(true):(false);
+	}
 	
 	
 	public DefaultTableModel getTableModel(ResultSet resultSet) throws SQLException {

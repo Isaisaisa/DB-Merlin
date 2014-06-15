@@ -5,8 +5,8 @@ import static merlin.utils.ConstantElems.defaultDbSID;
 import static merlin.utils.ConstantElems.defaultDbURL;
 import static merlin.utils.ConstantElems.showMsgBox;
 
-import java.io.PrintStream;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import merlin.base.interfaces.DbWrapperInterface;
@@ -31,6 +30,7 @@ public final class DbWrapper implements DbWrapperInterface {
 	
 	private static DbWrapper 	instance;
 	private Connection 		 	connection;
+	private DatabaseMetaData	databaseMetaData;
 	private boolean			 	isDriverInitialized;
 	
 	private String				dbURL  = defaultDbURL;
@@ -102,7 +102,7 @@ public final class DbWrapper implements DbWrapperInterface {
 	private void dbPassword(String dbPassword) throws Exception {
 		this.dbPassword = AES.encrypt(dbPassword);
 		// TODO debug, whats going on
-		System.out.println("DbWrapper#dbPassword(): encrypted PW: " + this.dbPassword);
+//		System.out.println("DbWrapper#dbPassword(): encrypted PW: " + this.dbPassword);
 	}
 
 	private String dbPassword() throws Exception {
@@ -214,7 +214,22 @@ public final class DbWrapper implements DbWrapperInterface {
 		return new DefaultComboBoxModel<Object>(input);
 	}
 	
+//	public List<String> getSchemas() throws SQLException {
+//		return getList(databaseMetaData.getSchemas());
+//	}
 	
+//	public boolean areSchemasValid() throws SQLException {
+//		if (databaseMetaData == null) { return false; }
+//		
+//		List<String> schemas = new ArrayList<String>();
+//		schemas.add("Vogelart");
+//		schemas.add("Birdwatcher");
+//		schemas.add("Beobachtunsgebiet");
+//		schemas.add("beobachtet");
+//		schemas.add("kommtVor");
+//		
+//		return getList(databaseMetaData.getSchemas()).containsAll(schemas);
+//	}
 	
 	public List<String> getListOfQuery(String query) throws Exception {
 		ResultSet rs = sendQuery(query);
@@ -311,8 +326,8 @@ public final class DbWrapper implements DbWrapperInterface {
 			isDriverInitialized = true;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-			System.err.println(e.getMessage());
-			System.err.println("Cannot initialize driver: Class oracle.jdbc.driver.OracleDriver not found");
+			showMsgBox(e, "Cannot initialize driver: Class oracle.jdbc.driver.OracleDriver not found"); // TODO nicht validiert, dass problemlos l‰uft
+//			System.err.println("Cannot initialize driver: Class oracle.jdbc.driver.OracleDriver not found");
 			isDriverInitialized = false;
 //			throws ClassNotFoundException;  // wird trotzdem noch von initDriver() der Fehler nach auﬂerdem geworfen, wenn try catch angewandt wird?
 		}
@@ -327,7 +342,7 @@ public final class DbWrapper implements DbWrapperInterface {
 			}
 			catch (ClassNotFoundException e) {
 				e.printStackTrace();
-				System.err.println(e.getMessage());
+				showMsgBox(e); // TODO nicht validiert, dass problemlos l‰uft
 			}
 		}
 		
@@ -337,28 +352,33 @@ public final class DbWrapper implements DbWrapperInterface {
 				try {
 					System.out.println("jdbc:oracle:thin:@" + dbURL + ":" + dbPort + ":" + dbSID +  dbUsername() +  dbPassword);
 					connection( DriverManager.getConnection("jdbc:oracle:thin:@" + dbURL + ":" + dbPort + ":" + dbSID, dbUsername(), dbPassword()) );
+//					databaseMetaData = connection().getMetaData(); // too expensive
 				} catch (SQLException e) {
-					System.err.println("Connection to database could not be established");
+					showMsgBox(e, "DbWrapper#connect: Connection to database could not be established"); // TODO nicht validiert, dass problemlos l‰uft
+//					System.err.println("DbWrapper#connect: Connection to database could not be established");
 					e.printStackTrace();
-					throw new SQLException();
+					throw e;
 				}
 			}
 		} catch (InvalidConnectionDataException e) {
+			showMsgBox(e, "Invalid connection data.\n" + "URL: " + dbURL + "\n" + "Port: " + dbPort + "\n" + "SID: " + dbSID); // TODO nicht validiert, dass problemlos l‰uft
 			e.printStackTrace();
-			System.err.println("Invalid connection data.");
-			System.err.println("URL: " + dbURL + "\n"
-							 + "Port: " + dbPort + "\n" 
-							 + "SID: " + dbSID);
+//			System.err.println("Invalid connection data.");
+//			System.err.println("URL: " + dbURL + "\n"
+//							 + "Port: " + dbPort + "\n" 
+//							 + "SID: " + dbSID);
 		} catch (InvalidLoginDataException e) {
+			showMsgBox(e, "Invalid login data.\n" + "Username: " + dbUsername); // TODO nicht validiert, dass problemlos l‰uft
 			e.printStackTrace();
-			System.err.println("Invalid login data.");
-			System.err.println("Username: " + dbUsername);
+//			System.err.println("Invalid login data.");
+//			System.err.println("Username: " + dbUsername);
 		}
 	}
 	
 	public void close() throws SQLException {
 		if (connection != null) {
 			connection.close();
+			databaseMetaData = null;
 		}
 	}
 	

@@ -1,11 +1,9 @@
 package merlin.data;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
 import static merlin.utils.ConstantElems.showMsgBox;
 
-
+import java.sql.SQLException;
+import java.util.List;
 
 import merlin.base.Application;
 import merlin.base.DbWrapper;
@@ -15,6 +13,16 @@ import merlin.data.entities.BirdwatcherImpl;
 
 //Inserts, abfragen, update, delete usw.
 public class BirdwatcherRepository {
+	
+	private static Birdwatcher activeUser;
+	
+	public static void setActiveUser(Birdwatcher activeUser) {
+		BirdwatcherRepository.activeUser = activeUser;
+	}
+
+	public static Birdwatcher getActiveUser() {
+		return activeUser;
+	}
 	
 	public static Birdwatcher create(String name, String vorname, String benutzername, String passwort, String email) throws Exception {
 
@@ -41,7 +49,6 @@ public class BirdwatcherRepository {
 		
 		try {
 			// Wenn ein Eintrag zur Kombination aus Benutzernamen und Passwort gibt, sind die Logindaten korrekt und das ResultSet hat einen Eintrag ==> nicht leer
-//			return database.hasResults(database.sendQuery("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = 'demo' AND Passwort = 'merlin'"));
 			return database.hasResults(database.sendQuery("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = '" + benutzername + "' AND Passwort = '" + passwort + "'"));
 		
 		} catch (SQLException e) {
@@ -53,7 +60,6 @@ public class BirdwatcherRepository {
 	
 	
 	public static List<Birdwatcher> findByName(String name) {
-		
 		return null;
 	}
 
