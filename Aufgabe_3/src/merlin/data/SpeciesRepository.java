@@ -23,10 +23,7 @@ import merlin.utils.ConstantElems;
 import static merlin.data.enums.SpeciesCategoryEnum.*;
 
 
-
-//SELECT vo.* FROM Vogelart vo RIGHT JOIN KOMMTVOR kv ON vo.VA_ID = kv.VA_ID AND kv.ORT_ID = (
-//	    SELECT Ort_ID FROM BEOBACHTUNSGEBIET WHERE LEVEL_1 = 'WP' AND LEVEL_2 = 'GER' AND LEVEL_3 is null);
-
+//Daten holen zur Checkliste
 public class SpeciesRepository {
 
 	public static DefaultTableModel selectLocation(String region, String land, String area){
@@ -130,12 +127,12 @@ public class SpeciesRepository {
 				database = Application.getInstance().database();
 				if (dateUntil.equals("null")){
 					database.sendUpdate("INSERT INTO beobachtet"
-							+ "	VALUES ( '" + birdId + "', '3', '" + "', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), 'null', '" + notice + "'");
-				}else{
-				database.sendUpdate("INSERT INTO beobachtet"
-						+ "	VALUES ( '" + birdId + "', '3', '" + "', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), TO_DATE('" + dateUntil + "', 'DD-MM-YYYY HH24:MI'), '" + notice + "'");
+							+ "	VALUES( '" + birdId + "', '3', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), 'null', '" + notice + "')");
+				}else{		
+					database.sendUpdate("INSERT INTO beobachtet"
+							+ "	VALUES( '" + birdId + "', '3', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), TO_DATE('" + dateUntil + "', 'DD-MM-YYYY HH24:MI'), '" + notice + "')");
 //				database.sendUpdate("INSERT INTO beobachtet"
-//						+ "	VALUES ( '" + birdId + "', '" + bw_Id + "', '" + "', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), TO_DATE('" + dateUntil + "', 'DD-MM-YYYY HH24:MI'), '" + notice + "'");
+//						+ "	VALUES ( '" + birdId + "', '" + bw_Id + "', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), TO_DATE('" + dateUntil + "', 'DD-MM-YYYY HH24:MI'), '" + notice + "')");
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

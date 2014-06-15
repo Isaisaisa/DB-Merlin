@@ -389,19 +389,6 @@ public class MerlinMainWindow {
 				System.out.println(level3); //evtl. null 
 				
 				tableCheckliste.setModel(MainWindowLogic.selectLocation(level1, level2, level3));
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
 			}
 		});
 		btnFiltern.setBounds(438, 35, 89, 23);
@@ -412,6 +399,7 @@ public class MerlinMainWindow {
 		panelCheckliste.add(scrollPane);
 		
 		tableCheckliste = new JTable();
+		tableCheckliste.setVerifyInputWhenFocusTarget(false);
 		scrollPane.setViewportView(tableCheckliste);
 		
 		
@@ -693,20 +681,28 @@ public class MerlinMainWindow {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 				SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 				
-				String formatVon = dateFormat.format(datumVom.getDate()) + " " + timeFormat.format((Date)uhrzeitVom.getValue());
-				String formatBis = dateFormat.format(datumBis.getDate()) + " " + timeFormat.format((Date)uhrzeitBis.getValue());
+				System.out.println("684 MerlinMainWindow : " + dateFormat);
+				System.out.println("685 MerlinMainWindow : " + timeFormat);
 				
-				System.out.println(formatVon);
-				System.out.println(formatBis);
-			
-//				String notice = txtNotice.getText();
+				String formatVon = dateFormat.format(datumVom.getDate()) + " " + timeFormat.format((Date)uhrzeitVom.getValue());
+//				if (datumBis.getDate() == null && uhrzeitBis.getValue() == null){
+//					String formatBis = null;
+//				}
+				String formatBis = dateFormat.format(datumBis.getDate()) + " " + timeFormat.format((Date)uhrzeitBis.getValue());
+				System.out.println("692 MerlinMainWindow : " + datumBis.getDate().toString());
+				System.out.println("693 MerlinMainWindow : " + ((Date)uhrzeitBis.getValue()).toString());
+				System.out.println("694 MerlinMainWindow : " + formatVon);
+				System.out.println("695 MerlinMainWindow : " + formatBis);
+				
 					
 				String notice = txtComment.getText();
-				MainWindowLogic.addObservation(stringBirdId(), level_1, level_2, level_3,  formatVon, formatBis, notice);
-				
-				// y_id kommt aus der Tabelle
-//				MainWindowLogic.addObservation(v_id, level_1, level_2, level_3,  formatVon, formatBis, notice);
+				System.out.println("699 MerlinMainWindow : " + notice);
 
+				MainWindowLogic.addObservation("300", "WPA", "GER", "Hamburg", "06-05-2014 11:02", "07-05-2014 11:02", "hallihallo");
+//				MainWindowLogic.addObservation("300", "WPA", "GER", "Hamburg", "06-05-2014 11:02", null, "hallihallo");
+//				MainWindowLogic.addObservation("300", level_1, level_2, level_3,  formatVon, null, notice);
+//				MainWindowLogic.addObservation(stringBirdId(), level_1, level_2, level_3,  formatVon, formatBis, notice);
+				
 			}
 		});
 		
