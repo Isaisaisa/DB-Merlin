@@ -1,18 +1,18 @@
 package merlin.logic.impl;
 
-import static merlin.utils.ConstantElems.errorMessageBox;
+import static merlin.utils.ConstantElems.showMsgBox;
 
 import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
 
-import merlin.base.Application;
-import merlin.data.SpeziesRepository;
+import merlin.data.SpeciesRepository;
+import merlin.data.enums.SpeciesCategoryEnum;
 
 public class MainWindowLogic {
 
 	public static void selectLocation(String region, String land, String area){
-		SpeziesRepository.selectLocation(region, land, area);
+		SpeciesRepository.selectLocation(region, land, area);
 	}
 	public static void selectLocation(String region, String land){
 		selectLocation(region, land, "");
@@ -24,33 +24,35 @@ public class MainWindowLogic {
 	
 //	gibt Name (String) von Level1 an GUI weiter
 	public static Vector<String> loadRegion(){
-		return SpeziesRepository.getRegion();
+		return SpeciesRepository.getRegion();
 	
 	}
 	public static Vector<String> loadLand(String level1){
-		return SpeziesRepository.getLand(level1);
+		return SpeciesRepository.getLand(level1);
 	}
 	
 	public static Vector<String> loadArea(String level1, String level2){
-		return SpeziesRepository.getArea(level1, level2);
+		return SpeciesRepository.getArea(level1, level2);
 	}
 	
 	
+<<<<<<< HEAD
 	public static void addObservation(String birdId, String level1, String level2, String level3, String dateFrom, String dateUntil, String notice){
 		SpeziesRepository.addDataObservation(birdId, level1, level2, level3, dateFrom, dateUntil, notice);
+=======
+	public static void addObservation(int birdId, String level1, String level2, String level3, String dateFrom, String dateUntil, String notice){
+		SpeciesRepository.addDataObservation(birdId, level1, level2, level3, dateFrom, dateUntil, notice);
+>>>>>>> 7320aad97614f71a588b49f63cef2466e98f347a
 		
 	}
 	
 	public static DefaultTableModel loadTableDataIntoGui() {
-//		return SpeziesRepository.getTableData();
 		try {
-			return Application.getInstance().database().getTableModelOfQuery("select * from beobachtunsgebiet");
+			return SpeciesRepository.getCoreData("x", SpeciesCategoryEnum.ALL, 0);
 		} catch (Exception e) {
 			e.printStackTrace();
-			errorMessageBox(e);
+			showMsgBox(e); //TODO im auge behalten
 			return new DefaultTableModel();
 		}
-		
 	}
-	
 }

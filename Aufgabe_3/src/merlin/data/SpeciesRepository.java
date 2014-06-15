@@ -1,6 +1,10 @@
 package merlin.data;
 
+<<<<<<< HEAD:Aufgabe_3/src/merlin/data/SpeziesRepository.java
 import static merlin.utils.ConstantElems.errorMessageBox;
+=======
+import static merlin.utils.ConstantElems.showMsgBox;
+>>>>>>> 7320aad97614f71a588b49f63cef2466e98f347a:Aufgabe_3/src/merlin/data/SpeciesRepository.java
 
 import java.sql.ResultSet;
 import java.util.HashSet;
@@ -9,11 +13,16 @@ import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
 
 import merlin.base.Application;
+<<<<<<< HEAD:Aufgabe_3/src/merlin/data/SpeziesRepository.java
 import merlin.base.DbWrapper;
+=======
+import merlin.data.enums.SpeciesCategoryEnum;
+import static merlin.data.enums.SpeciesCategoryEnum.*;
+>>>>>>> 7320aad97614f71a588b49f63cef2466e98f347a:Aufgabe_3/src/merlin/data/SpeciesRepository.java
 
 
 
-public class SpeziesRepository {
+public class SpeciesRepository {
 
 	public static void selectLocation(String region, String land, String area){
 		if (land.isEmpty() && area.isEmpty()){
@@ -120,25 +129,61 @@ public class SpeziesRepository {
 			if (!level2.isEmpty()) { template2 = level2; }
 			if (!level3.isEmpty()) { template3 = level3; }
 			
-			ResultSet rs;
+			String query = "SELECT Ort_ID FROM Beobachtunsgebiete WHERE Level_1 = '" + template1 + "' AND Level_2 = '" + template2 + "' AND Level_3 = '" + template3 + "'";
 			try {
-				rs = Application.getInstance().database().sendQuery("SELECT Ort_ID FROM Beobachtunsgebiete WHERE Level_1 = '" + template1 + "' AND Level_2 = '" + template2 + "' AND Level_3 = '" + template3 + "'");
-				return Application.getInstance().database().getList(rs).get(0);
+				return Application.getInstance().database().getSingleValue(query);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-				
+				showMsgBox(e); // TODO
 				return "";
 			}
 			
 		} 
 		
+		// Stammdaten holen
+//		public static DefaultTableModel getCoreData() throws Exception {
+//			return Application.getInstance().database().getTableModelOfQuery("SELECT * FROM VOGELART WHERE NAME_LAT LIKE 'X%' ORDER BY NAME_LAT ASC");
+//			return Application.getInstance().database().getTableModelOfQuery("SELECT * FROM VOGELART ORDER BY NAME_LAT ASC");
+//		}
 		
-		public static DefaultTableModel getTableData() throws Exception{
-			return Application.getInstance().database().getTableModelOfQuery("SELECT * FROM VOGELART ORDER BY NAME_LAT ASC");
-//			Beispiel nur um nicht die lange Wartezeit zu haben.
-//			return Application.getInstance().database().getTableModelOfQuery("SELECT * FROM Birdwatcher");
+//		public static DefaultTableModel getCoreData(String filter) throws Exception {
+//			
+//		}
+//		
+//		public static DefaultTableModel getCoreData(String filter, String location) throws Exception {
+//			
+//		}
+//		
+		public static DefaultTableModel getCoreData(String filter, SpeciesCategoryEnum species, int orderBy) throws Exception {
+			// TODO Gefilterte Stammdaten ausgeben
+			/*
+			 * String filter
+			 * SpeciesCategoryEnum species
+			 * int orderBy => 0 = none, 1 = ASC, 2 = DESC
+			 * 
+			 */
+			boolean filtered = filter != null && !filter.isEmpty();
+			boolean filterSpecies = !species.value().equals(ALL.value());
+			boolean orderResult = orderBy > 0;
+			boolean limitQuery = filtered || filterSpecies;
+			String query = "SELECT * FROM VOGELART";
+			
+			
+			// MEEEGA dreckig. Is nur zu testzwecken so gebaut
+			if (limitQuery) {
+				query+= " WHERE ";
+				
+				if (filtered) {
+					query += "(NAME_LAT LIKE '%" + filter +
+							 "%' OR NAME_DE LIKE '%" + filter +
+							"%' OR NAME_ENG LIKE '%" + filter +
+							"%' OR ARTENTYP LIKE '%" + filter + "%')";
+				}
+			}			
+			
+			return Application.getInstance().database().getTableModelOfQuery(query);
 		}
+<<<<<<< HEAD:Aufgabe_3/src/merlin/data/SpeziesRepository.java
 		
 		//Methode um "beobachtet" in Gui zu laden
 //		public static DefaultTableModel getDataObservation() throws Exception{
@@ -147,4 +192,6 @@ public class SpeziesRepository {
 //		}
 		
 		
+=======
+>>>>>>> 7320aad97614f71a588b49f63cef2466e98f347a:Aufgabe_3/src/merlin/data/SpeciesRepository.java
 }

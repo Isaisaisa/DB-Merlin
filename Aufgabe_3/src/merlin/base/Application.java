@@ -23,12 +23,13 @@ public final class Application {
 	private static Application instance;
 
 	private Application() {
+		
 		try {
 			loadProperties();
 			database = DbWrapper.getInstance();
 		} catch (Exception e) {
 			e.printStackTrace();
-			errorMessageBox(e);
+			showMsgBox(e);
 		}
 		/*
 		 * testings	 area	
@@ -96,7 +97,7 @@ public final class Application {
 	}
 	
 	public void shutdown() {
-		shutdown(false);
+		shutdown(true);
 	}
 	
 	

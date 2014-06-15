@@ -3,6 +3,7 @@ package merlin.base;
 import static merlin.utils.ConstantElems.defaultDbPort;
 import static merlin.utils.ConstantElems.defaultDbSID;
 import static merlin.utils.ConstantElems.defaultDbURL;
+import static merlin.utils.ConstantElems.showMsgBox;
 
 import java.io.PrintStream;
 import java.sql.Connection;
@@ -15,22 +16,15 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-
-
-
-
-
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-import org.junit.runner.Result;
-
 import merlin.base.interfaces.DbWrapperInterface;
-import merlin.logic.exception.*;
-import merlin.utils.ConstantElems;
+import merlin.logic.exception.InvalidConnectionDataException;
+import merlin.logic.exception.InvalidLoginDataException;
 
 public final class DbWrapper implements DbWrapperInterface {
 
@@ -72,7 +66,7 @@ public final class DbWrapper implements DbWrapperInterface {
 
 	 ///////////////
 	// ACCESSORS //
-	public void setConnectionData(String dbURL, String dbPort, String dbSID, String dbUsername, char[] dbPassword) throws Exception {
+	public void setConnectionData(String dbURL, String dbPort, String dbSID, String dbUsername, char[] dbPassword) throws InvalidConnectionDataException, Exception {
 		if (areConnectionDataValid(dbURL, dbPort, dbSID)) {
 			this.dbURL = dbURL;
 			this.dbPort = dbPort;
@@ -80,6 +74,7 @@ public final class DbWrapper implements DbWrapperInterface {
 		} else {
 			throw new InvalidConnectionDataException();
 		}
+
 		if (dbUsername != null && dbPassword != null) {
 			setLoginData(dbUsername, new String(dbPassword));
 		}
@@ -106,7 +101,7 @@ public final class DbWrapper implements DbWrapperInterface {
 
 	private void dbPassword(String dbPassword) throws Exception {
 		this.dbPassword = AES.encrypt(dbPassword);
-		// TODO debug
+		// TODO debug, whats going on
 		System.out.println("DbWrapper#dbPassword(): encrypted PW: " + this.dbPassword);
 	}
 
@@ -143,8 +138,14 @@ public final class DbWrapper implements DbWrapperInterface {
 		return getList(rs).get(0);
 	}
 	
-	public String getSingleValue(String query) {
-		return getSingleValue(sendQuery(query));
+	public String getSingleValue(String query) throws SQLException {
+		try {
+			return getSingleValue(sendQuery(query));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			showMsgBox(e);
+			throw e;
+		}
 	}
 	
 	
@@ -183,12 +184,12 @@ public final class DbWrapper implements DbWrapperInterface {
 	
 	// Direkteste Methode, um direkt von einem Query das volle Ergebnis in Form
 	// eines TableModels zu erhalten
-	public DefaultTableModel getTableModelOfQuery(String query) {
+	public DefaultTableModel getTableModelOfQuery (String query) {
 		try {
 			return getTableModel(sendQuery(query));
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.err.println(e.getMessage());
+			// showMsgBox(e); // TODO im Auge behalten
 			return new DefaultTableModel();
 		}
 	}
@@ -334,7 +335,7 @@ public final class DbWrapper implements DbWrapperInterface {
 		try {
 			if (areDataValid()) {
 				try {
-					debugPrint("jdbc:oracle:thin:@" + dbURL + ":" + dbPort + ":" + dbSID +  dbUsername() +  dbPassword);
+					System.out.println("jdbc:oracle:thin:@" + dbURL + ":" + dbPort + ":" + dbSID +  dbUsername() +  dbPassword);
 					connection( DriverManager.getConnection("jdbc:oracle:thin:@" + dbURL + ":" + dbPort + ":" + dbSID, dbUsername(), dbPassword()) );
 				} catch (SQLException e) {
 					System.err.println("Connection to database could not be established");
@@ -380,12 +381,13 @@ public final class DbWrapper implements DbWrapperInterface {
 	
 	private boolean preSendChecks() throws InvalidConnectionDataException, InvalidLoginDataException, SQLException, Exception {
 		if (!isConnectionValid() && !areDataValid()) {
-			throw new Exception("The attempt to connect to database, before sending, failed.");
+			throw new Exception("DbWrapper#preSendChecks(): The attempt to connect to database, before sending, failed.");
 		}
 		return true;
 	}
 	
 	// Query an Datenbank senden
+<<<<<<< HEAD
 	public ResultSet sendQuery(String query) {
 		
 		Statement statement = null;
@@ -395,60 +397,50 @@ public final class DbWrapper implements DbWrapperInterface {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+=======
+	public ResultSet sendQuery(String query) throws SQLException {
+>>>>>>> 7320aad97614f71a588b49f63cef2466e98f347a
 		try {
+			Statement statement = connection().createStatement();
 			return statement.executeQuery(query);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.err.println(e.getMessage());
-			System.err.println("ErrorCode: " + e.getErrorCode());
-			try {
-				ConstantElems.errorMessageBox(e);
-			} catch (Exception e1) {
-				errorMessageBox(e);;
-			}
-			
-			// TODO aufpassen, dass dann auf den null Wert passend reagiert wird
-			return null;
+			showMsgBox(e);
+			throw e;
 		}
 	}
 	
 	public ResultSet sendQuery(PreparedStatement prepStatement) throws SQLException {
-		return prepStatement.executeQuery();
+		try {
+			return prepStatement.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			showMsgBox(e);
+			throw e;
+		}
 	}
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 7320aad97614f71a588b49f63cef2466e98f347a
 	public void sendUpdate(String query) throws SQLException {
-		connection().createStatement().executeUpdate(query);
+		try {
+			connection().createStatement().executeUpdate(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			showMsgBox(e);
+			throw e;
+		}
 	}
 	
 	public void sendUpdate(PreparedStatement prepStatement) throws SQLException {
-		prepStatement.executeUpdate();
-	}
-	
-	
-	
-	/* DEBUGGING PRINTER */
-	private void debugPrint(String debugThis, PrintStream ps) {
-		ps.println("DbWrapper: " + debugThis);
-	}
-	
-	private void debugPrintErr(String debugThis) {
-		debugPrint(debugThis, System.err);
-	}
-	
-	private void debugPrint(String debugThis) {
-		debugPrint(debugThis, System.out);
-	}
-	
-	public void errorMessageBox(SQLException e) {
-		JOptionPane.showMessageDialog(null,
-			    "Fehler: " + e.getErrorCode() + "\n" +
-			    e.getMessage(),
-			    // TODO e.getClass().getName().... hm...
-			    e.getClass().getName(),
-			    JOptionPane.ERROR_MESSAGE);
-	}
-	
-	public void messageBox(String msg) {
-		JOptionPane.showMessageDialog(null, msg);
+		try {
+			prepStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			showMsgBox(e);
+			throw e;
+		}
 	}
 }
