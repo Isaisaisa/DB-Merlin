@@ -387,19 +387,8 @@ public final class DbWrapper implements DbWrapperInterface {
 	}
 	
 	// Query an Datenbank senden
-<<<<<<< HEAD
-	public ResultSet sendQuery(String query) {
-		
-		Statement statement = null;
-		try {
-			statement = connection().createStatement();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-=======
+	
 	public ResultSet sendQuery(String query) throws SQLException {
->>>>>>> 7320aad97614f71a588b49f63cef2466e98f347a
 		try {
 			Statement statement = connection().createStatement();
 			return statement.executeQuery(query);
@@ -419,11 +408,7 @@ public final class DbWrapper implements DbWrapperInterface {
 			throw e;
 		}
 	}
-<<<<<<< HEAD
 
-=======
-	
->>>>>>> 7320aad97614f71a588b49f63cef2466e98f347a
 	public void sendUpdate(String query) throws SQLException {
 		try {
 			connection().createStatement().executeUpdate(query);

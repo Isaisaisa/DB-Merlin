@@ -51,15 +51,15 @@ import merlin.base.Application;
 import merlin.logic.impl.MainWindowLogic;
 import merlin.utils.ConstantElems;
 
-<<<<<<< HEAD
+
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.ListSelectionModel;
-=======
+
 import com.toedter.calendar.JDateChooser;
->>>>>>> 7320aad97614f71a588b49f63cef2466e98f347a
+
 
 public class MerlinMainWindow {
 
@@ -90,7 +90,7 @@ public class MerlinMainWindow {
 	private JSpinner uhrzeitBis;
 	private JDateChooser datumVom;
 	private JDateChooser datumBis;
-<<<<<<< HEAD
+
 	private JTextArea txtNotice;
 	private String stringBirdId;
 	
@@ -100,7 +100,7 @@ public class MerlinMainWindow {
 	public void stringBirdId(String s){
 		
 	}
-=======
+
 	private JTextArea txtComment;
 	private JTextField txtFilterCoreData;
 	private JTextField txtFilterObservation;
@@ -109,8 +109,7 @@ public class MerlinMainWindow {
 	private final Color btnNormalNoHover 	= new Color(0,0,0);
 	private final Color btnCriticalHover	= new Color(255,0,0);
 	private final Color btnCriticalNoHover 	= new Color(0,0,0);
->>>>>>> 7320aad97614f71a588b49f63cef2466e98f347a
-	
+
 	/**
 	 * Launch the application.
 	 * @throws UnsupportedLookAndFeelException 
@@ -150,7 +149,6 @@ public class MerlinMainWindow {
 	 */
 	private void initialize() {
 		frmMerlinMain = new JFrame();
-		frmMerlinMain.setResizable(false);
 		frmMerlinMain.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
@@ -288,6 +286,16 @@ public class MerlinMainWindow {
 		frmMerlinMain.getContentPane().add(panelMain);
 		panelMain.setLayout(new CardLayout(0, 0));
 		
+		
+		
+		
+		
+		
+		
+		
+		//CHECKLISTE
+		
+		
 		JPanel panelCheckliste = new JPanel();
 		panelMain.add(panelCheckliste, "name_117825363666024");
 		panelCheckliste.setLayout(null);
@@ -323,7 +331,7 @@ public class MerlinMainWindow {
 		cmbLevel1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				level1 = cmbLevel1.getSelectedItem().toString();
-				MainWindowLogic.selectLocation(level1);
+//				MainWindowLogic.selectLocation(level1);
 			}
 		});
 		cmbLevel1.setBounds(10, 36, 136, 20);
@@ -344,7 +352,7 @@ public class MerlinMainWindow {
 		cmbLevel2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				level2 = cmbLevel2.getSelectedItem().toString();
-				MainWindowLogic.selectLocation(level1, level2);
+//				MainWindowLogic.selectLocation(level1, level2);
 			}
 		});
 		cmbLevel2.setBounds(151, 36, 136, 20);
@@ -365,13 +373,37 @@ public class MerlinMainWindow {
 		cmbLevel3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				level3 = cmbLevel3.getSelectedItem().toString();
-				MainWindowLogic.selectLocation(level1, level2, level3);
+				// Glaube das wird hier nciht benötigt
+//				MainWindowLogic.selectLocation(level1, level2, level3);
 			}
 		});
 		cmbLevel3.setBounds(292, 36, 136, 20);
 		panelOrtsfilter.add(cmbLevel3);
 		
 		JButton btnFiltern = new JButton("Filtern");
+		btnFiltern.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				System.out.println(level1);
+				System.out.println(level2); //evtl. null 
+				System.out.println(level3); //evtl. null 
+				
+				tableCheckliste.setModel(MainWindowLogic.selectLocation(level1, level2, level3));
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+			}
+		});
 		btnFiltern.setBounds(438, 35, 89, 23);
 		panelOrtsfilter.add(btnFiltern);
 		
@@ -383,6 +415,13 @@ public class MerlinMainWindow {
 		scrollPane.setViewportView(tableCheckliste);
 		
 		
+		
+		
+		
+		
+		
+		
+		//BEOBACHTUNGSLISTE
 		
 		
 		
@@ -536,7 +575,7 @@ public class MerlinMainWindow {
 		cbLandBeo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				level_2 = cbLandBeo.getSelectedItem().toString();
-				MainWindowLogic.selectLocation(level_1, level_2);
+//				MainWindowLogic.selectLocation(level_1, level_2);
 				
 			}
 		});
@@ -552,7 +591,7 @@ public class MerlinMainWindow {
 		cbRegionBeo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				level_1 = cbRegionBeo.getSelectedItem().toString();
-				MainWindowLogic.selectLocation(level_1);
+//				MainWindowLogic.selectLocation(level_1);
 			}
 		});
 		
@@ -640,23 +679,17 @@ public class MerlinMainWindow {
 		
 		
 		
-		
-		
-		
-		
 		JButton btnAddObservation = new JButton("Eintrag Hinzuf\u00FCgen");
 		btnAddObservation.setBounds(20, 316, 226, 23);
 		panelAddObservation.add(btnAddObservation);
 		btnAddObservation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-<<<<<<< HEAD
+
 				tblStammdatenBeob.getSelectedRow();
-=======
+
 			
 				//TODO Eintrag korrekt hinzufügen
->>>>>>> 7320aad97614f71a588b49f63cef2466e98f347a
-				
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 				SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 				
@@ -665,22 +698,17 @@ public class MerlinMainWindow {
 				
 				System.out.println(formatVon);
 				System.out.println(formatBis);
-				
-<<<<<<< HEAD
-				String notice = txtNotice.getText();
-				
+			
+//				String notice = txtNotice.getText();
+					
+				String notice = txtComment.getText();
 				MainWindowLogic.addObservation(stringBirdId(), level_1, level_2, level_3,  formatVon, formatBis, notice);
 				
-=======
-				String notice = txtComment.getText();
 				// y_id kommt aus der Tabelle
 //				MainWindowLogic.addObservation(v_id, level_1, level_2, level_3,  formatVon, formatBis, notice);
->>>>>>> 7320aad97614f71a588b49f63cef2466e98f347a
+
 			}
 		});
-		
-		
-		
 		
 		
 		btnAddObservation.setFocusable(false);
@@ -711,6 +739,11 @@ public class MerlinMainWindow {
 		
 		
 		
+		
+		
+		
+		
+		//STAMMDATEN
 		
 		
 		

@@ -8,18 +8,21 @@ import javax.swing.table.DefaultTableModel;
 
 import merlin.data.SpeciesRepository;
 import merlin.data.enums.SpeciesCategoryEnum;
+import merlin.utils.ConstantElems;
 
 public class MainWindowLogic {
 
-	public static void selectLocation(String region, String land, String area){
-		SpeciesRepository.selectLocation(region, land, area);
+	public static DefaultTableModel selectLocation(String region, String land, String area){
+			return SpeciesRepository.selectLocation(region, land, area);
 	}
-	public static void selectLocation(String region, String land){
-		selectLocation(region, land, "");
-	}
-	public static void selectLocation(String region){
-		selectLocation(region, "", "");
-	}
+	
+	
+//	public static void selectLocation(String region, String land){
+//		selectLocation(region, land, "");
+//	}
+//	public static void selectLocation(String region){
+//		selectLocation(region, "", "");
+//	}
 	
 	
 //	gibt Name (String) von Level1 an GUI weiter
@@ -35,14 +38,10 @@ public class MainWindowLogic {
 		return SpeciesRepository.getArea(level1, level2);
 	}
 	
-	
-<<<<<<< HEAD
+
 	public static void addObservation(String birdId, String level1, String level2, String level3, String dateFrom, String dateUntil, String notice){
-		SpeziesRepository.addDataObservation(birdId, level1, level2, level3, dateFrom, dateUntil, notice);
-=======
-	public static void addObservation(int birdId, String level1, String level2, String level3, String dateFrom, String dateUntil, String notice){
 		SpeciesRepository.addDataObservation(birdId, level1, level2, level3, dateFrom, dateUntil, notice);
->>>>>>> 7320aad97614f71a588b49f63cef2466e98f347a
+
 		
 	}
 	
@@ -55,4 +54,6 @@ public class MainWindowLogic {
 			return new DefaultTableModel();
 		}
 	}
+	
+
 }

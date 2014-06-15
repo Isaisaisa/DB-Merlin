@@ -1,37 +1,62 @@
 package merlin.data;
 
-<<<<<<< HEAD:Aufgabe_3/src/merlin/data/SpeziesRepository.java
-import static merlin.utils.ConstantElems.errorMessageBox;
-=======
+
+
 import static merlin.utils.ConstantElems.showMsgBox;
->>>>>>> 7320aad97614f71a588b49f63cef2466e98f347a:Aufgabe_3/src/merlin/data/SpeciesRepository.java
+
+
+
+
+
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
 
 import merlin.base.Application;
-<<<<<<< HEAD:Aufgabe_3/src/merlin/data/SpeziesRepository.java
 import merlin.base.DbWrapper;
-=======
 import merlin.data.enums.SpeciesCategoryEnum;
+import merlin.utils.ConstantElems;
 import static merlin.data.enums.SpeciesCategoryEnum.*;
->>>>>>> 7320aad97614f71a588b49f63cef2466e98f347a:Aufgabe_3/src/merlin/data/SpeciesRepository.java
 
 
+
+//SELECT vo.* FROM Vogelart vo RIGHT JOIN KOMMTVOR kv ON vo.VA_ID = kv.VA_ID AND kv.ORT_ID = (
+//	    SELECT Ort_ID FROM BEOBACHTUNSGEBIET WHERE LEVEL_1 = 'WP' AND LEVEL_2 = 'GER' AND LEVEL_3 is null);
 
 public class SpeciesRepository {
 
-	public static void selectLocation(String region, String land, String area){
-		if (land.isEmpty() && area.isEmpty()){
+	public static DefaultTableModel selectLocation(String region, String land, String area){
+		DbWrapper database;
+		DefaultTableModel table = new DefaultTableModel();
+		try {
+			database = Application.getInstance().database();
+			System.out.println("37 SpeciesRepository : "+database);
+			if (land == null && area == null){
+				table = database.getTableModelOfQuery(
+						"SELECT vo.* FROM Vogelart vo RIGHT JOIN KOMMTVOR kv ON vo.VA_ID = kv.VA_ID AND kv.ORT_ID = ("
+						+ "SELECT Ort_ID FROM BEOBACHTUNSGEBIET WHERE LEVEL_1 = '" + region + "' And Level_2 IS NULL And Level_3 IS NULL)"
+						);
+				
+			}else if (area == null){
+				table = database.getTableModelOfQuery("SELECT vo.* FROM Vogelart vo RIGHT JOIN KOMMTVOR kv ON vo.VA_ID = kv.VA_ID AND kv.ORT_ID = ("
+						+ "SELECT Ort_ID FROM BEOBACHTUNSGEBIET WHERE LEVEL_1 = '" + region + "' And Level_2 = '" + land + "' And Level_3 IS NULL)");
 			
-		}
-		if (area.isEmpty()){
-			
-		}
+			}else{
+				table =  database.getTableModelOfQuery("SELECT vo.* FROM Vogelart vo RIGHT JOIN KOMMTVOR kv ON vo.VA_ID = kv.VA_ID AND kv.ORT_ID = ("
+						+ "SELECT Ort_ID FROM BEOBACHTUNSGEBIET WHERE LEVEL_1 = '" + region + "' And Level_2 = '" + land + "' And Level_3 = '" + area + "')");
+			}
 		
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			ConstantElems.showMsgBox(e);
+		}
+		return table;
+	
 	}
 	
 	//Holt alle Level1 aus Beobachtung
@@ -115,7 +140,9 @@ public class SpeciesRepository {
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				errorMessageBox(e);
+				
+				//TODO warum es nicht funktioniert
+				ConstantElems.showMsgBox(e);
 			}
 			
 			
@@ -143,7 +170,7 @@ public class SpeciesRepository {
 		// Stammdaten holen
 //		public static DefaultTableModel getCoreData() throws Exception {
 //			return Application.getInstance().database().getTableModelOfQuery("SELECT * FROM VOGELART WHERE NAME_LAT LIKE 'X%' ORDER BY NAME_LAT ASC");
-//			return Application.getInstance().database().getTableModelOfQuery("SELECT * FROM VOGELART ORDER BY NAME_LAT ASC");
+////			return Application.getInstance().database().getTableModelOfQuery("SELECT * FROM VOGELART ORDER BY NAME_LAT ASC");
 //		}
 		
 //		public static DefaultTableModel getCoreData(String filter) throws Exception {
@@ -154,6 +181,7 @@ public class SpeciesRepository {
 //			
 //		}
 //		
+	
 		public static DefaultTableModel getCoreData(String filter, SpeciesCategoryEnum species, int orderBy) throws Exception {
 			// TODO Gefilterte Stammdaten ausgeben
 			/*
@@ -183,15 +211,16 @@ public class SpeciesRepository {
 			
 			return Application.getInstance().database().getTableModelOfQuery(query);
 		}
-<<<<<<< HEAD:Aufgabe_3/src/merlin/data/SpeziesRepository.java
 		
-		//Methode um "beobachtet" in Gui zu laden
+		
+		
+
+		
+//		Methode um "beobachtet" in Gui zu laden
 //		public static DefaultTableModel getDataObservation() throws Exception{
 //			return Application.getInstance().database().getTableModelOfQuery("SELECT * FROM beobachtet");
-////			
 //		}
 		
 		
-=======
->>>>>>> 7320aad97614f71a588b49f63cef2466e98f347a:Aufgabe_3/src/merlin/data/SpeciesRepository.java
+
 }
