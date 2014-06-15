@@ -149,13 +149,15 @@ INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarkti
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Saarland');
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Baden-Württemberg');
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Bayern');
+/*
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('AAA', null, null);
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('AFR', null, null);
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('AUS', null, null);
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('IND', null, null);
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('NEA', null, null);
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('NEO', null, null);
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('OPA', null, null); 
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('OPA', null, null);
+*/
 
 
 /* wie wird ein Statement formuliert, mit dem man Anhand Level 3 auf Level 2 schließen kann?
