@@ -14,6 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -670,35 +671,35 @@ public class MerlinMainWindow {
 		btnAddObservation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-
-				tblStammdatenBeob.getSelectedRow();
-
+				// holt Vogel ID aus JTable
+				BigDecimal tmp = (BigDecimal)tblStammdatenBeob.getValueAt(tblStammdatenBeob.getSelectedRow(), 0);
+				String birdId =  tmp.toString();
+				System.out.println("677 MerlinMainWindow : "+birdId);
 			
-				//TODO Eintrag korrekt hinzufügen
+				// Datum- und Zeitformat
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 				SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 				
 				System.out.println("684 MerlinMainWindow : " + dateFormat);
 				System.out.println("685 MerlinMainWindow : " + timeFormat);
 				
+				// DatumVon und UhrzeitVon konkatiniert als String
 				String formatVon = dateFormat.format(datumVom.getDate()) + " " + timeFormat.format((Date)uhrzeitVom.getValue());
 //				if (datumBis.getDate() == null && uhrzeitBis.getValue() == null){
 //					String formatBis = null;
 //				}
+				// DatumBis und UhrzeitBis konkatiniert als String
 				String formatBis = dateFormat.format(datumBis.getDate()) + " " + timeFormat.format((Date)uhrzeitBis.getValue());
 				System.out.println("692 MerlinMainWindow : " + datumBis.getDate().toString());
 				System.out.println("693 MerlinMainWindow : " + ((Date)uhrzeitBis.getValue()).toString());
 				System.out.println("694 MerlinMainWindow : " + formatVon);
 				System.out.println("695 MerlinMainWindow : " + formatBis);
 				
-					
+				// holt Notizen/Bemerkungen aus Textfeld	
 				String notice = txtComment.getText();
 				System.out.println("699 MerlinMainWindow : " + notice);
 
-				MainWindowLogic.addObservation("311", "Westpaläarktis", "Deutschland", "Hamburg", "06-05-2014 11:02", "07-05-2014 11:02", "hallihallo");
-//				MainWindowLogic.addObservation("300", "WPA", "GER", "Hamburg", "06-05-2014 11:02", null, "hallihallo");
-//				MainWindowLogic.addObservation("300", level_1, level_2, level_3,  formatVon, null, notice);
-//				MainWindowLogic.addObservation(stringBirdId(), level_1, level_2, level_3,  formatVon, formatBis, notice);
+				MainWindowLogic.addObservation(birdId, level_1, level_2, level_3,  formatVon, formatBis, notice);
 				
 			}
 		});

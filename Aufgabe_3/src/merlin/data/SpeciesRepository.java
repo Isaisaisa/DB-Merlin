@@ -117,6 +117,9 @@ public class SpeciesRepository {
 
 		
 		public static void addDataObservation(String birdId, String level1, String level2, String level3, String dateFrom, String dateUntil, String notice){
+			System.out.println("120 SpeciesRepository : " + level1);
+			System.out.println("121 SpeciesRepository : " + level2);
+			System.out.println("122 SpeciesRepository : " + level3);
 			String str = getLocationId(level1, level2, level3);
 			//TODO birdwatcherid holen
 			
@@ -126,12 +129,12 @@ public class SpeciesRepository {
 				if (dateUntil.equals("null")){
 					String tmp ="INSERT INTO beobachtet"
 							+ "	VALUES( '" + birdId + "', '3', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), 'null', '" + notice + "')";
-					System.out.println(tmp);
+					System.out.println("132 SpeciesRepository : "+tmp);
 					database.sendUpdate(tmp);
 				}else{	
 					String tmp = "INSERT INTO beobachtet"
-							+ "	VALUES( '" + birdId + "', '3', '3', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), TO_DATE('" + dateUntil + "', 'DD-MM-YYYY HH24:MI'), '" + notice + "')";
-					System.out.println(tmp);
+							+ "	VALUES( '" + birdId + "', '3', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), TO_DATE('" + dateUntil + "', 'DD-MM-YYYY HH24:MI'), '" + notice + "')";
+					System.out.println("137 SpeciesRepository : " + tmp);
 					database.sendUpdate(tmp);
 //				database.sendUpdate("INSERT INTO beobachtet"
 //						+ "	VALUES ( '" + birdId + "', '" + bw_Id + "', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), TO_DATE('" + dateUntil + "', 'DD-MM-YYYY HH24:MI'), '" + notice + "')");
@@ -149,19 +152,40 @@ public class SpeciesRepository {
 			
 		
 		private static String getLocationId(String level1, String level2, String level3) {
-			 String template1 = level1, template2 = "null", template3 = "null";
+//			 String template1 = level1, template2 = "null", template3 = "null";
+//			
+//			if ( level1.isEmpty()) { return "-1"; } // fehler
+//			if (!level2.isEmpty()) { template2 = level2; }
+//			if (!level3.isEmpty()) { template3 = level3; }
+//			
+//			String query = "SELECT Ort_ID FROM Beobachtunsgebiete WHERE Level_1 = '" + template1 + "' AND Level_2 = '" + template2 + "' AND Level_3 = '" + template3 + "'";
+//			try {
+//				return Application.getInstance().database().getSingleValue(query);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				showMsgBox(e); // TODO
+//				return "";
+//			}
+			String query = "";
+			String stmt = "SELECT ort_Id FROM Beobachtunsgebiet WHERE level_1 = '";
 			
-			if ( level1.isEmpty()) { return "-1"; } // fehler
-			if (!level2.isEmpty()) { template2 = level2; }
-			if (!level3.isEmpty()) { template3 = level3; }
-			
-			String query = "SELECT Ort_ID FROM Beobachtunsgebiete WHERE Level_1 = '" + template1 + "' AND Level_2 = '" + template2 + "' AND Level_3 = '" + template3 + "'";
-			try {
+			try{
+				if (level1 == null){
+					return "Mindestens die Zooökologische Region muss ausgewählt werden";
+				}else if ((level2 == null && level3 == null) || level2.isEmpty() && level3.isEmpty()){
+					query =  stmt + level1 + "' AND level_2 IS NULL AND level_3 IS NULL";
+						
+				}else if (level3 == null || level3.isEmpty()){
+					query =  stmt + level1 + "' AND level_2 ='" + level2 + "' AND level_3 IS NULL";
+				}else{
+					query =  stmt + level1 + "' AND level_2 ='" + level2 + "' AND level_3 = '" + level3 + "'";
+				}
 				return Application.getInstance().database().getSingleValue(query);
-			} catch (Exception e) {
+				
+			}catch (Exception e){
 				e.printStackTrace();
 				showMsgBox(e); // TODO
-				return "";
+				return "EXCEPTION IS THROWN";
 			}
 			
 		} 
