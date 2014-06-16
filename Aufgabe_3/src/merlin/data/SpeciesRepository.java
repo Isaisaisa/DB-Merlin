@@ -33,16 +33,16 @@ public class SpeciesRepository {
 			database = Application.getInstance().database();
 			System.out.println("37 SpeciesRepository : "+database);
 			if ((land == null && area == null) || (land.isEmpty() && area.isEmpty())){
-				table = database.getTableModelOfQuery("SELECT DISTINCT v.Name_Lat, v. Name_DE , v.Name_ENG, v.Artentyp FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
+				table = database.getTableModelOfQuery("SELECT DISTINCT v.Name_Lat, v.Name_DE , v.Name_ENG, v.Artentyp FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
 						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "'");
 				
 			}else if (area == null || area.isEmpty()){
-				table = database.getTableModelOfQuery("SELECT vo.* FROM Vogelart vo RIGHT JOIN KOMMTVOR kv ON vo.VA_ID = kv.VA_ID AND kv.ORT_ID = ("
-						+ "SELECT Ort_ID FROM BEOBACHTUNSGEBIET WHERE LEVEL_1 = '" + region + "' And Level_2 = '" + land + "' And Level_3 IS NULL)");
+				table = database.getTableModelOfQuery("SELECT DISTINCT v.Name_Lat, v.Name_DE , v.Name_ENG, v.Artentyp FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
+						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "' AND level_2 = '" +  land  + "'");
 			
 			}else{
-				table =  database.getTableModelOfQuery("SELECT vo.* FROM Vogelart vo RIGHT JOIN KOMMTVOR kv ON vo.VA_ID = kv.VA_ID AND kv.ORT_ID = ("
-						+ "SELECT Ort_ID FROM BEOBACHTUNSGEBIET WHERE LEVEL_1 = '" + region + "' And Level_2 = '" + land + "' And Level_3 = '" + area + "')");
+				table = database.getTableModelOfQuery("SELECT DISTINCT v.Name_Lat, v.Name_DE , v.Name_ENG, v.Artentyp FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
+						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "' AND level_2 = '" +  land  + "' AND level_3 = '" + area + "'");
 			}
 		
 		} catch (Exception e) {
