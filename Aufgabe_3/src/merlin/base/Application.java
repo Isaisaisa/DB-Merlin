@@ -138,6 +138,7 @@ public final class Application {
 	public String[] getLogin(String encLoginData) throws Exception {
 		// Login Daten String entschlüsseln
 		String loginData   = getEncProp(encLoginData);
+		// TODO debug
 
 		if (!loginData.isEmpty()) {
 			String decUsername = loginData.substring(0, loginData.indexOf(loginDataSplitString));

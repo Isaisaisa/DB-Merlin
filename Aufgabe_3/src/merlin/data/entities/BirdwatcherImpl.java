@@ -115,9 +115,5 @@ public class BirdwatcherImpl implements Birdwatcher {
 			return false;
 		return true;
 	}
-
-	
-	
-
 }
 

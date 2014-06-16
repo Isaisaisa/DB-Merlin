@@ -141,15 +141,19 @@ public final class ConstantElems {
 	
 	// TODO stelle finden, durch die die ganze zeit die nullpointer exception im windowbuilder geworfen wird
 	
-	public static void showMsgBox(Exception e) {
+	public static void showMsgBox(Exception e, String additionalMsg) {
+		String breakStr = (additionalMsg == null)?(""):("\n");
+		
 		JOptionPane.showMessageDialog(
 				null,
-			    e.getMessage(),
+			    e.getMessage() + breakStr + additionalMsg,
 			    e.getClass().getName(),
 			    JOptionPane.ERROR_MESSAGE);
 	}
 	
-	
+	public static void showMsgBox(Exception e) {
+		showMsgBox(e, null);
+	}
 	
 	public static void showMsgBox(SQLException e) {
 		JOptionPane.showMessageDialog(
