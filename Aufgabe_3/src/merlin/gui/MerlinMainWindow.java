@@ -698,7 +698,7 @@ public class MerlinMainWindow {
 				String notice = txtComment.getText();
 				System.out.println("699 MerlinMainWindow : " + notice);
 
-				MainWindowLogic.addObservation("300", "WPA", "GER", "Hamburg", "06-05-2014 11:02", "07-05-2014 11:02", "hallihallo");
+				MainWindowLogic.addObservation("311", "Westpaläarktis", "Deutschland", "Hamburg", "06-05-2014 11:02", "07-05-2014 11:02", "hallihallo");
 //				MainWindowLogic.addObservation("300", "WPA", "GER", "Hamburg", "06-05-2014 11:02", null, "hallihallo");
 //				MainWindowLogic.addObservation("300", level_1, level_2, level_3,  formatVon, null, notice);
 //				MainWindowLogic.addObservation(stringBirdId(), level_1, level_2, level_3,  formatVon, formatBis, notice);

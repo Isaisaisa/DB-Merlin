@@ -32,13 +32,11 @@ public class SpeciesRepository {
 		try {
 			database = Application.getInstance().database();
 			System.out.println("37 SpeciesRepository : "+database);
-			if (land == null && area == null){
-				table = database.getTableModelOfQuery(
-						"SELECT vo.* FROM Vogelart vo RIGHT JOIN KOMMTVOR kv ON vo.VA_ID = kv.VA_ID AND kv.ORT_ID = ("
-						+ "SELECT Ort_ID FROM BEOBACHTUNSGEBIET WHERE LEVEL_1 = '" + region + "' And Level_2 IS NULL And Level_3 IS NULL)"
-						);
+			if ((land == null && area == null) || (land.isEmpty() && area.isEmpty())){
+				table = database.getTableModelOfQuery("SELECT DISTINCT v.Name_Lat, v. Name_DE , v.Name_ENG, v.Artentyp FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
+						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "'");
 				
-			}else if (area == null){
+			}else if (area == null || area.isEmpty()){
 				table = database.getTableModelOfQuery("SELECT vo.* FROM Vogelart vo RIGHT JOIN KOMMTVOR kv ON vo.VA_ID = kv.VA_ID AND kv.ORT_ID = ("
 						+ "SELECT Ort_ID FROM BEOBACHTUNSGEBIET WHERE LEVEL_1 = '" + region + "' And Level_2 = '" + land + "' And Level_3 IS NULL)");
 			
@@ -126,11 +124,15 @@ public class SpeciesRepository {
 			try {
 				database = Application.getInstance().database();
 				if (dateUntil.equals("null")){
-					database.sendUpdate("INSERT INTO beobachtet"
-							+ "	VALUES( '" + birdId + "', '3', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), 'null', '" + notice + "')");
-				}else{		
-					database.sendUpdate("INSERT INTO beobachtet"
-							+ "	VALUES( '" + birdId + "', '3', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), TO_DATE('" + dateUntil + "', 'DD-MM-YYYY HH24:MI'), '" + notice + "')");
+					String tmp ="INSERT INTO beobachtet"
+							+ "	VALUES( '" + birdId + "', '3', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), 'null', '" + notice + "')";
+					System.out.println(tmp);
+					database.sendUpdate(tmp);
+				}else{	
+					String tmp = "INSERT INTO beobachtet"
+							+ "	VALUES( '" + birdId + "', '3', '3', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), TO_DATE('" + dateUntil + "', 'DD-MM-YYYY HH24:MI'), '" + notice + "')";
+					System.out.println(tmp);
+					database.sendUpdate(tmp);
 //				database.sendUpdate("INSERT INTO beobachtet"
 //						+ "	VALUES ( '" + birdId + "', '" + bw_Id + "', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), TO_DATE('" + dateUntil + "', 'DD-MM-YYYY HH24:MI'), '" + notice + "')");
 				}
