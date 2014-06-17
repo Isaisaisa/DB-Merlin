@@ -59,6 +59,13 @@ public class BirdwatcherImpl implements Birdwatcher {
 
 
 	@Override
+	public String toString() {
+		return "BirdwatcherImpl [id=" + id + ", name=" + name + ", firstname="
+				+ firstname + ", username=" + username + ", password="
+				+ password + ", email=" + email + ", role=" + role + "]";
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

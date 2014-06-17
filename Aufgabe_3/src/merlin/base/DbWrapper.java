@@ -149,17 +149,17 @@ public final class DbWrapper implements DbWrapperInterface {
 	}
 	
 	
-	public Vector<Vector<Object>> getResultVector(ResultSet resultSet) throws SQLException {
-		Vector<Vector<Object>> result = new Vector<Vector<Object>>();
+	public Vector<Vector<String>> getResultVector(ResultSet resultSet) throws SQLException {
+		Vector<Vector<String>> result = new Vector<Vector<String>>();
 		
 		ResultSetMetaData metaData = resultSet.getMetaData();
 		int columns = metaData.getColumnCount();
 		
 		// Zeileninhalt ermitteln
 		while (resultSet.next()) {
-			Vector<Object> row = new Vector<Object>(columns);
+			Vector<String> row = new Vector<String>(columns);
 			for (int i = 1; i <= columns; i++) {
-				row.addElement(resultSet.getObject(i));
+				row.addElement(resultSet.getString(i));
 			}
 			result.addElement(row);
 		}
@@ -205,7 +205,7 @@ public final class DbWrapper implements DbWrapperInterface {
 	}
 	
 	
-	public DefaultTableModel getTableModel(Vector<Vector<Object>> resultVector, Vector<String> columnNames) {
+	public DefaultTableModel getTableModel(Vector<Vector<String>> resultVector, Vector<String> columnNames) {
 		return new DefaultTableModel(resultVector, columnNames);
 	}
 	

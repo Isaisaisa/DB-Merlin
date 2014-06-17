@@ -121,7 +121,7 @@ public class SpeciesRepository {
 			System.out.println("121 SpeciesRepository : " + level2);
 			System.out.println("122 SpeciesRepository : " + level3);
 			String str = getLocationId(level1, level2, level3);
-			//TODO birdwatcherid holen
+			//TODO birdwatcherid holen activeUser.id()
 			
 			DbWrapper database;
 			try {

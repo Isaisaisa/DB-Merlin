@@ -205,12 +205,9 @@ public class MerlinLogic {
 		}
 		
 		try {
-			boolean isRegistered = BirdwatcherRepository.isRegistered(username, password);
+			boolean isRegistered = BirdwatcherRepository.loginToMerlin(username, password);
+//			System.out.println("209 MerlinLogic#loginToMerlin " + BirdwatcherRepository.getActiveUser().toString());
 			if (isRegistered) {
-				
-				//testweise immer den demo account aktiv schalten. TODO!
-				BirdwatcherRepository.setActiveUser(BirdwatcherImpl.valueOf("3", "Watcher", "Birdy", "demo", "merlin", "demo@merlin.de", "R03"));
-				
 				loginSucceed = true;
 			} else {
 				// TODO Sinnvollere Maﬂnahmen oder Fehler werfen (?)

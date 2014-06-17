@@ -33,6 +33,7 @@ import merlin.base.Application;
 import merlin.logic.exception.IllegalPasswordException;
 import merlin.logic.impl.MerlinLogic;
 import merlin.utils.ConstantElems;
+import static merlin.utils.ConstantElems.showMsgBox;
 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
@@ -357,7 +358,7 @@ public class MerlinLogin {
 			
 				boolean[] ret = MerlinLogic.loginToMerlin(txtUsernameLog.getText(), new String(txtPasswordLog.getPassword()), chkRememberUser.isSelected());
 				
-				if (ret[0] && ret[1]) {
+				if (ret[0] && ret[1] && ret[2]) {
 					frmLogin.dispose();
 					proceedToNextDialog = true;
 					try {
@@ -365,6 +366,8 @@ public class MerlinLogin {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+				} else {
+					showMsgBox(new Exception(), "Die Logindaten sind ungültig");
 				}
 				
 				
