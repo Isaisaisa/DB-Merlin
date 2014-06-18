@@ -9,6 +9,7 @@ import static merlin.utils.ConstantElems.showMsgBox;
 
 
 
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
@@ -18,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 
 import merlin.base.Application;
 import merlin.base.DbWrapper;
+import merlin.data.entities.Birdwatcher;
 import merlin.data.enums.SpeciesCategoryEnum;
 import merlin.utils.ConstantElems;
 import static merlin.data.enums.SpeciesCategoryEnum.*;
@@ -121,23 +123,23 @@ public class SpeciesRepository {
 			System.out.println("121 SpeciesRepository : " + level2);
 			System.out.println("122 SpeciesRepository : " + level3);
 			String str = getLocationId(level1, level2, level3);
-			//TODO birdwatcherid holen activeUser.id()
+			String bw_id = BirdwatcherRepository.getActiveUser().id();
+			System.out.println("127 SpeciesRepository#addDataObservation : " +  bw_id);
+			
 			
 			DbWrapper database;
 			try {
 				database = Application.getInstance().database();
-				if (dateUntil.equals("null")){
+				if (dateUntil == null){
 					String tmp ="INSERT INTO beobachtet"
-							+ "	VALUES( '" + birdId + "', '3', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), 'null', '" + notice + "')";
-					System.out.println("132 SpeciesRepository : "+tmp);
+							+ "	VALUES( '" + birdId + "', '" + bw_id + "', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), null, '" + notice + "')";
+					System.out.println("136 SpeciesRepository#addDataObservation : "+tmp);
 					database.sendUpdate(tmp);
 				}else{	
 					String tmp = "INSERT INTO beobachtet"
-							+ "	VALUES( '" + birdId + "', '3', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), TO_DATE('" + dateUntil + "', 'DD-MM-YYYY HH24:MI'), '" + notice + "')";
-					System.out.println("137 SpeciesRepository : " + tmp);
+							+ "	VALUES ( '" + birdId + "', '" + bw_id + "', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), TO_DATE('" + dateUntil + "', 'DD-MM-YYYY HH24:MI'), '" + notice + "')";
+					System.out.println("141 SpeciesRepository#addDataObservation : " + tmp);
 					database.sendUpdate(tmp);
-//				database.sendUpdate("INSERT INTO beobachtet"
-//						+ "	VALUES ( '" + birdId + "', '" + bw_Id + "', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), TO_DATE('" + dateUntil + "', 'DD-MM-YYYY HH24:MI'), '" + notice + "')");
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

@@ -388,6 +388,7 @@ public class MerlinLogin {
 							new String(txtPasswordReg.getPassword()),
 							new String(txtPasswordRegBest.getPassword()),
 							txtEmail.getText().trim());
+					System.out.println("391 MerlinLogin#actionPerformed Register" + isBirdwatcherInserted );
 					if (isBirdwatcherInserted == true){
 						panelRegistration.setVisible(false);
 						panel_AfterRegister.setVisible(true);

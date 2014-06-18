@@ -672,32 +672,34 @@ public class MerlinMainWindow {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				// holt Vogel ID aus JTable
-				BigDecimal tmp = (BigDecimal)tblStammdatenBeob.getValueAt(tblStammdatenBeob.getSelectedRow(), 0);
-				String birdId =  tmp.toString();
-				System.out.println("677 MerlinMainWindow : "+birdId);
+				String birdId = (String)tblStammdatenBeob.getValueAt(tblStammdatenBeob.getSelectedRow(), 0);
+				System.out.println("676 MerlinMainWindow : "+ birdId);
 			
 				// Datum- und Zeitformat
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 				SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 				
-				System.out.println("684 MerlinMainWindow : " + dateFormat);
-				System.out.println("685 MerlinMainWindow : " + timeFormat);
+				System.out.println("682 MerlinMainWindow : " + dateFormat);
+				System.out.println("683 MerlinMainWindow : " + timeFormat);
 				
 				// DatumVon und UhrzeitVon konkatiniert als String
 				String formatVon = dateFormat.format(datumVom.getDate()) + " " + timeFormat.format((Date)uhrzeitVom.getValue());
-//				if (datumBis.getDate() == null && uhrzeitBis.getValue() == null){
-//					String formatBis = null;
-//				}
-				// DatumBis und UhrzeitBis konkatiniert als String
-				String formatBis = dateFormat.format(datumBis.getDate()) + " " + timeFormat.format((Date)uhrzeitBis.getValue());
-				System.out.println("692 MerlinMainWindow : " + datumBis.getDate().toString());
-				System.out.println("693 MerlinMainWindow : " + ((Date)uhrzeitBis.getValue()).toString());
-				System.out.println("694 MerlinMainWindow : " + formatVon);
-				System.out.println("695 MerlinMainWindow : " + formatBis);
+				
+				String formatBis;
+				if (chkDatumBis.isEnabled()){
+					formatBis = null;
+				}else{
+					// DatumBis und UhrzeitBis konkatiniert als String
+					formatBis = dateFormat.format(datumBis.getDate()) + " " + timeFormat.format((Date)uhrzeitBis.getValue());
+					System.out.println("694 MerlinMainWindow : " + datumBis.getDate().toString());
+					System.out.println("695 MerlinMainWindow : " + ((Date)uhrzeitBis.getValue()).toString());
+					System.out.println("696 MerlinMainWindow : " + formatVon);
+					System.out.println("697 MerlinMainWindow : " + formatBis);
+				}
 				
 				// holt Notizen/Bemerkungen aus Textfeld	
 				String notice = txtComment.getText();
-				System.out.println("699 MerlinMainWindow : " + notice);
+				System.out.println("702 MerlinMainWindow : " + notice);
 
 				MainWindowLogic.addObservation(birdId, level_1, level_2, level_3,  formatVon, formatBis, notice);
 				
