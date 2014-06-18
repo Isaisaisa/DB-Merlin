@@ -703,6 +703,15 @@ public class MerlinMainWindow {
 
 				MainWindowLogic.addObservation(birdId, level_1, level_2, level_3,  formatVon, formatBis, notice);
 				
+				
+				/* Die Tabelle Beobachtet aus der Datenbank in die Gui laden.
+				 * ein update muss durchgeführt werden.
+				 * */
+				tblBeobachtungsliste.setModel(MainWindowLogic.getDataObservation());
+				
+				
+					
+				
 			}
 		});
 		

@@ -239,12 +239,16 @@ public class SpeciesRepository {
 		
 		
 		
-
+//		  SELECT v.Name_Lat, v.Name_De, v.Name_Eng,b.Ort_Id, b.DatumVon, b.DatumBis, b.Bemerkung 
+//		  FROM  beobachtet b, Vogelart v WHERE b.bw_id = 24 AND b.va_Id = v.va_id ORDER BY DatumVon ASC;
 		
 //		Methode um "beobachtet" in Gui zu laden
-//		public static DefaultTableModel getDataObservation() throws Exception{
-//			return Application.getInstance().database().getTableModelOfQuery("SELECT * FROM beobachtet");
-//		}
+		public static DefaultTableModel getDataObservation() throws Exception{
+			return Application.getInstance().database().getTableModelOfQuery(
+					" SELECT v.Name_Lat, v.Name_De, v.Name_Eng,b.Ort_Id, b.DatumVon, b.DatumBis, b.Bemerkung "
+					+ "FROM  beobachtet b, Vogelart v WHERE b.bw_id = '" + BirdwatcherRepository.getActiveUser().id() + 
+					"' AND b.va_Id = v.va_id ORDER BY DatumVon ASC");
+		}
 		
 		
 

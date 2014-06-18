@@ -55,5 +55,16 @@ public class MainWindowLogic {
 		}
 	}
 	
+	// leitet an die Datenbankebene weiter, um Tablle Beobachtet zu holen
+	public static DefaultTableModel getDataObservation(){
+		DefaultTableModel table = null;
+		try {
+			table = SpeciesRepository.getDataObservation();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return table;
+	}
 
 }
