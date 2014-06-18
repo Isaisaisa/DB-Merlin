@@ -6,7 +6,7 @@ import static merlin.utils.ConstantElems.defaultDbURL;
 import static merlin.utils.ConstantElems.showMsgBox;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
+//import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,7 +30,7 @@ public final class DbWrapper implements DbWrapperInterface {
 	
 	private static DbWrapper 	instance;
 	private Connection 		 	connection;
-	private DatabaseMetaData	databaseMetaData;
+//	private DatabaseMetaData	databaseMetaData;
 	private boolean			 	isDriverInitialized;
 	
 	private String				dbURL  = defaultDbURL;
@@ -125,8 +125,15 @@ public final class DbWrapper implements DbWrapperInterface {
 	/**
 	 * @throws SQLException *************************************************************************************************************/
 	
+	// DON'T USE
 	public boolean isEmptyResultSet(ResultSet resultSet) throws SQLException {
-		return !resultSet.next();
+		showMsgBox(new Exception("Obsolete DbWrapper method"), "Don't use isEmptyResultSet anymore, since it consumes the first row of a given result set causing consequential errors");
+		return true;
+//		return !resultSet.next();
+	}
+	
+	public boolean hasResults(Vector<?> resultVector) throws SQLException {
+		return resultVector.size() > 0;
 	}
 	
 	public boolean hasResults(ResultSet resultSet) throws SQLException {
@@ -378,7 +385,7 @@ public final class DbWrapper implements DbWrapperInterface {
 	public void close() throws SQLException {
 		if (connection != null) {
 			connection.close();
-			databaseMetaData = null;
+//			databaseMetaData = null;
 		}
 	}
 	

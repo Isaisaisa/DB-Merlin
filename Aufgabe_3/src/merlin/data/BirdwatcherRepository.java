@@ -55,7 +55,7 @@ public class BirdwatcherRepository {
 			loginResult = database.sendQuery("SELECT Bw_ID, Name, Vorname, Benutzername, Passwort, Email, Rolle FROM Birdwatcher WHERE Benutzername = '" + benutzername + "' AND Passwort = '" + passwort + "'");
 			Vector<Vector<String>> resultVector = database.getResultVector(loginResult);
 			
-			if (resultVector.size() > 0) {
+			if (database.hasResults(resultVector)) {
 				
 				int i = 0;
 				

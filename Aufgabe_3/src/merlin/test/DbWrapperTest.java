@@ -23,7 +23,7 @@ public class DbWrapperTest {
 
 	@Test
 	public void isEmptyResultSetTest() throws SQLException, Exception {
-		assertTrue(database.hasResults(database.sendQuery("SELECT * FROM Birdwatcher")));
+		assertTrue(database.hasResults(database.getResultVector(database.sendQuery("SELECT * FROM Birdwatcher"))));
 	}
 
 }
