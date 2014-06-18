@@ -477,6 +477,7 @@ public class MerlinMainWindow {
 		
 		tblBeobachtungsliste = new JTable();
 		scrollPane_2.setViewportView(tblBeobachtungsliste);
+		tblBeobachtungsliste.setModel(MainWindowLogic.getDataObservation());
 		
 		JLabel label = new JLabel("Volltextfilter:");
 		label.setBounds(10, 31, 62, 14);
@@ -708,9 +709,6 @@ public class MerlinMainWindow {
 				 * ein update muss durchgeführt werden.
 				 * */
 				tblBeobachtungsliste.setModel(MainWindowLogic.getDataObservation());
-				
-				
-					
 				
 			}
 		});
