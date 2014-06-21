@@ -61,8 +61,10 @@ public class SpeciesRepository {
 			ResultSet rs;
 			Vector<String> list = new Vector<String>();
 			list.add("");
+//			list.add("WPA");
 			try {
 				rs = Application.getInstance().database().sendQuery("SELECT Level_1 FROM Beobachtunsgebiet WHERE Level_2 is null and Level_3 is null"); 
+				System.out.println(rs);
 				while (rs.next()) {
 			        list.add(rs.getString(1));
 			     }

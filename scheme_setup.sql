@@ -54,7 +54,7 @@ CREATE TABLE kommtVor
         PRIMARY KEY   (Va_ID, Ort_ID));
 
 
-/* Sequenz und Trigger für Beobachtungsgebiete */
+/* Sequenz und Trigger für Beobachtunsgebiete */
 CREATE SEQUENCE ort_id_sequence
   START WITH 1
   INCREMENT BY 1;
@@ -129,26 +129,26 @@ BEGIN
 END;
 /
   
-/* dt. Beobachtungsgebiete eintragen */
+/* dt. Beobachtunsgebiete eintragen  */
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', null, null); 
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', null); /* 2 */
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Hamburg'); /* 3 */
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Schleswig-Holstein');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Bremen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Mecklenburg-Vorpommern');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Niedersachsen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Berlin');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Brandenburg');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Sachsen-Anhalt');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Nordrhein-Westfalen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Hessen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Thüringen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Sachsen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Rheinland-Pfalz');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Saarland');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Baden-Württemberg');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Bayern');
 
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', null, null);  
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', null); /* 2 */
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Hamburg'); /* 3 */
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Schleswig-Holstein');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Bremen');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Mecklenburg-Vorpommern');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Niedersachsen');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Berlin');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Brandenburg');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Sachsen-Anhalt');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Nordrhein-Westfalen');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Hessen');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Thüringen');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Sachsen');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Rheinland-Pfalz');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Saarland');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Baden-Württemberg');
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Bayern');
 /*
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('AAA', null, null);
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('AFR', null, null);
@@ -166,7 +166,7 @@ INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('OPA', null, n
  * Beispielfall: Man macht eine Beobachtung in Hamburg (Deutschland), entspricht das einem Tupel beobachtet(va_id, bw_id, 3, ...)
  * Will man nun wissen, welche Vögel man in Deutschland gesehen hat, müsste ebenfalls diese Eintragung ausgegeben werden,
  * da alle Level-3-Gebiete Teilmenge von Level 2 sind.
- * Es müssten demnach für alle Level-3 Gebiete, die zu Level-2 passen (ORT_ID = 2 (Deutschland) => Beobachtungsgebiet.Level_2 = 'GER'),
+ * Es müssten demnach für alle Level-3 Gebiete, die zu Level-2 passen (ORT_ID = 2 (Deutschland) => Beobachtunsgebiet.Level_2 = 'GER'),
  * die passenden Einträge selektiert werden.
  */ 
 

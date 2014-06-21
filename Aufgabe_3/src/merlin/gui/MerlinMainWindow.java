@@ -719,14 +719,14 @@ public class MerlinMainWindow {
 		
 		JPanel panelMaintainObservation = new JPanel();
 		panelMaintainObservation.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Beobachtung verwalten", TitledBorder.LEFT, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panelMaintainObservation.setBounds(824, 369, 266, 350);
+		panelMaintainObservation.setBounds(824, 369, 266, 327);
 		panelBeobachtungsliste.add(panelMaintainObservation);
 		panelMaintainObservation.setLayout(null);
 		
 		
 		JButton btnDeleteObservation = new JButton("Eintrag l\u00F6schen");
 		btnDeleteObservation.setFocusable(false);
-		btnDeleteObservation.setBounds(20, 227, 226, 23);
+		btnDeleteObservation.setBounds(20, 285, 226, 23);
 		panelMaintainObservation.add(btnDeleteObservation);
 		
 		
@@ -736,7 +736,7 @@ public class MerlinMainWindow {
 			}
 		});
 		btnChangeObservation.setFocusable(false);
-		btnChangeObservation.setBounds(20, 193, 226, 23);
+		btnChangeObservation.setBounds(20, 251, 226, 23);
 		panelMaintainObservation.add(btnChangeObservation);
 		
 		
