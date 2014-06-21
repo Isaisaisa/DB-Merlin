@@ -24,6 +24,7 @@ import javax.swing.table.DefaultTableModel;
 import merlin.base.interfaces.DbWrapperInterface;
 import merlin.logic.exception.InvalidConnectionDataException;
 import merlin.logic.exception.InvalidLoginDataException;
+import merlin.utils.ConstantElems;
 
 public final class DbWrapper implements DbWrapperInterface {
 
@@ -172,6 +173,19 @@ public final class DbWrapper implements DbWrapperInterface {
 		}
 
 		return result;
+	}
+	
+	public Vector<String> getResultVector(ResultSet resultSet, int column) {
+		try {
+			Vector<Vector<String>> resultVector = getResultVector(resultSet);
+			System.out.println(resultVector.size());
+			
+			return null; 
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("DbWrapper#getResultVector/2: Fehler \"" + e.getMessage() + "\" - leerer Vector wird zurückgegeben.");
+			return new Vector<String>();
+		}
 	}
 	
 	
