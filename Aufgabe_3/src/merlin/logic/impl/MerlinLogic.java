@@ -62,8 +62,7 @@ public class MerlinLogic {
 			loginSucceed = true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.err.println(e.getMessage());
-			System.err.println("MerlinLogic: loginToDatabase failed.");
+			showMsgBox(e, "MerlinLogic#loginToDatabase: Verbindung konnte nicht hergestellt werden");
 			loginSucceed = false;
 		}
 		

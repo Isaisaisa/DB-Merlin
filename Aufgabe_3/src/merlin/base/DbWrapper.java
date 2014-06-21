@@ -1,12 +1,12 @@
 package merlin.base;
 
+import static merlin.base.PreparedStatementKeyEnum.*;
 import static merlin.utils.ConstantElems.defaultDbPort;
 import static merlin.utils.ConstantElems.defaultDbSID;
 import static merlin.utils.ConstantElems.defaultDbURL;
 import static merlin.utils.ConstantElems.showMsgBox;
 
 import java.sql.Connection;
-//import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,7 +24,7 @@ import javax.swing.table.DefaultTableModel;
 import merlin.base.interfaces.DbWrapperInterface;
 import merlin.logic.exception.InvalidConnectionDataException;
 import merlin.logic.exception.InvalidLoginDataException;
-import merlin.utils.ConstantElems;
+import merlin.utils.DefaultTableModelNoEdit;
 
 public final class DbWrapper implements DbWrapperInterface {
 
@@ -40,14 +40,14 @@ public final class DbWrapper implements DbWrapperInterface {
 	private String				dbUsername;
 	private byte[]  			dbPassword; // setter auto-encrypts and getter auto-decrypts
 	
-	private Hashtable<String, PreparedStatement> preparedStatements;
+	// TODO: Entfernen, falls externe Variante funktioniert
+	private Hashtable<PreparedStatementKeyEnum, PreparedStatement> preparedStatements;
 
 	
 	// PRIVATE CONSTRUCTOR USED BY SINGLETON PATTERN: DbWrapper nur instanziieren und Treiber initialisieren
 	private DbWrapper() throws ClassNotFoundException {
 //		this.resultContainer = null;
 		initDriver();
-		prepareStatements();
 	}
 	
 	// SINGLETON PATTERN INIT
@@ -58,10 +58,27 @@ public final class DbWrapper implements DbWrapperInterface {
 		return instance;
 	}
 	
-	private void prepareStatements() {
-		System.out.println("Preparing statements...");
-		
-		
+	// TODO: Entfernen, falls externe Variante funktioniert
+//	private void prepareStatements() {
+//		System.out.println("Preparing statements...");
+//		try {
+//			preparedStatements.put(COREDATA_FILTERED_ORDERED,
+//					connection.prepareStatement("SELECT ? FROM Vogelart WHERE "
+//							+ "lower(NAME_LAT) LIKE lower(%?%) OR "
+//							+ "lower(NAME_DE)  LIKE lower(%?%) OR "
+//							+ "lower(NAME_ENG) LIKE lower(%?%) OR "
+//							+ "lower(ARTENTYP) LIKE lower(%?%) "
+//							+ "ORDER BY ? ?"
+//					)
+//			);
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+////			showMsgBox(e, "Prepared-Statements konnten nicht vorbereitet werden.");
+//		}
+//	}
+	
+	public PreparedStatement prepareStatement(String query) throws SQLException {
+		return connection().prepareStatement(query);
 	}
 	
 
@@ -130,15 +147,14 @@ public final class DbWrapper implements DbWrapperInterface {
 	public boolean isEmptyResultSet(ResultSet resultSet) throws SQLException {
 		showMsgBox(new Exception("Obsolete DbWrapper method"), "Don't use isEmptyResultSet anymore, since it consumes the first row of a given result set causing consequential errors");
 		return true;
-//		return !resultSet.next();
-	}
-	
-	public boolean hasResults(Vector<?> resultVector) throws SQLException {
-		return resultVector.size() > 0;
 	}
 	
 	public boolean hasResults(ResultSet resultSet) throws SQLException {
 		return !isEmptyResultSet(resultSet);
+	}
+	
+	public boolean hasResults(Vector<?> resultVector) throws SQLException {
+		return resultVector.size() > 0;
 	}
 	
 	// Gibt einen einzigen Wert zurück ==> erster Attributwert des ersten Tupels des Abfrageergebnisses 
@@ -148,7 +164,10 @@ public final class DbWrapper implements DbWrapperInterface {
 	
 	public String getSingleValue(String query) throws SQLException {
 		try {
-			return getSingleValue(sendQuery(query));
+			ResultSet resultSet = sendQuery(query);
+			String resultString = getSingleValue(resultSet);
+			resultSet.getStatement().close(); // Automatisches Schließen des Statements nach Verarbeitung des ResultSets erwirken
+			return resultString;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			showMsgBox(e);
@@ -207,7 +226,10 @@ public final class DbWrapper implements DbWrapperInterface {
 	// eines TableModels zu erhalten
 	public DefaultTableModel getTableModelOfQuery (String query) {
 		try {
-			return getTableModel(sendQuery(query));
+			ResultSet resultSet = sendQuery(query);
+			DefaultTableModel resultTableModel = getTableModel(resultSet);
+			resultSet.getStatement().close(); // automatisches Schließen, da ResultSet nur für diesen Aufruf gebraucht wird.
+			return resultTableModel;
 		} catch (Exception e) {
 			e.printStackTrace();
 			// showMsgBox(e); // TODO im Auge behalten
@@ -217,11 +239,12 @@ public final class DbWrapper implements DbWrapperInterface {
 	
 	public DefaultTableModel getTableModel(ResultSet resultSet) {
 		try {
-			return new DefaultTableModel(getResultVector(resultSet), getColumnNames(resultSet));
+			return new DefaultTableModelNoEdit(getResultVector(resultSet), getColumnNames(resultSet));
+//			return new DefaultTableModel(getResultVector(resultSet), getColumnNames(resultSet));
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.err.println(e.getMessage());
-			return new DefaultTableModel();
+			return new DefaultTableModelNoEdit();
 		} 
 	}
 	
@@ -253,8 +276,11 @@ public final class DbWrapper implements DbWrapperInterface {
 //	}
 	
 	public List<String> getListOfQuery(String query) throws Exception {
-		ResultSet rs = sendQuery(query);
-		return getList(rs);
+		ResultSet resultSet = sendQuery(query);
+		List<String> resultList = getList(resultSet);
+		// TODO: Validieren, dass das Schließen des Statements nach Abarbeitung zu keinen Fehlern führt.
+		resultSet.getStatement().close();
+		return resultList;
 	}
 	
 	
@@ -348,7 +374,6 @@ public final class DbWrapper implements DbWrapperInterface {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			showMsgBox(e, "Cannot initialize driver: Class oracle.jdbc.driver.OracleDriver not found"); // TODO nicht validiert, dass problemlos läuft
-//			System.err.println("Cannot initialize driver: Class oracle.jdbc.driver.OracleDriver not found");
 			isDriverInitialized = false;
 //			throws ClassNotFoundException;  // wird trotzdem noch von initDriver() der Fehler nach außerdem geworfen, wenn try catch angewandt wird?
 		}
@@ -373,10 +398,8 @@ public final class DbWrapper implements DbWrapperInterface {
 				try {
 					System.out.println("jdbc:oracle:thin:@" + dbURL + ":" + dbPort + ":" + dbSID +  dbUsername() +  dbPassword);
 					connection( DriverManager.getConnection("jdbc:oracle:thin:@" + dbURL + ":" + dbPort + ":" + dbSID, dbUsername(), dbPassword()) );
-//					databaseMetaData = connection().getMetaData(); // too expensive
 				} catch (SQLException e) {
 					showMsgBox(e, "DbWrapper#connect: Connection to database could not be established"); // TODO nicht validiert, dass problemlos läuft
-//					System.err.println("DbWrapper#connect: Connection to database could not be established");
 					e.printStackTrace();
 					throw e;
 				}
@@ -399,27 +422,12 @@ public final class DbWrapper implements DbWrapperInterface {
 	public void close() throws SQLException {
 		if (connection != null) {
 			connection.close();
-//			databaseMetaData = null;
 		}
 	}
-	
-	 ///////////////////////////
-	// DATA(BASE) OPERATIONS //
-   //-----------------------//
-	// Gibt eine Object-Matrix zurück, die aus der Ergebnismenge des Query's berechnet wird.
-	// Kann zur Erstellung von Tabellen bzw. Befüllung von JTables u.ä. benutzt werden.
-//	public List<HashMap<String, Object>> getResultOfQuery(String query) throws Exception {
-//		ResultSet resultSet = sendQuery(query);
-//		List<HashMap<String, Object>> result = processResultSet( resultSet );
-//		resultSet.close();
-//		return result;
-//	}
-	
-	
-//	public Vector<Vector<Object>> getResultOfQuery(String query) throws Exception {
-//		return new ResultContainer().processResultSet( sendQuery(query) );
-//	}
-	
+	 
+	  ///////////////////////////
+ 	 // DATA(BASE) OPERATIONS //
+    //-----------------------//
 	private boolean preSendChecks() throws InvalidConnectionDataException, InvalidLoginDataException, SQLException, Exception {
 		if (!isConnectionValid() && !areDataValid()) {
 			throw new Exception("DbWrapper#preSendChecks(): The attempt to connect to database, before sending, failed.");
@@ -468,5 +476,10 @@ public final class DbWrapper implements DbWrapperInterface {
 			showMsgBox(e);
 			throw e;
 		}
+	}
+	
+	// TODO: Entfernen, falls externe Variante funktioniert
+	public PreparedStatement getPreparedStatement(PreparedStatementKeyEnum key) {
+		return preparedStatements.get(key);
 	}
 }

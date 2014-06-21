@@ -1,7 +1,5 @@
 package merlin.gui;
 
-import static merlin.utils.ConstantElems.showMsgBox;
-
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -14,7 +12,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -57,6 +54,7 @@ import merlin.logic.impl.MainWindowLogic;
 import merlin.utils.ConstantElems;
 
 import com.toedter.calendar.JDateChooser;
+import merlin.data.enums.SpeciesCategoryEnum;
 
 
 public class MerlinMainWindow {
@@ -65,6 +63,7 @@ public class MerlinMainWindow {
 	private JTable tableCheckliste;
 	private JTable tblStammdatenBeob;
 	private JPanel panelMain;
+	private JPanel panelAdminCards;
 	private String level1;
 	private String level2;
 	private String level3;
@@ -73,11 +72,6 @@ public class MerlinMainWindow {
 	private static JComboBox<String> cmbLevel3;
 	private JTable tblBeobachtungsliste;
 	private JTable table_1;
-	private JTextField textField_6;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
 	private static JComboBox<String> cbRegionBeo;
 	private static JComboBox<String> cbLandBeo;
 	private static JComboBox<String> cbGebietBeo;
@@ -89,7 +83,6 @@ public class MerlinMainWindow {
 	private JDateChooser datumVom;
 	private JDateChooser datumBis;
 
-	private JTextArea txtNotice;
 	private String stringBirdId;
 	
 	public String stringBirdId(){
@@ -103,10 +96,30 @@ public class MerlinMainWindow {
 	private JTextField txtFilterCoreData;
 	private JTextField txtFilterObservation;
 	
-	private final Color btnNormalHover 		= new Color(34,153,176);
-	private final Color btnNormalNoHover 	= new Color(0,0,0);
-	private final Color btnCriticalHover	= new Color(255,0,0);
-	private final Color btnCriticalNoHover 	= new Color(0,0,0);
+	private final Color   btnNormalHover 	 = new Color(34,153,176);
+	private final Color   btnNormalNoHover 	 = new Color(0,0,0);
+	private final Color   btnCriticalHover	 = new Color(255,0,0);
+	private final Color   btnCriticalNoHover = new Color(0,0,0);
+	private JToggleButton tglbtnBeobachtungsliste;
+	private JToggleButton tglbtnCheckliste;
+	private JToggleButton tglbtnVerwaltung;
+	
+	private JToggleButton tglbtnAdminStammdaten;
+	private JToggleButton tglbtnAdminOrte;
+	private JToggleButton tglbtnAdminChecklisten;
+	private JToggleButton tglbtnBenutzer;
+	private JToggleButton tglbtnAdminManQuery;
+	private JTextField txtAdminCoreDataFilter;
+	private JTable tableAdminCoreData;
+	private JTable tableAdminCoreDataConflicts;
+	private JTextField txtAdminAddBirdNameLat;
+	private JTextField txtAdminAddBirdNameDe;
+	private JTextField txtAdminAddBirdNameEng;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
+	
+	
 
 	/**
 	 * Launch the application.
@@ -195,7 +208,7 @@ public class MerlinMainWindow {
 		btnBeenden.setBounds(930, 9, 160, 25);
 		panelUser.add(btnBeenden);
 		
-		final JToggleButton tglbtnBeobachtungsliste = new JToggleButton("Beobachtungsliste");
+		tglbtnBeobachtungsliste = new JToggleButton("Beobachtungsliste");
 		tglbtnBeobachtungsliste.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
@@ -207,7 +220,9 @@ public class MerlinMainWindow {
 			}
 		});
 		tglbtnBeobachtungsliste.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		final JToggleButton tglbtnCheckliste = new JToggleButton("Checkliste");
+		
+		
+		tglbtnCheckliste = new JToggleButton("Checkliste");
 		tglbtnCheckliste.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
@@ -219,7 +234,7 @@ public class MerlinMainWindow {
 			}
 		});
 		tglbtnCheckliste.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		final JToggleButton tglbtnVerwaltung = new JToggleButton("Verwaltung");
+		tglbtnVerwaltung = new JToggleButton("Verwaltung");
 		tglbtnVerwaltung.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
@@ -236,14 +251,15 @@ public class MerlinMainWindow {
 		tglbtnBeobachtungsliste.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				 CardLayout cl = (CardLayout)(panelMain.getLayout());
-			     cl.show(panelMain, "name_117830304432961");
+			     cl.show(panelMain, "panel_beobachtungsliste");
 			     
-			     tglbtnBeobachtungsliste.setSelected(true);
-			     tglbtnCheckliste.setSelected(false);
-			     tglbtnVerwaltung.setSelected(false);
+//			     tglbtnBeobachtungsliste.setSelected(true);
+//			     tglbtnCheckliste.setSelected(false);
+//			     tglbtnVerwaltung.setSelected(false);
+			     toggleCardButtons(true, false, false);
 			}
 		});
-		tglbtnBeobachtungsliste.setBounds(7, 9, 160, 25);
+		tglbtnBeobachtungsliste.setBounds(10, 9, 160, 25);
 		panelUser.add(tglbtnBeobachtungsliste);
 		
 		
@@ -252,16 +268,16 @@ public class MerlinMainWindow {
 		tglbtnCheckliste.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				 CardLayout cl = (CardLayout)(panelMain.getLayout());
-			     cl.show(panelMain, "name_117825363666024");
+			     cl.show(panelMain, "panel_checkliste");
 			     
-			     tglbtnBeobachtungsliste.setSelected(false);
-			     tglbtnCheckliste.setSelected(true);
-			     tglbtnVerwaltung.setSelected(false);
-			    
+//			     tglbtnBeobachtungsliste.setSelected(false);
+//			     tglbtnCheckliste.setSelected(true);
+//			     tglbtnVerwaltung.setSelected(false);
+			     toggleCardButtons(false, true, false);
 			    
 			}
 		});
-		tglbtnCheckliste.setBounds(177, 9, 160, 25);
+		tglbtnCheckliste.setBounds(180, 9, 160, 25);
 		panelUser.add(tglbtnCheckliste);
 		
 		
@@ -269,14 +285,15 @@ public class MerlinMainWindow {
 		tglbtnVerwaltung.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				CardLayout cl = (CardLayout)(panelMain.getLayout());
-			    cl.show(panelMain, "name_524734224155361");
+			    cl.show(panelMain, "panel_verwaltung");
 			    
-			    tglbtnBeobachtungsliste.setSelected(false);
-			    tglbtnCheckliste.setSelected(false);
-			    tglbtnVerwaltung.setSelected(true);
+//			    tglbtnBeobachtungsliste.setSelected(false);
+//			    tglbtnCheckliste.setSelected(false);
+//			    tglbtnVerwaltung.setSelected(true);
+			    toggleCardButtons(false, false, true);
 			}
 		});
-		tglbtnVerwaltung.setBounds(347, 9, 160, 25);
+		tglbtnVerwaltung.setBounds(350, 9, 160, 25);
 		panelUser.add(tglbtnVerwaltung);
 		
 		panelMain = new JPanel();
@@ -285,17 +302,11 @@ public class MerlinMainWindow {
 		panelMain.setLayout(new CardLayout(0, 0));
 		
 		
-		
-		
-		
-		
-		
-		
 		//CHECKLISTE
 		
 		
 		JPanel panelCheckliste = new JPanel();
-		panelMain.add(panelCheckliste, "name_117825363666024");
+		panelMain.add(panelCheckliste, "panel_checkliste");
 		panelCheckliste.setLayout(null);
 		
 		JPanel panelOrtsfilter = new JPanel();
@@ -378,8 +389,8 @@ public class MerlinMainWindow {
 		cmbLevel3.setBounds(292, 36, 136, 20);
 		panelOrtsfilter.add(cmbLevel3);
 		
-		JButton btnFiltern = new JButton("Filtern");
-		btnFiltern.addActionListener(new ActionListener() {
+		JButton btnChecklisteFiltern = new JButton("Filtern");
+		btnChecklisteFiltern.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				System.out.println(level1);
@@ -389,8 +400,8 @@ public class MerlinMainWindow {
 				tableCheckliste.setModel(MainWindowLogic.selectLocation(level1, level2, level3));
 			}
 		});
-		btnFiltern.setBounds(438, 35, 89, 23);
-		panelOrtsfilter.add(btnFiltern);
+		btnChecklisteFiltern.setBounds(438, 35, 89, 23);
+		panelOrtsfilter.add(btnChecklisteFiltern);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(20, 95, 740, 471);
@@ -413,7 +424,7 @@ public class MerlinMainWindow {
 		
 		JPanel panelBeobachtungsliste = new JPanel();
 		panelBeobachtungsliste.setBackground(SystemColor.menu);
-		panelMain.add(panelBeobachtungsliste, "name_117830304432961");
+		panelMain.add(panelBeobachtungsliste, "panel_beobachtungsliste");
 		panelBeobachtungsliste.setLayout(null);
 		
 		JPanel panelCoreDataTable = new JPanel();
@@ -750,101 +761,375 @@ public class MerlinMainWindow {
 		
 		
 		
-		JPanel panelStammdaten = new JPanel();
-		panelMain.add(panelStammdaten, "name_524734224155361");
-		panelStammdaten.setLayout(null);
+		JPanel panelVerwaltung = new JPanel();
+		panelMain.add(panelVerwaltung, "panel_verwaltung");
+		panelVerwaltung.setLayout(null);
 		
-		JPanel panel = new JPanel();
-		panel.setLayout(null);
-		panel.setBorder(new TitledBorder(null, "Manuelles Statement", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(24, 11, 540, 68);
-		panelStammdaten.add(panel);
+		JPanel panelAdminButtons = new JPanel();
+		panelAdminButtons.setBackground(SystemColor.activeCaption);
+		panelAdminButtons.setBounds(0, 0, 1100, 43);
+		panelVerwaltung.add(panelAdminButtons);
+		panelAdminButtons.setLayout(null);
 		
-		JTextPane textPane = new JTextPane();
-		textPane.setText("SELECT * FROM Birdwatcher");
-		textPane.setFont(new Font("Courier New", Font.PLAIN, 12));
-		textPane.setBounds(10, 21, 421, 38);
-		panel.add(textPane);
+		tglbtnAdminStammdaten = new JToggleButton("Stammdaten");
+		tglbtnAdminStammdaten.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				tglbtnAdminStammdaten.setForeground(btnCriticalHover);
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				tglbtnAdminStammdaten.setForeground(btnCriticalNoHover);
+			}
+		});
+		tglbtnAdminStammdaten.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CardLayout cl = (CardLayout)(panelAdminCards.getLayout());
+				cl.show(panelAdminCards, "panel_admin_stammdaten");
+				
+			    toggleAdminCardButtons(true, false, false, false, false);
+			}
+		});
 		
-		JButton button = new JButton("Ab daf\u00FCr");
-		button.setFocusable(false);
-		button.setBounds(441, 21, 89, 38);
-		panel.add(button);
+		tglbtnAdminStammdaten.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tglbtnAdminStammdaten.setFocusable(false);
+		tglbtnAdminStammdaten.setBounds(10, 9, 160, 25);
+		panelAdminButtons.add(tglbtnAdminStammdaten);
 		
-		JPanel panel_3 = new JPanel();
-		panel_3.setLayout(null);
-		panel_3.setBorder(new TitledBorder(null, "Optionen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_3.setBounds(780, 90, 218, 543);
-		panelStammdaten.add(panel_3);
+		tglbtnAdminOrte = new JToggleButton("Orte");
+		tglbtnAdminOrte.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				tglbtnAdminOrte.setForeground(btnCriticalHover);
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				tglbtnAdminOrte.setForeground(btnCriticalNoHover);
+			}
+		});
+		tglbtnAdminOrte.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CardLayout cl = (CardLayout)(panelAdminCards.getLayout());
+				cl.show(panelAdminCards, "panel_admin_lokationen");
+				toggleAdminCardButtons(false, true, false, false, false);
+			}
+		});
+		tglbtnAdminOrte.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tglbtnAdminOrte.setFocusable(false);
+		tglbtnAdminOrte.setBounds(180, 9, 160, 25);
+		panelAdminButtons.add(tglbtnAdminOrte);
 		
-		JToggleButton toggleButton = new JToggleButton("Hinzuf\u00FCgen");
-		toggleButton.setFocusable(false);
-		toggleButton.setBounds(47, 376, 121, 23);
-		panel_3.add(toggleButton);
+		tglbtnAdminChecklisten = new JToggleButton("Checklisten");
+		tglbtnAdminChecklisten.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				tglbtnAdminChecklisten.setForeground(btnCriticalHover);
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				tglbtnAdminChecklisten.setForeground(btnCriticalNoHover);
+			}
+		});
+		tglbtnAdminChecklisten.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CardLayout cl = (CardLayout)(panelAdminCards.getLayout());
+				cl.show(panelAdminCards, "panel_admin_checklisten");
+				toggleAdminCardButtons(false, false, true, false, false);
+			}
+		});
+		tglbtnAdminChecklisten.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tglbtnAdminChecklisten.setFocusable(false);
+		tglbtnAdminChecklisten.setBounds(350, 9, 160, 25);
+		panelAdminButtons.add(tglbtnAdminChecklisten);
 		
-		JToggleButton toggleButton_1 = new JToggleButton("L\u00F6schen");
-		toggleButton_1.setFocusable(false);
-		toggleButton_1.setBounds(47, 410, 121, 23);
-		panel_3.add(toggleButton_1);
+		tglbtnBenutzer = new JToggleButton("Benutzer");
+		tglbtnBenutzer.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				tglbtnBenutzer.setForeground(btnCriticalHover);
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				tglbtnBenutzer.setForeground(btnCriticalNoHover);
+			}
+		});
+		tglbtnBenutzer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CardLayout cl = (CardLayout)(panelAdminCards.getLayout());
+				cl.show(panelAdminCards, "panel_admin_benutzer");
+				toggleAdminCardButtons(false, false, false, true, false);
+			}
+		});
+		tglbtnBenutzer.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tglbtnBenutzer.setFocusable(false);
+		tglbtnBenutzer.setBounds(520, 9, 160, 25);
+		panelAdminButtons.add(tglbtnBenutzer);
 		
-		JToggleButton toggleButton_2 = new JToggleButton("Abbrechen");
-		toggleButton_2.setFocusable(false);
-		toggleButton_2.setBounds(47, 444, 121, 23);
-		panel_3.add(toggleButton_2);
+		tglbtnAdminManQuery = new JToggleButton("Manuelle Queries");
+		tglbtnAdminManQuery.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				tglbtnAdminManQuery.setForeground(btnCriticalHover);
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				tglbtnAdminManQuery.setForeground(btnCriticalNoHover);
+			}
+		});
+		tglbtnAdminManQuery.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CardLayout cl = (CardLayout)(panelAdminCards.getLayout());
+				cl.show(panelAdminCards, "panel_admin_manstatement");
+				toggleAdminCardButtons(false, false, false, false, true);
+			}
+		});
+		tglbtnAdminManQuery.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tglbtnAdminManQuery.setFocusable(false);
+		tglbtnAdminManQuery.setBounds(690, 9, 160, 25);
+		panelAdminButtons.add(tglbtnAdminManQuery);
 		
-		textField_6 = new JTextField();
-		textField_6.setColumns(10);
-		textField_6.setBounds(26, 63, 170, 29);
-		panel_3.add(textField_6);
+		panelAdminCards = new JPanel();
+		panelAdminCards.setBounds(0, 43, 1100, 682);
+		panelVerwaltung.add(panelAdminCards);
+		panelAdminCards.setLayout(new CardLayout(0, 0));
 		
-		JLabel lblVogelId = new JLabel("Vogel ID");
-		lblVogelId.setBounds(26, 38, 170, 14);
-		panel_3.add(lblVogelId);
+		JPanel panelAdminStammdaten = new JPanel();
+		panelAdminCards.add(panelAdminStammdaten, "panel_admin_stammdaten");
+		panelAdminStammdaten.setLayout(null);
 		
-		JLabel lblArtentyp = new JLabel("Artentyp");
-		lblArtentyp.setBounds(26, 103, 170, 14);
-		panel_3.add(lblArtentyp);
+		JPanel panelAdminCoreDataTable = new JPanel();
+		panelAdminCoreDataTable.setLayout(null);
+		panelAdminCoreDataTable.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Stammdaten", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelAdminCoreDataTable.setBounds(10, 11, 741, 519);
+		panelAdminStammdaten.add(panelAdminCoreDataTable);
 		
-		JLabel lblDeutscherName = new JLabel("Deutscher Name");
-		lblDeutscherName.setBounds(26, 168, 170, 14);
-		panel_3.add(lblDeutscherName);
+		JScrollPane scrollPane_3 = new JScrollPane();
+		scrollPane_3.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane_3.setBounds(10, 59, 721, 449);
+		panelAdminCoreDataTable.add(scrollPane_3);
 		
-		JLabel lblEnglischerName = new JLabel("Englischer Name");
-		lblEnglischerName.setBounds(26, 233, 170, 14);
-		panel_3.add(lblEnglischerName);
+		tableAdminCoreData = new JTable();
+		scrollPane_3.setViewportView(tableAdminCoreData);
+		tableAdminCoreData.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableAdminCoreData.setBackground(SystemColor.menu);
 		
-		JLabel lblLateinischerName = new JLabel("Lateinischer Name");
-		lblLateinischerName.setBounds(26, 298, 170, 14);
-		panel_3.add(lblLateinischerName);
+		txtAdminCoreDataFilter = new JTextField();
+		txtAdminCoreDataFilter.setColumns(10);
+		txtAdminCoreDataFilter.setBounds(82, 28, 230, 20);
+		panelAdminCoreDataTable.add(txtAdminCoreDataFilter);
+		
+		JLabel lblAdminCoreDataFilter = new JLabel("Volltextfilter:");
+		lblAdminCoreDataFilter.setBounds(10, 28, 62, 20);
+		panelAdminCoreDataTable.add(lblAdminCoreDataFilter);
+		
+		JComboBox cmbAdminCoreDataSpecType = new JComboBox();
+		cmbAdminCoreDataSpecType.setModel(new DefaultComboBoxModel(new String[] {"Alle", "Oberarten", "Unterarten"}));
+		cmbAdminCoreDataSpecType.setBounds(559, 28, 120, 20);
+		panelAdminCoreDataTable.add(cmbAdminCoreDataSpecType);
+		
+		JLabel lblAdminCoreDataArtentyp = new JLabel("Artentyp:");
+		lblAdminCoreDataArtentyp.setBounds(502, 28, 47, 20);
+		panelAdminCoreDataTable.add(lblAdminCoreDataArtentyp);
+		
+		JButton btnAdminCoreDataFilter = new JButton("Filtern");
+		btnAdminCoreDataFilter.setBounds(322, 27, 89, 23);
+		panelAdminCoreDataTable.add(btnAdminCoreDataFilter);
+		
+		JPanel panelAdminAddBird = new JPanel();
+		panelAdminAddBird.setBorder(new TitledBorder(null, "Vogel hinzuf\u00FCgen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelAdminAddBird.setBounds(761, 11, 329, 325);
+		panelAdminStammdaten.add(panelAdminAddBird);
+		panelAdminAddBird.setLayout(null);
+		
+		JLabel lblLateinischerName = new JLabel("*Lateinischer Name:");
+		lblLateinischerName.setForeground(new Color(0, 0, 128));
+		lblLateinischerName.setBounds(10, 34, 97, 20);
+		panelAdminAddBird.add(lblLateinischerName);
+		
+		txtAdminAddBirdNameLat = new JTextField();
+		txtAdminAddBirdNameLat.setBounds(117, 34, 200, 20);
+		panelAdminAddBird.add(txtAdminAddBirdNameLat);
+		txtAdminAddBirdNameLat.setColumns(10);
+		
+		JLabel lblDeutscherName = new JLabel("Deutscher Name:");
+		lblDeutscherName.setBounds(10, 65, 91, 20);
+		panelAdminAddBird.add(lblDeutscherName);
+		
+		txtAdminAddBirdNameDe = new JTextField();
+		txtAdminAddBirdNameDe.setColumns(10);
+		txtAdminAddBirdNameDe.setBounds(117, 65, 200, 20);
+		panelAdminAddBird.add(txtAdminAddBirdNameDe);
+		
+		JLabel lblEnglischerName = new JLabel("Englischer Name:");
+		lblEnglischerName.setBounds(10, 96, 91, 20);
+		panelAdminAddBird.add(lblEnglischerName);
+		
+		txtAdminAddBirdNameEng = new JTextField();
+		txtAdminAddBirdNameEng.setColumns(10);
+		txtAdminAddBirdNameEng.setBounds(117, 96, 200, 20);
+		panelAdminAddBird.add(txtAdminAddBirdNameEng);
+		
+		JLabel label_1 = new JLabel("Artentyp:");
+		label_1.setBounds(10, 127, 47, 20);
+		panelAdminAddBird.add(label_1);
+		
+		JComboBox cmbAdminAddBirdSpecType = new JComboBox();
+		cmbAdminAddBirdSpecType.setModel(new DefaultComboBoxModel(new String[] {"Oberart", "Unterart"}));
+		cmbAdminAddBirdSpecType.setBounds(117, 127, 200, 20);
+		panelAdminAddBird.add(cmbAdminAddBirdSpecType);
+		
+		JButton btnNewButton = new JButton("Hinzuf\u00FCgen");
+		btnNewButton.setBounds(117, 166, 200, 23);
+		panelAdminAddBird.add(btnNewButton);
+		
+		JLabel lblpflichtangabe = new JLabel("*Pflichtangabe");
+		lblpflichtangabe.setForeground(new Color(0, 0, 128));
+		lblpflichtangabe.setBounds(10, 194, 71, 14);
+		panelAdminAddBird.add(lblpflichtangabe);
+		
+		JPanel panelAdminEditBird = new JPanel();
+		panelAdminEditBird.setLayout(null);
+		panelAdminEditBird.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Vogel bearbeiten (Tabellenauswahl)", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelAdminEditBird.setBounds(761, 346, 329, 325);
+		panelAdminStammdaten.add(panelAdminEditBird);
+		
+		JLabel label_2 = new JLabel("*Lateinischer Name:");
+		label_2.setForeground(new Color(0, 0, 128));
+		label_2.setBounds(10, 34, 97, 20);
+		panelAdminEditBird.add(label_2);
+		
+		textField = new JTextField();
+		textField.setColumns(10);
+		textField.setBounds(117, 34, 200, 20);
+		panelAdminEditBird.add(textField);
+		
+		JLabel label_3 = new JLabel("Deutscher Name:");
+		label_3.setBounds(10, 65, 91, 20);
+		panelAdminEditBird.add(label_3);
+		
+		textField_1 = new JTextField();
+		textField_1.setColumns(10);
+		textField_1.setBounds(117, 65, 200, 20);
+		panelAdminEditBird.add(textField_1);
+		
+		JLabel label_4 = new JLabel("Englischer Name:");
+		label_4.setBounds(10, 96, 91, 20);
+		panelAdminEditBird.add(label_4);
 		
 		textField_2 = new JTextField();
 		textField_2.setColumns(10);
-		textField_2.setBounds(26, 128, 170, 29);
-		panel_3.add(textField_2);
+		textField_2.setBounds(117, 96, 200, 20);
+		panelAdminEditBird.add(textField_2);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(26, 193, 170, 29);
-		panel_3.add(textField_3);
+		JLabel label_5 = new JLabel("Artentyp:");
+		label_5.setBounds(10, 127, 47, 20);
+		panelAdminEditBird.add(label_5);
 		
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
-		textField_4.setBounds(26, 258, 170, 29);
-		panel_3.add(textField_4);
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(117, 127, 200, 20);
+		panelAdminEditBird.add(comboBox);
 		
-		textField_5 = new JTextField();
-		textField_5.setColumns(10);
-		textField_5.setBounds(26, 323, 170, 29);
-		panel_3.add(textField_5);
+		JButton btnBearbeiten = new JButton("\u00DCbernehmen");
+		btnBearbeiten.setBounds(117, 166, 200, 23);
+		panelAdminEditBird.add(btnBearbeiten);
+		
+		JButton btnLschen = new JButton("L\u00F6schen");
+		btnLschen.setForeground(new Color(0, 0, 0));
+		btnLschen.setBackground(Color.PINK);
+		btnLschen.setBounds(117, 200, 200, 23);
+		panelAdminEditBird.add(btnLschen);
+		
+		JLabel label_6 = new JLabel("*Pflichtangabe");
+		label_6.setForeground(new Color(0, 0, 128));
+		label_6.setBounds(10, 231, 71, 14);
+		panelAdminEditBird.add(label_6);
+		
+		JPanel panelAdminCoreDataConflicts = new JPanel();
+		panelAdminCoreDataConflicts.setBorder(new TitledBorder(null, "Konflikte", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelAdminCoreDataConflicts.setBounds(10, 541, 741, 130);
+		panelAdminStammdaten.add(panelAdminCoreDataConflicts);
+		panelAdminCoreDataConflicts.setLayout(null);
+		
+		JScrollPane scrollPane_5 = new JScrollPane();
+		scrollPane_5.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane_5.setBounds(10, 54, 721, 65);
+		panelAdminCoreDataConflicts.add(scrollPane_5);
+		
+		tableAdminCoreDataConflicts = new JTable();
+		tableAdminCoreDataConflicts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPane_5.setViewportView(tableAdminCoreDataConflicts);
+		
+		JButton btnAdminCoreDataConflicts = new JButton("Ermitteln");
+		btnAdminCoreDataConflicts.setBounds(10, 21, 89, 23);
+		panelAdminCoreDataConflicts.add(btnAdminCoreDataConflicts);
+		
+		JPanel panelAdminLokationen = new JPanel();
+		panelAdminCards.add(panelAdminLokationen, "panel_admin_lokationen");
+		panelAdminLokationen.setLayout(null);
+		
+		JPanel panelAdminChecklisten = new JPanel();
+		panelAdminCards.add(panelAdminChecklisten, "panel_admin_checklisten");
+		panelAdminChecklisten.setLayout(null);
+		
+		JPanel panelAdminBenutzer = new JPanel();
+		panelAdminCards.add(panelAdminBenutzer, "panel_admin_benutzer");
+		panelAdminBenutzer.setLayout(null);
+		
+		JPanel panelAdminManStatement = new JPanel();
+		panelAdminCards.add(panelAdminManStatement, "panel_admin_manstatement");
+		panelAdminManStatement.setLayout(null);
+		
+		JPanel panelManStatementsFrame = new JPanel();
+		panelManStatementsFrame.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Manuelle Anfragen senden", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelManStatementsFrame.setBounds(10, 11, 1074, 660);
+		panelAdminManStatement.add(panelManStatementsFrame);
+		panelManStatementsFrame.setLayout(null);
 		
 		JScrollPane scrollPane_4 = new JScrollPane();
+		scrollPane_4.setBounds(10, 65, 1054, 584);
+		panelManStatementsFrame.add(scrollPane_4);
 		scrollPane_4.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane_4.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_4.setBounds(24, 90, 746, 543);
-		panelStammdaten.add(scrollPane_4);
 		
 		table_1 = new JTable();
 		scrollPane_4.setViewportView(table_1);
+		
+		final JTextPane textPane = new JTextPane();
+		textPane.setBounds(10, 16, 464, 38);
+		panelManStatementsFrame.add(textPane);
+		textPane.setText("SELECT * FROM Birdwatcher");
+		textPane.setFont(new Font("Courier New", Font.PLAIN, 12));
+		
+		JButton btnSendManQuery = new JButton("Senden");
+		btnSendManQuery.setBounds(484, 16, 89, 38);
+		panelManStatementsFrame.add(btnSendManQuery);
+		btnSendManQuery.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ResultSet resultSet;
+				try {
+					// TODO bereiningen
+//					String query = "SELECT * FROM BIRDWATCHER WHERE lower(Benutzername) LIKE lower(demo)";
+//					
+//					PreparedStatement ps = Application.getInstance().database().prepareStatement(query);
+//					ps.setString(1, textPane.getText());
+//					resultSet = ps.executeQuery();
+					resultSet = Application.getInstance().database().sendQuery(textPane.getText());
+					DefaultTableModel resultTableModel = Application.getInstance().database().getTableModel(resultSet);
+					resultSet.getStatement().close();
+					
+					table_1.setModel(resultTableModel);
+					
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		});
+		btnSendManQuery.setFocusable(false);
 		
 		/*
 		 * AFTER-INITIALIZATION AREA
@@ -852,8 +1137,8 @@ public class MerlinMainWindow {
 		
 		tglbtnBeobachtungsliste.doClick();
 		
-		showMsgBox(applyRolePermissions());
-//		applyRolePermissions();
+//		showMsgBox(applyRolePermissions());
+		applyRolePermissions();
 		
 		
 	}
@@ -984,6 +1269,21 @@ public class MerlinMainWindow {
 
 			return null;
 		}
+	}
+	
+	private void toggleCardButtons(boolean beob, boolean check, boolean admin) {
+		 tglbtnBeobachtungsliste.setSelected(beob);
+	     tglbtnCheckliste.setSelected(check);
+	     tglbtnVerwaltung.setSelected(admin);
+	}
+	
+	private void toggleAdminCardButtons(boolean stamm, boolean lok, boolean check, boolean user, boolean manstate) {
+		tglbtnAdminStammdaten.setSelected(stamm);
+		tglbtnAdminOrte.setSelected(lok);
+		tglbtnAdminChecklisten.setSelected(check);
+		tglbtnBenutzer.setSelected(user);
+		tglbtnAdminManQuery.setSelected(manstate);
+
 	}
 
 	public void debugPrint(String message) {

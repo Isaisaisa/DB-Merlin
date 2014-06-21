@@ -2,32 +2,28 @@ package merlin.data;
 
 
 
+import static merlin.base.PreparedStatementKeyEnum.*;
+import static merlin.data.enums.SpeciesCategoryEnum.*;
 import static merlin.utils.ConstantElems.showMsgBox;
 
-
-
-
-
-
-
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
 
 import merlin.base.Application;
 import merlin.base.DbWrapper;
-import merlin.data.entities.Birdwatcher;
+import merlin.base.PreparedStatementKeyEnum;
 import merlin.data.enums.SpeciesCategoryEnum;
 import merlin.utils.ConstantElems;
-import static merlin.data.enums.SpeciesCategoryEnum.*;
 
 
 //Daten holen zur Checkliste
 public class SpeciesRepository {
-
+	
 	public static DefaultTableModel selectLocation(String region, String land, String area){
 		DbWrapper database;
 		DefaultTableModel table = new DefaultTableModel();
@@ -209,6 +205,20 @@ public class SpeciesRepository {
 //		}
 //		
 	
+//		public static DefaultTableModel getCoreData(String filter, SpeciesCategoryEnum species, int ordering) throws Exception {
+//			// TODO: gefilterte Stammdaten ausgeben
+//			DbWrapper database = Application.getInstance().database();
+//			
+//			PreparedStatement ps = database.getPreparedStatement(PreparedStatementKeyEnum.COREDATA_FILTERED_ORDERED);
+//			ps.setString(1, "");
+//			
+//			ResultSet resultSet = ps.executeQuery();
+//			DefaultTableModel resultTableModel = database.getTableModel(resultSet);
+//			resultSet.getStatement().close();
+//			
+//			return resultTableModel;
+//		}
+		
 		public static DefaultTableModel getCoreData(String filter, SpeciesCategoryEnum species, int orderBy) throws Exception {
 			// TODO Gefilterte Stammdaten ausgeben
 			/*
@@ -229,10 +239,15 @@ public class SpeciesRepository {
 				query+= " WHERE ";
 				
 				if (filtered) {
+					
 					query += "(NAME_LAT LIKE '%" + filter +
 							 "%' OR NAME_DE LIKE '%" + filter +
 							"%' OR NAME_ENG LIKE '%" + filter +
 							"%' OR ARTENTYP LIKE '%" + filter + "%')";
+				}
+				
+				if (!species.value().isEmpty()) {
+					query += " AND ARTENTYP = '" + species.value() +"'";
 				}
 			}			
 			
@@ -251,7 +266,41 @@ public class SpeciesRepository {
 					+ "FROM  beobachtet b, Vogelart v WHERE b.bw_id = '" + BirdwatcherRepository.getActiveUser().id() + 
 					"' AND b.va_Id = v.va_id ORDER BY DatumVon ASC");
 		}
+//		public static DefaultTableModel getDataObservation() throws Exception{
+//			return Application.getInstance().database().getTableModelOfQuery(
+//					" SELECT v.Name_Lat, v.Name_De, v.Name_Eng,b.Ort_Id, b.DatumVon, b.DatumBis, b.Bemerkung "
+//							+ "FROM  beobachtet b, Vogelart v WHERE b.bw_id = '" + BirdwatcherRepository.getActiveUser().id() + 
+//					"' AND b.va_Id = v.va_id ORDER BY DatumVon ASC");
+//		}
 		
+		
+		private Hashtable<PreparedStatementKeyEnum, PreparedStatement> preparedStatements;
+		
+		private void prepareStatements() {
+			System.out.println("Preparing statements...");
+			DbWrapper database;
+			try {
+				database = Application.getInstance().database();
+				
+				preparedStatements.put(COREDATA_FILTERED_ORDERED,
+						database.prepareStatement("SELECT * FROM Vogelart WHERE "
+								+ "lower(NAME_LAT) LIKE lower(?) OR "
+								+ "lower(NAME_DE)  LIKE lower(?) OR "
+								+ "lower(NAME_ENG) LIKE lower(?) OR "
+								+ "lower(ARTENTYP) LIKE lower(?) "
+								+ "ORDER BY ? ?"
+						)
+				);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+//				showMsgBox(e);
+				System.out.println("SpeciesRepository#prepareStatements: " + e.getMessage());
+				System.out.println("Prepared Statements konnten nicht vorbereitet werden");
+			}
+			
+				
+		}
 		
 
 }

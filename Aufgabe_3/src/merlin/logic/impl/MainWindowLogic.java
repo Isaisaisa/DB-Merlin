@@ -1,14 +1,11 @@
 package merlin.logic.impl;
 
-import static merlin.utils.ConstantElems.showMsgBox;
-
 import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
 
 import merlin.data.SpeciesRepository;
 import merlin.data.enums.SpeciesCategoryEnum;
-import merlin.utils.ConstantElems;
 
 public class MainWindowLogic {
 
@@ -47,10 +44,10 @@ public class MainWindowLogic {
 	
 	public static DefaultTableModel loadTableDataIntoGui() {
 		try {
-			return SpeciesRepository.getCoreData("x", SpeciesCategoryEnum.ALL, 0);
+			return SpeciesRepository.getCoreData("xa", SpeciesCategoryEnum.SPECIES, 0);
 		} catch (Exception e) {
 			e.printStackTrace();
-			showMsgBox(e); //TODO im auge behalten
+//			showMsgBox(e); //TODO im auge behalten --> macht ärger beim Windowbuilder
 			return new DefaultTableModel();
 		}
 	}
