@@ -12,6 +12,7 @@ DROP TABLE Vogelart;
 DROP SEQUENCE va_id_sequence;
 DROP SEQUENCE ort_id_sequence;
 DROP SEQUENCE bw_id_sequence;
+DROP SEQUENCE beo_id_sequence;
 
 
  
