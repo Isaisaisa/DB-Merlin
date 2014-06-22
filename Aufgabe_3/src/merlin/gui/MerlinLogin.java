@@ -34,8 +34,12 @@ import merlin.logic.exception.IllegalPasswordException;
 import merlin.logic.impl.MerlinLogic;
 import merlin.utils.ConstantElems;
 import static merlin.utils.ConstantElems.showMsgBox;
-
 import org.eclipse.wb.swing.FocusTraversalOnArray;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
 
 public class MerlinLogin {
 
@@ -152,11 +156,6 @@ public class MerlinLogin {
 		 * 
 		 * 
 		 */
-		panelRegistration.setVisible(true);
-		/*
-		 * 
-		 * 
-		 */
 		panelRegistration.setBorder(new EtchedBorder(EtchedBorder.LOWERED,
 				null, null));
 		panelRegistration.setBounds(330, 161, 332, 276);
@@ -164,6 +163,13 @@ public class MerlinLogin {
 		panelRegistration.setLayout(null);
 
 		txtVorname = new JTextField();
+		txtVorname.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtVorname.setBackground(Color.WHITE);
+				txtVorname.selectAll();
+			}
+		});
 		txtVorname.setBounds(117, 79, 204, 20);
 		panelRegistration.add(txtVorname);
 		txtVorname.setColumns(10);
@@ -175,6 +181,13 @@ public class MerlinLogin {
 		lblEmail.setLabelFor(txtName);
 
 		txtEmail = new JTextField();
+		txtEmail.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtEmail.setBackground(Color.WHITE);
+				txtEmail.selectAll();
+			}
+		});
 		txtEmail.setBounds(117, 138, 204, 20);
 		panelRegistration.add(txtEmail);
 		txtEmail.setColumns(10);
@@ -190,6 +203,13 @@ public class MerlinLogin {
 		panelRegistration.add(lblUsernameReg);
 
 		txtUsernameReg = new JTextField();
+		txtUsernameReg.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtUsernameReg.setBackground(Color.WHITE);
+				txtUsernameReg.selectAll();
+			}
+		});
 		txtUsernameReg.setBounds(117, 54, 204, 20);
 		panelRegistration.add(txtUsernameReg);
 		txtUsernameReg.setColumns(10);
@@ -200,6 +220,13 @@ public class MerlinLogin {
 		panelRegistration.add(lblPasswortReg);
 
 		txtPasswordReg = new JPasswordField();
+		txtPasswordReg.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtPasswordReg.setBackground(Color.WHITE);
+				txtPasswordReg.selectAll();
+			}
+		});
 		txtPasswordReg.setBounds(117, 166, 204, 20);
 		panelRegistration.add(txtPasswordReg);
 
@@ -209,6 +236,13 @@ public class MerlinLogin {
 		panelRegistration.add(lblPasswortBestReg);
 
 		txtPasswordRegBest = new JPasswordField();
+		txtPasswordRegBest.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtPasswordRegBest.setBackground(Color.WHITE);
+				txtPasswordRegBest.selectAll();
+			}
+		});
 		txtPasswordRegBest.setBounds(117, 194, 204, 20);
 		panelRegistration.add(txtPasswordRegBest);
 
@@ -226,22 +260,18 @@ public class MerlinLogin {
 		lblVorname.setFocusable(false);
 		lblVorname.setBounds(10, 85, 70, 14);
 		panelRegistration.add(lblVorname);
-		frmLogin.setFocusTraversalPolicy(new FocusTraversalOnArray(
-				new Component[] { txtUsernameLog, txtPasswordLog,
-						chkRememberUser, btnLogin, txtUsernameReg, txtVorname,
-						txtEmail, txtName, txtPasswordReg, txtPasswordRegBest,
-						btnRegister, lblNewLabel, label,
-						frmLogin.getContentPane(), lblVorname, lblEmail,
-						lblName, lblUsernameReg, lblPasswortReg,
-						lblPasswortBestReg, panelLogin, lblPasswort,
-						lblUsername, lblbereitsRegistriert, panel, menuBar,
-						panelRegistration, lblWelcomeText }));
 
 		txtName = new JTextField();
+		txtName.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtName.setBackground(Color.WHITE);
+				txtName.selectAll();
+			}
+		});
 		txtName.setBounds(117, 107, 204, 20);
 		panelRegistration.add(txtName);
 		txtName.setColumns(10);
-		panelRegistration.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtUsernameReg, txtVorname, txtName, txtEmail, txtPasswordReg, txtPasswordRegBest, btnRegister}));
 		
 		
 		panel_AfterRegister = new JPanel();
@@ -273,11 +303,42 @@ public class MerlinLogin {
 		panelLogin.add(lblPasswort);
 
 		txtPasswordLog = new JPasswordField();
+		txtPasswordLog.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
+					btnLogin.doClick();
+				};
+			}
+		});
+		txtPasswordLog.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtPasswordLog.setBackground(Color.WHITE);
+				txtPasswordLog.selectAll();
+			}
+		});
 		txtPasswordLog.setText(ConstantElems.demoPassword);
 		txtPasswordLog.setBounds(126, 74, 99, 20);
 		panelLogin.add(txtPasswordLog);
 
 		txtUsernameLog = new JTextField();
+		txtUsernameLog.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
+//					btnLogin.doClick();
+					txtPasswordLog.requestFocus();
+				};
+			}
+		});
+		txtUsernameLog.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtUsernameLog.setBackground(Color.WHITE);
+				txtUsernameLog.selectAll();
+			}
+		});
 		txtUsernameLog.setText(ConstantElems.demoUsername);
 		txtUsernameLog.setBounds(10, 74, 99, 20);
 		panelLogin.add(txtUsernameLog);
@@ -322,7 +383,6 @@ public class MerlinLogin {
 		lblWelcomeText.setBounds(24, 0, 263, 328);
 		panel.add(lblWelcomeText);
 		lblWelcomeText.setFont(new Font("Candara", Font.PLAIN, 12));
-		frmLogin.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtUsernameLog, txtPasswordLog, btnLogin, txtUsernameReg, txtVorname, txtName, txtEmail, txtPasswordReg, txtPasswordRegBest, btnRegister, label, panelRegistration, lblEmail, lblName, lblUsernameReg, lblPasswortReg, lblPasswortBestReg, lblNewLabel, lblVorname, panel_AfterRegister, lblAfterRegister, panelLogin, lblPasswort, lblUsername, chkRememberUser, lblbereitsRegistriert, panel, lblWelcomeText}));
 
 		JMenuBar menuBar = new JMenuBar();
 		frmLogin.setJMenuBar(menuBar);
@@ -353,6 +413,7 @@ public class MerlinLogin {
 						MerlinLogin.class
 								.getResource("/javax/swing/plaf/metal/icons/ocean/minimize.gif")));
 		mnEintellungen.add(mntmVerbindungseinstellungen);
+		frmLogin.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtUsernameLog, txtPasswordLog, btnLogin, chkRememberUser, txtUsernameReg, txtVorname, txtName, txtEmail, txtPasswordReg, txtPasswordRegBest, btnRegister, frmLogin.getContentPane(), label, panelRegistration, lblEmail, lblName, lblUsernameReg, lblPasswortReg, lblPasswortBestReg, lblNewLabel, lblVorname, panel_AfterRegister, lblAfterRegister, panelLogin, lblPasswort, lblUsername, lblbereitsRegistriert, panel, lblWelcomeText, menuBar, mnDatei, mntmBeenden, mnEintellungen, mntmVerbindungseinstellungen}));
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			
