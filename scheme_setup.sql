@@ -39,7 +39,8 @@ CREATE TABLE Beobachtunsgebiet
         LEVEL_3       VARCHAR(150));
         
 CREATE TABLE beobachtet   
-       (Va_ID         INTEGER REFERENCES Vogelart ON DELETE CASCADE, 
+       (Beo_Id        INTEGER,
+        Va_ID         INTEGER REFERENCES Vogelart ON DELETE CASCADE, 
         Bw_ID         INTEGER REFERENCES Birdwatcher ON DELETE CASCADE,
         Ort_ID        INTEGER REFERENCES Beobachtunsgebiet ON DELETE CASCADE,
         DatumVon      DATE NOT NULL, 
@@ -81,6 +82,21 @@ BEGIN
   SELECT bw_id_sequence.nextval into :new.Bw_ID from dual;
 END;
 /
+
+/* Sequenz und Trigger für beobachtet */  
+CREATE SEQUENCE beo_id_sequence
+  START WITH 1
+  INCREMENT BY 1;
+  
+  
+CREATE OR REPLACE TRIGGER beo_id_trigger 
+BEFORE INSERT ON beobachtet
+FOR EACH ROW
+BEGIN
+  SELECT beo_id_sequence.nextval into :new.Beo_ID from dual;
+END;
+/
+
 
 /*############################################################################*/ 
 
@@ -184,18 +200,18 @@ INSERT INTO kommtVor
 /* Teil 1: Beobachtung für den deutschen Raum anlegen */  	
 
 /* Beispiel-Beobachtungen des Demo-Nutzers in seine Beobachtungsliste (pers. Checkliste) eintragen */
-INSERT INTO beobachtet
+INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung)
   VALUES (284, 3, 2, TO_DATE('08-05-2014 11:02', 'DD-MM-YYYY HH24:MI'), TO_DATE('09-MAI-2014 14:15', 'DD-MONTH-YYYY HH24:MI'), '2 m. 5 w. 3 juv.');
 	
-INSERT INTO beobachtet
+INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung)
   VALUES (300, 3, 3, TO_DATE('28-05-2014 21:02', 'DD-MM-YYYY HH24:MI'), null, '...');
 	
-INSERT INTO beobachtet
+INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung)
   VALUES (397, 3, 2, TO_DATE('14-06-2014 13:14', 'DD-MM-YYYY HH24:MI'), null, 'Stürmisches Wetter');
 	
-INSERT INTO beobachtet
+INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung)
   VALUES (256, 3, 2, TO_DATE('08-07-2014 11:27', 'DD-MM-YYYY HH24:MI'), null, '3 m. 5 w.');
 	
-INSERT INTO beobachtet
+INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung)
   VALUES (284, 3, 2, TO_DATE('08-07-2014 11:03', 'DD-MM-YYYY HH24:MI'), null, '2 m. im Kampf');
     

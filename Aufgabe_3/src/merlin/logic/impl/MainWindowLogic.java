@@ -63,5 +63,11 @@ public class MainWindowLogic {
 		}
 		return table;
 	}
+	
+	
+	public static void deleteDataObservation(String beoId){
+		SpeciesRepository.deleteDataObservation(beoId);
+	}
+	
 
 }

@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
@@ -54,6 +55,7 @@ import merlin.logic.impl.MainWindowLogic;
 import merlin.utils.ConstantElems;
 
 import com.toedter.calendar.JDateChooser;
+
 import merlin.data.enums.SpeciesCategoryEnum;
 
 
@@ -736,6 +738,19 @@ public class MerlinMainWindow {
 		
 		
 		JButton btnDeleteObservation = new JButton("Eintrag l\u00F6schen");
+		btnDeleteObservation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				
+				//Beo-ID
+				String beoId = (String)tblBeobachtungsliste.getValueAt(tblBeobachtungsliste.getSelectedRow(), 0);
+			
+				MainWindowLogic.deleteDataObservation(beoId);
+				tblBeobachtungsliste.setModel(MainWindowLogic.getDataObservation());
+				
+						
+			}
+		});
 		btnDeleteObservation.setFocusable(false);
 		btnDeleteObservation.setBounds(20, 285, 226, 23);
 		panelMaintainObservation.add(btnDeleteObservation);

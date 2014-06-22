@@ -129,12 +129,12 @@ public class SpeciesRepository {
 			try {
 				database = Application.getInstance().database();
 				if (dateUntil == null){
-					String tmp ="INSERT INTO beobachtet"
+					String tmp ="INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung)"
 							+ "	VALUES( '" + birdId + "', '" + bw_id + "', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), null, '" + notice + "')";
 					System.out.println("136 SpeciesRepository#addDataObservation : "+tmp);
 					database.sendUpdate(tmp);
 				}else{	
-					String tmp = "INSERT INTO beobachtet"
+					String tmp = "INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung)"
 							+ "	VALUES ( '" + birdId + "', '" + bw_id + "', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), TO_DATE('" + dateUntil + "', 'DD-MM-YYYY HH24:MI'), '" + notice + "')";
 					System.out.println("141 SpeciesRepository#addDataObservation : " + tmp);
 					database.sendUpdate(tmp);
@@ -150,6 +150,25 @@ public class SpeciesRepository {
 			
 		}
 			
+		// Beobachtung löschen aus Datenbank
+		//TODO das Delete statement ist falsch, Datum ist falsch
+		public static void deleteDataObservation(String beoId){
+			String bw_id = BirdwatcherRepository.getActiveUser().id();
+			System.out.println("SpeciesRepository#deleteDataObservasion : " + beoId);
+			DbWrapper database;
+			try{
+				database = Application.getInstance().database();	
+				String tmp = "DELETE beobachtet WHERE Beo_id = '" + beoId + "'";
+					database.sendUpdate(tmp);
+			}catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				//TODO warum es nicht funktioniert
+				ConstantElems.showMsgBox(e);
+			}
+		}
+		
+		
 		
 		private static String getLocationId(String level1, String level2, String level3) {
 //			 String template1 = level1, template2 = "null", template3 = "null";
@@ -262,7 +281,7 @@ public class SpeciesRepository {
 //		Methode um "beobachtet" in Gui zu laden
 		public static DefaultTableModel getDataObservation() throws Exception{
 			return Application.getInstance().database().getTableModelOfQuery(
-					" SELECT v.Name_Lat, v.Name_De, v.Name_Eng,b.Ort_Id, b.DatumVon, b.DatumBis, b.Bemerkung "
+					" SELECT b.beo_id, v.Name_Lat, v.Name_De, v.Name_Eng,b.Ort_Id, b.DatumVon, b.DatumBis, b.Bemerkung "
 					+ "FROM  beobachtet b, Vogelart v WHERE b.bw_id = '" + BirdwatcherRepository.getActiveUser().id() + 
 					"' AND b.va_Id = v.va_id ORDER BY DatumVon ASC");
 		}
