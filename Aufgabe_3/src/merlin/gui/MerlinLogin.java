@@ -74,6 +74,7 @@ public class MerlinLogin {
 	private static boolean proceedToNextDialog = false;
 	private JPanel panel_AfterRegister;
 	private JLabel lblAfterRegister;
+	private JButton btnRegister;
 
 	/**
 	 * Launch the application.
@@ -163,6 +164,14 @@ public class MerlinLogin {
 		panelRegistration.setLayout(null);
 
 		txtVorname = new JTextField();
+		txtVorname.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
+					txtName.requestFocus();
+				};
+			}
+		});
 		txtVorname.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -181,6 +190,14 @@ public class MerlinLogin {
 		lblEmail.setLabelFor(txtName);
 
 		txtEmail = new JTextField();
+		txtEmail.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
+					txtPasswordReg.requestFocus();
+				};
+			}
+		});
 		txtEmail.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -203,6 +220,14 @@ public class MerlinLogin {
 		panelRegistration.add(lblUsernameReg);
 
 		txtUsernameReg = new JTextField();
+		txtUsernameReg.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
+					txtVorname.requestFocus();
+				};
+			}
+		});
 		txtUsernameReg.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -220,6 +245,14 @@ public class MerlinLogin {
 		panelRegistration.add(lblPasswortReg);
 
 		txtPasswordReg = new JPasswordField();
+		txtPasswordReg.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
+					txtPasswordRegBest.requestFocus();
+				};
+			}
+		});
 		txtPasswordReg.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -236,6 +269,14 @@ public class MerlinLogin {
 		panelRegistration.add(lblPasswortBestReg);
 
 		txtPasswordRegBest = new JPasswordField();
+		txtPasswordRegBest.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
+					if (checkRegistrationData()) btnRegister.doClick();
+				};
+			}
+		});
 		txtPasswordRegBest.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -252,7 +293,7 @@ public class MerlinLogin {
 		panelRegistration.add(lblNewLabel);
 
 		// TODO GUI für IllegalPasswordException konformitieren
-		JButton btnRegister = new JButton("Registrieren");
+		btnRegister = new JButton("Registrieren");
 		btnRegister.setBounds(117, 225, 204, 39);
 		panelRegistration.add(btnRegister);
 
@@ -262,6 +303,14 @@ public class MerlinLogin {
 		panelRegistration.add(lblVorname);
 
 		txtName = new JTextField();
+		txtName.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
+					txtEmail.requestFocus();
+				};
+			}
+		});
 		txtName.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -327,7 +376,6 @@ public class MerlinLogin {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
-//					btnLogin.doClick();
 					txtPasswordLog.requestFocus();
 				};
 			}
@@ -443,7 +491,8 @@ public class MerlinLogin {
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					boolean isBirdwatcherInserted = MerlinLogic.insertBirdwatcher(txtName.getText().trim(),
+					boolean isBirdwatcherInserted = MerlinLogic.insertBirdwatcher(
+							txtName.getText().trim(),
 							txtVorname.getText().trim(),
 							txtUsernameReg.getText().trim(),
 							new String(txtPasswordReg.getPassword()),
@@ -474,5 +523,10 @@ public class MerlinLogin {
 			}
 		});
 
+	}
+
+	private boolean checkRegistrationData() {
+		// TODO: Eingaben des Registrierungsformular überprüfen
+		return true;
 	}
 }

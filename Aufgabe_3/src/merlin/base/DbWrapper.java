@@ -158,21 +158,45 @@ public final class DbWrapper implements DbWrapperInterface {
 	}
 	
 	// Gibt einen einzigen Wert zur¸ck ==> erster Attributwert des ersten Tupels des Abfrageergebnisses 
-	public String getSingleValue(ResultSet rs) {
-		return getList(rs).get(0);
-	}
-	
-	public String getSingleValue(String query) throws SQLException {
+	public String getSingleValue(ResultSet rs) throws SQLException {
+		String result = getList(rs).get(0);
 		try {
-			ResultSet resultSet = sendQuery(query);
-			String resultString = getSingleValue(resultSet);
-			resultSet.getStatement().close(); // Automatisches Schlieﬂen des Statements nach Verarbeitung des ResultSets erwirken
-			return resultString;
+			rs.getStatement().close(); // Automatisches Schlieﬂen des Statements nach Verarbeitung des ResultSets erwirken
 		} catch (SQLException e) {
 			e.printStackTrace();
-			showMsgBox(e);
+			System.out.println("DbWrapper#getSingleValue(ResultSet rs): Statement konnte nicht geschlossen werden.");
 			throw e;
-		}
+		} 
+		return result;
+	}
+	
+	public String getSingleValue(PreparedStatement ps) throws SQLException {
+		return getSingleValue( sendQuery(ps) );
+//		try {
+//			ResultSet resultSet = sendQuery(ps);
+//			String resultString = getSingleValue(resultSet);
+//			resultSet.getStatement().close(); // Automatisches Schlieﬂen des Statements nach Verarbeitung des ResultSets erwirken
+//			return resultString;
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			showMsgBox(e);
+//			throw e;
+//		}
+	}
+	
+	
+	public String getSingleValue(String query) throws SQLException {
+		return getSingleValue( sendQuery(query) );
+//		try {
+//			ResultSet resultSet = sendQuery(query);
+//			String resultString = getSingleValue(resultSet);
+//			resultSet.getStatement().close(); // Automatisches Schlieﬂen des Statements nach Verarbeitung des ResultSets erwirken
+//			return resultString;
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			showMsgBox(e);
+//			throw e;
+//		}
 	}
 	
 	

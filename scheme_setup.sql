@@ -147,9 +147,29 @@ END;
 /
   
 /* dt. Beobachtunsgebiete eintragen  */
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', null, null); 
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', null); /* 2 */
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Hamburg'); /* 3 */
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Schleswig-Holstein');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Bremen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Mecklenburg-Vorpommern');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Niedersachsen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Berlin');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Brandenburg');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Sachsen-Anhalt');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Nordrhein-Westfalen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Hessen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Thüringen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Sachsen');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Rheinland-Pfalz');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Saarland');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Baden-Württemberg');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Westpaläarktis', 'Deutschland', 'Bayern');
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('Ostpaläarktis', null, null);
+/*
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', null, null); 
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', null); /* 2 */
-INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Hamburg'); /* 3 */
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', null);
+INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Hamburg');
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Schleswig-Holstein');
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Bremen');
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Mecklenburg-Vorpommern');
@@ -165,7 +185,7 @@ INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Saarland');
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Baden-Württemberg');
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('WPA', 'GER', 'Bayern');
-
+*/
 /*
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('AAA', null, null);
 INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values ('AFR', null, null);

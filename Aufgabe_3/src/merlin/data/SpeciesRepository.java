@@ -117,27 +117,60 @@ public class SpeciesRepository {
 
 		
 		public static void addDataObservation(String birdId, String level1, String level2, String level3, String dateFrom, String dateUntil, String notice){
-			System.out.println("120 SpeciesRepository : " + level1);
-			System.out.println("121 SpeciesRepository : " + level2);
-			System.out.println("122 SpeciesRepository : " + level3);
-			String str = getLocationId(level1, level2, level3);
+				System.out.println("120 SpeciesRepository : " + level1); // TODO syso's aufräumen
+				System.out.println("121 SpeciesRepository : " + level2);
+				System.out.println("122 SpeciesRepository : " + level3);
+				String ort_id = getLocationId(level1, level2, level3);
 			String bw_id = BirdwatcherRepository.getActiveUser().id();
-			System.out.println("127 SpeciesRepository#addDataObservation : " +  bw_id);
+				System.out.println("127 SpeciesRepository#addDataObservation : " +  bw_id);
 			
 			
 			DbWrapper database;
 			try {
 				database = Application.getInstance().database();
-				if (dateUntil == null){
-					String tmp ="INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung)"
-							+ "	VALUES( '" + birdId + "', '" + bw_id + "', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), null, '" + notice + "')";
-					System.out.println("136 SpeciesRepository#addDataObservation : "+tmp);
-					database.sendUpdate(tmp);
-				}else{	
-					String tmp = "INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung)"
-							+ "	VALUES ( '" + birdId + "', '" + bw_id + "', '" + str + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), TO_DATE('" + dateUntil + "', 'DD-MM-YYYY HH24:MI'), '" + notice + "')";
-					System.out.println("141 SpeciesRepository#addDataObservation : " + tmp);
-					database.sendUpdate(tmp);
+				if (dateUntil == null) {
+
+//					String tmp ="INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung)"
+//					+ "	VALUES( '" + birdId + "', '" + bw_id + "', '" + ort_id + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), null, '" + notice + "')";
+//					System.out.println("136 SpeciesRepository#addDataObservation : "+tmp);
+//					database.sendUpdate(tmp);
+					
+					
+					PreparedStatement psObservation = getPreparedStatement(ADD_OBSERVATION_MOMENT);
+					psObservation.setString(1, birdId);
+					psObservation.setString(2, bw_id);
+					psObservation.setString(3, ort_id);
+					psObservation.setString(4, dateFrom);
+					psObservation.setString(5, notice);
+					
+					database.sendUpdate(psObservation);
+					
+				} else {	
+//					String tmp = "INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung)"
+//							+ "	VALUES ( '" + birdId + "', '" + bw_id + "', '" + ort_id + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), TO_DATE('" + dateUntil + "', 'DD-MM-YYYY HH24:MI'), '" + notice + "')";
+//					System.out.println("141 SpeciesRepository#addDataObservation : " + tmp);
+//					database.sendUpdate(tmp);
+					
+					
+					PreparedStatement psObservation = getPreparedStatement(ADD_OBSERVATION_PERIOD);
+					psObservation.setString(1, birdId);
+					psObservation.setString(2, bw_id);
+					psObservation.setString(3, ort_id);
+					psObservation.setString(4, dateFrom);
+					psObservation.setString(5, dateUntil);
+					psObservation.setString(6, notice);
+					
+//					psObservation.setString(1, birdId);
+//					psObservation.setString(2, bw_id);
+//					psObservation.setString(3, ort_id);
+//					psObservation.setString(4, dateFrom);
+//					psObservation.setString(5, SQL_DATE_FORMAT);
+//					psObservation.setString(6, dateUntil);
+//					psObservation.setString(7, SQL_DATE_FORMAT);
+//					psObservation.setString(8, notice);
+					
+					database.sendUpdate(psObservation);
+					
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -293,16 +326,27 @@ public class SpeciesRepository {
 //		}
 		
 		
-		private Hashtable<PreparedStatementKeyEnum, PreparedStatement> preparedStatements;
+		private static Hashtable<PreparedStatementKeyEnum, PreparedStatement> preparedStatements = new Hashtable<PreparedStatementKeyEnum, PreparedStatement>();
+		private static boolean isPreparedStatementsHashInitialized = false;
+		private static String SQL_DATE_FORMAT = "DD-MM-YYYY HH24:MI";
 		
-		private void prepareStatements() {
+		public static PreparedStatement getPreparedStatement(PreparedStatementKeyEnum key) {
+			if (!isPreparedStatementsHashInitialized) { // Initialisierung der Prepared Statements sicherstellen
+				prepareStatements();
+				isPreparedStatementsHashInitialized = true;
+			}
+			return preparedStatements.get(key);
+		}
+
+		private static void prepareStatements() {
 			System.out.println("Preparing statements...");
 			DbWrapper database;
 			try {
 				database = Application.getInstance().database();
 				
 				preparedStatements.put(COREDATA_FILTERED_ORDERED,
-						database.prepareStatement("SELECT * FROM Vogelart WHERE "
+						database.prepareStatement(
+								  "SELECT * FROM Vogelart WHERE "
 								+ "lower(NAME_LAT) LIKE lower(?) OR "
 								+ "lower(NAME_DE)  LIKE lower(?) OR "
 								+ "lower(NAME_ENG) LIKE lower(?) OR "
@@ -310,6 +354,48 @@ public class SpeciesRepository {
 								+ "ORDER BY ? ?"
 						)
 				);
+				
+				preparedStatements.put(REGISTER_BIRDWATCHER, 
+						database.prepareStatement("INSERT INTO Birdwatcher "
+								+ "(Name, Vorname, Benutzername, Passwort, Email, Rolle) "
+								+ "VALUES (?, ?, ?, ?, ?, ?)"
+						)
+				);
+				
+				preparedStatements.put(GET_BW_ID, 
+						database.prepareStatement("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = ?")
+				);
+				
+				preparedStatements.put(GET_USER_ROLE, 
+						database.prepareStatement("SELECT Rolle FROM Birdwatcher WHERE Benutzername = ?")
+				);
+				
+				preparedStatements.put(ADD_OBSERVATION_MOMENT, 
+						database.prepareStatement("INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung) "
+								+ "VALUES (?, ?, ?, TO_DATE(?, '"+SQL_DATE_FORMAT+"'), null, ?)")
+				);
+				
+				preparedStatements.put(ADD_OBSERVATION_PERIOD, 
+						database.prepareStatement("INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung) "
+								+ "VALUES (?, ?, ?, TO_DATE(?, '"+SQL_DATE_FORMAT+"'), TO_DATE(?, '"+SQL_DATE_FORMAT+"'), ?)")
+				);
+				
+//				preparedStatements.put(ADD_OBSERVATION_PERIOD, 
+//						database.prepareStatement("INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung) VALUES (?, ?, ?, TO_DATE(?, ?), TO_DATE(?, ?), ?)")
+//				);
+//				preparedStatements.put(OBSERVATION_FILTERED_ORDERED, 
+//						database.prepareStatement(
+//								  ""
+//								+ ""
+//						)
+//				);
+//				
+//				preparedStatements.put(CHECKLIST_FILTERED, 
+//						database.prepareStatement(
+//								  ""
+//								+ ""
+//						)
+//				);
 				
 			} catch (Exception e) {
 				e.printStackTrace();
