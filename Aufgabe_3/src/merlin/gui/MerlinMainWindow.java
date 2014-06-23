@@ -57,6 +57,8 @@ import merlin.utils.ConstantElems;
 import com.toedter.calendar.JDateChooser;
 
 import merlin.data.enums.SpeciesCategoryEnum;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 
 public class MerlinMainWindow {
@@ -510,7 +512,7 @@ public class MerlinMainWindow {
 		
 		JPanel panelAddObLocation = new JPanel();
 		panelAddObLocation.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Ort", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panelAddObLocation.setBounds(10, 20, 247, 103);
+		panelAddObLocation.setBounds(10, 20, 247, 110);
 		panelAddObservation.add(panelAddObLocation);
 		panelAddObLocation.setLayout(null);
 		
@@ -528,8 +530,6 @@ public class MerlinMainWindow {
 		lblGebiet.setBounds(10, 72, 65, 20);
 		panelAddObLocation.add(lblGebiet);
 		lblGebiet.setFont(new Font("Tahoma", Font.PLAIN, 13));
-	
-		
 		
 
 		cbRegionBeo = new  JComboBox<String>();
@@ -559,6 +559,7 @@ public class MerlinMainWindow {
 		cbGebietBeo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				level_3 = cbGebietBeo.getSelectedItem().toString();
+				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3));
 				MainWindowLogic.selectLocation(level_1, level_2, level_3);
 			}
 		});
@@ -575,6 +576,7 @@ public class MerlinMainWindow {
 		cbLandBeo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				level_2 = cbLandBeo.getSelectedItem().toString();
+				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3));
 //				MainWindowLogic.selectLocation(level_1, level_2);
 				
 			}
@@ -591,13 +593,14 @@ public class MerlinMainWindow {
 		cbRegionBeo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				level_1 = cbRegionBeo.getSelectedItem().toString();
+				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3));
 //				MainWindowLogic.selectLocation(level_1);
 			}
 		});
 		
 		JPanel panelAddObDate = new JPanel();
 		panelAddObDate.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Datum", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panelAddObDate.setBounds(10, 134, 247, 79);
+		panelAddObDate.setBounds(10, 141, 247, 79);
 		panelAddObservation.add(panelAddObDate);
 		panelAddObDate.setLayout(null);
 		
@@ -662,7 +665,7 @@ public class MerlinMainWindow {
 		panelAddObDate.add(checkBox);
 		
 		JPanel panelComment = new JPanel();
-		panelComment.setBounds(10, 224, 247, 87);
+		panelComment.setBounds(10, 231, 247, 87);
 		panelAddObservation.add(panelComment);
 		panelComment.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Bemerkung", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panelComment.setLayout(null);
@@ -680,7 +683,7 @@ public class MerlinMainWindow {
 		
 		
 		JButton btnAddObservation = new JButton("Eintrag Hinzuf\u00FCgen");
-		btnAddObservation.setBounds(20, 316, 226, 23);
+		btnAddObservation.setBounds(20, 317, 226, 23);
 		panelAddObservation.add(btnAddObservation);
 		btnAddObservation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -700,7 +703,8 @@ public class MerlinMainWindow {
 				String formatVon = dateFormat.format(datumVom.getDate()) + " " + timeFormat.format((Date)uhrzeitVom.getValue());
 				
 				String formatBis;
-				if (chkDatumBis.isEnabled()){
+				
+				if (!chkDatumBis.isSelected()){
 					formatBis = null;
 				}else{
 					// DatumBis und UhrzeitBis konkatiniert als String
@@ -732,7 +736,7 @@ public class MerlinMainWindow {
 		
 		JPanel panelMaintainObservation = new JPanel();
 		panelMaintainObservation.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Beobachtung verwalten", TitledBorder.LEFT, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panelMaintainObservation.setBounds(824, 369, 266, 327);
+		panelMaintainObservation.setBounds(824, 379, 266, 317);
 		panelBeobachtungsliste.add(panelMaintainObservation);
 		panelMaintainObservation.setLayout(null);
 		
@@ -752,7 +756,7 @@ public class MerlinMainWindow {
 			}
 		});
 		btnDeleteObservation.setFocusable(false);
-		btnDeleteObservation.setBounds(20, 285, 226, 23);
+		btnDeleteObservation.setBounds(20, 125, 226, 23);
 		panelMaintainObservation.add(btnDeleteObservation);
 		
 		
@@ -762,7 +766,7 @@ public class MerlinMainWindow {
 			}
 		});
 		btnChangeObservation.setFocusable(false);
-		btnChangeObservation.setBounds(20, 251, 226, 23);
+		btnChangeObservation.setBounds(20, 180, 226, 23);
 		panelMaintainObservation.add(btnChangeObservation);
 		
 		

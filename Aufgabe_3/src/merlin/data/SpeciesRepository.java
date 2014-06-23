@@ -30,16 +30,20 @@ public class SpeciesRepository {
 		try {
 			database = Application.getInstance().database();
 			System.out.println("37 SpeciesRepository : "+database);
-			if ((land == null && area == null) || (land.isEmpty() && area.isEmpty())){
-				table = database.getTableModelOfQuery("SELECT DISTINCT v.Name_Lat, v.Name_DE , v.Name_ENG, v.Artentyp FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
+			if ((region == null || region.isEmpty()) && (land == null || land.isEmpty()) && (area == null || area.isEmpty())){
+				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat, v.Name_DE , v.Name_ENG, v.Artentyp FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
+						+ "Vogelart v ON  v.va_ID = kv.va_ID");
+				
+		    }else if ((land == null || land.isEmpty()) && (area == null || area.isEmpty())){
+				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat, v.Name_DE , v.Name_ENG, v.Artentyp FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
 						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "'");
 				
 			}else if (area == null || area.isEmpty()){
-				table = database.getTableModelOfQuery("SELECT DISTINCT v.Name_Lat, v.Name_DE , v.Name_ENG, v.Artentyp FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
+				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat, v.Name_DE , v.Name_ENG, v.Artentyp FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
 						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "' AND level_2 = '" +  land  + "'");
 			
 			}else{
-				table = database.getTableModelOfQuery("SELECT DISTINCT v.Name_Lat, v.Name_DE , v.Name_ENG, v.Artentyp FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
+				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat, v.Name_DE , v.Name_ENG, v.Artentyp FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
 						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "' AND level_2 = '" +  land  + "' AND level_3 = '" + area + "'");
 			}
 		
@@ -115,7 +119,7 @@ public class SpeciesRepository {
 		
 		
 
-		
+		//Beobachtung eintragen in Datenbank
 		public static void addDataObservation(String birdId, String level1, String level2, String level3, String dateFrom, String dateUntil, String notice){
 			System.out.println("120 SpeciesRepository : " + level1);
 			System.out.println("121 SpeciesRepository : " + level2);
@@ -272,6 +276,8 @@ public class SpeciesRepository {
 			
 			return Application.getInstance().database().getTableModelOfQuery(query);
 		}
+		
+		
 		
 		
 		
