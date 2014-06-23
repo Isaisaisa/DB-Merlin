@@ -2,6 +2,7 @@ package merlin.logic.impl;
 
 import java.util.Vector;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 
 import merlin.data.SpeciesRepository;
@@ -10,17 +11,12 @@ import merlin.data.enums.SpeciesCategoryEnum;
 public class MainWindowLogic {
 
 	public static DefaultTableModel selectLocation(String region, String land, String area){
-			return SpeciesRepository.selectLocation(region, land, area);
+		return SpeciesRepository.selectLocation(region, land, area);
 	}
 	
-	
-//	public static void selectLocation(String region, String land){
-//		selectLocation(region, land, "");
-//	}
-//	public static void selectLocation(String region){
-//		selectLocation(region, "", "");
-//	}
-	
+	public static DefaultComboBoxModel<String> getLevel1Data() {
+		return SpeciesRepository.getLevel1Data();
+	}
 	
 //	gibt Name (String) von Level1 an GUI weiter
 	public static Vector<String> loadRegion(){
@@ -44,7 +40,7 @@ public class MainWindowLogic {
 	
 	public static DefaultTableModel loadTableDataIntoGui() {
 		try {
-			return SpeciesRepository.getCoreData("xa", SpeciesCategoryEnum.SPECIES, 0);
+			return SpeciesRepository.getCoreData("xxxxxxxx", SpeciesCategoryEnum.SPECIES, 0);
 		} catch (Exception e) {
 			e.printStackTrace();
 //			showMsgBox(e); //TODO im auge behalten --> macht ärger beim Windowbuilder

@@ -8,10 +8,13 @@ import static merlin.utils.ConstantElems.showMsgBox;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 
 import merlin.base.Application;
@@ -24,21 +27,41 @@ import merlin.utils.ConstantElems;
 //Daten holen zur Checkliste
 public class SpeciesRepository {
 	
+	public static DefaultComboBoxModel<String> getLevel1Data() {
+		try {
+			DbWrapper database = Application.getInstance().database();
+			DefaultComboBoxModel<String> resultModel = new DefaultComboBoxModel<String>();
+			List<String> resultList = database.getListOfQuery("SELECT DISTINCT Level_1 FROM Beobachtunsgebiet");
+			
+			resultModel.addElement("");
+			for (String str : resultList)
+				resultModel.addElement(str);
+			
+			return resultModel;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			DefaultComboBoxModel<String> errModel = new DefaultComboBoxModel<String>();
+			errModel.addElement("Fehler");
+			return errModel;
+		} 
+	}
+ 	
 	public static DefaultTableModel selectLocation(String region, String land, String area){
 		DbWrapper database;
 		DefaultTableModel table = new DefaultTableModel();
 		try {
 			database = Application.getInstance().database();
 			System.out.println("37 SpeciesRepository : "+database);
-			if ((region == null || region.isEmpty()) && (land == null || land.isEmpty()) && (area == null || area.isEmpty())){
+			if ((region == null || region.equals("")) && (land == null || land.equals("")) && (area == null || area.equals(""))){
 				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat, v.Name_DE , v.Name_ENG, v.Artentyp FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
 						+ "Vogelart v ON  v.va_ID = kv.va_ID");
 				
-		    }else if ((land == null || land.isEmpty()) && (area == null || area.isEmpty())){
+		    }else if ((land == null || land.equals("")) && (area == null || area.equals(""))){
 				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat, v.Name_DE , v.Name_ENG, v.Artentyp FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
 						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "'");
 				
-			}else if (area == null || area.isEmpty()){
+			}else if (area == null || area.equals("")){
 				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat, v.Name_DE , v.Name_ENG, v.Artentyp FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
 						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "' AND level_2 = '" +  land  + "'");
 			
@@ -48,7 +71,6 @@ public class SpeciesRepository {
 			}
 		
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			ConstantElems.showMsgBox(e);
 		}

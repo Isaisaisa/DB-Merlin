@@ -61,6 +61,10 @@ import merlin.utils.ConstantElems;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import com.toedter.calendar.JDateChooser;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ContainerAdapter;
+import java.awt.event.ContainerEvent;
 
 
 public class MerlinMainWindow {
@@ -78,9 +82,9 @@ public class MerlinMainWindow {
 	private static JComboBox<String> cmbLevel3;
 	private JTable tblBeobachtungsliste;
 	private JTable tableManQuery;
-	private static JComboBox<String> cbRegionBeo;
-	private static JComboBox<String> cbLandBeo;
-	private static JComboBox<String> cbGebietBeo;
+	private static JComboBox<String> cmbRegionAdd;
+	private static JComboBox<String> cmbLandAdd;
+	private static JComboBox<String> cmbGebietAdd;
 	private String level_1;
 	private String level_2;
 	private String level_3;
@@ -723,69 +727,46 @@ public class MerlinMainWindow {
 		
 		
 
-		cbRegionBeo = new  JComboBox<String>();
-		cbRegionBeo.setBounds(85, 18, 152, 20);
-		panelAddObLocation.add(cbRegionBeo);
+		cmbRegionAdd = new  JComboBox<String>();
+		cmbRegionAdd.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				level_1 = cmbRegionAdd.getSelectedItem().toString();
+				level_2 = "";
+				level_3 = "";
+				cmbLandAdd.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadLand(level_1)));
+				cmbGebietAdd.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadArea(level_1, level_2)));
+				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3));
+			}
+		});
+		cmbRegionAdd.setBounds(85, 18, 152, 20);
+		panelAddObLocation.add(cmbRegionAdd);
 		
 		
 		
-		cbLandBeo = new JComboBox<String>();
-		cbLandBeo.setBounds(85, 46, 152, 20);
-		panelAddObLocation.add(cbLandBeo);
+		cmbLandAdd = new JComboBox<String>();
+		cmbLandAdd.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				level_2 = cmbLandAdd.getSelectedItem().toString();
+				level_3 = "";
+				cmbGebietAdd.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadArea(level_1, level_2)));
+				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3));
+			}
+		});
+		cmbLandAdd.setBounds(85, 46, 152, 20);
+		panelAddObLocation.add(cmbLandAdd);
 		
 		
 		
-		cbGebietBeo = new JComboBox<String>();
-		cbGebietBeo.setBounds(85, 73, 152, 20);
-		panelAddObLocation.add(cbGebietBeo);
-		panelAddObLocation.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{cbRegionBeo, cbLandBeo, cbGebietBeo, lbRegion, lblLand, lblGebiet}));
-		cbGebietBeo.addPopupMenuListener(new PopupMenuListener() {
-			public void popupMenuCanceled(PopupMenuEvent arg0) {
-			}
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {
-			}
-			public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
-				cbGebietBeo.setModel( new DefaultComboBoxModel<String>(MainWindowLogic.loadArea(level_1, level_2)));
+		cmbGebietAdd = new JComboBox<String>();
+		cmbGebietAdd.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				level_3 = cmbGebietAdd.getSelectedItem().toString();
+				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3));
 			}
 		});
-		cbGebietBeo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				level_3 = cbGebietBeo.getSelectedItem().toString();
-				MainWindowLogic.selectLocation(level_1, level_2, level_3);
-			}
-		});
-		cbLandBeo.addPopupMenuListener(new PopupMenuListener() {
-			public void popupMenuCanceled(PopupMenuEvent arg0) {
-			}
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {
-			}
-			public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
-				cbLandBeo.setModel( new DefaultComboBoxModel<String>(MainWindowLogic.loadLand(level_1)));
-				
-			}
-		});
-		cbLandBeo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				level_2 = cbLandBeo.getSelectedItem().toString();
-//				MainWindowLogic.selectLocation(level_1, level_2);
-				
-			}
-		});
-		cbRegionBeo.addPopupMenuListener(new PopupMenuListener() {
-			public void popupMenuCanceled(PopupMenuEvent arg0) {
-			}
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {
-			}
-			public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
-				cbRegionBeo.setModel( new DefaultComboBoxModel<String>(MainWindowLogic.loadRegion()) );
-			}
-		});
-		cbRegionBeo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				level_1 = cbRegionBeo.getSelectedItem().toString();
-//				MainWindowLogic.selectLocation(level_1);
-			}
-		});
+		cmbGebietAdd.setBounds(85, 73, 152, 20);
+		panelAddObLocation.add(cmbGebietAdd);
+		panelAddObLocation.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{cmbRegionAdd, cmbLandAdd, cmbGebietAdd, lbRegion, lblLand, lblGebiet}));
 		
 		JPanel panelAddObDate = new JPanel();
 		panelAddObDate.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Datum", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
@@ -913,7 +894,7 @@ public class MerlinMainWindow {
 			}
 		});
 		panelAddObservation.add(btnAddObservation);
-		panelAddObservation.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{cbRegionBeo, cbLandBeo, cbGebietBeo, checkBox, datumVom, uhrzeitVom, chkDatumBis, datumBis, uhrzeitBis, txtComment, btnAddObservation, panelAddObLocation, lbRegion, lblLand, lblGebiet, panelAddObDate, lblVom, lblBis, datumVom.getCalendarButton(), datumBis.getCalendarButton(), panelComment, scrollpanelComment}));
+		panelAddObservation.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{cmbRegionAdd, cmbLandAdd, cmbGebietAdd, checkBox, datumVom, uhrzeitVom, chkDatumBis, datumBis, uhrzeitBis, txtComment, btnAddObservation, panelAddObLocation, lbRegion, lblLand, lblGebiet, panelAddObDate, lblVom, lblBis, datumVom.getCalendarButton(), datumBis.getCalendarButton(), panelComment, scrollpanelComment}));
 		
 		
 		
@@ -1543,6 +1524,8 @@ public class MerlinMainWindow {
 		
 		applyRolePermissions();
 		greetActiveUser();
+		cmbRegionAdd.setModel(MainWindowLogic.getLevel1Data());
+		tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3));
 		
 		
 	}
