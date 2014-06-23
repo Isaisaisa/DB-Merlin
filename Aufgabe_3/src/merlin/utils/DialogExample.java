@@ -11,7 +11,7 @@ public class DialogExample {
 
 	public static void show(String msg) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException
 	{
-//		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		
 		Frame window = new Frame();
 

@@ -1,7 +1,10 @@
 package merlin.data;
 
 import static merlin.utils.ConstantElems.showMsgBox;
+import static merlin.base.PreparedStatementKeyEnum.*;
+import static merlin.data.SpeciesRepository.getPreparedStatement;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -9,6 +12,7 @@ import java.util.Vector;
 
 import merlin.base.Application;
 import merlin.base.DbWrapper;
+import merlin.base.PreparedStatementKeyEnum;
 import merlin.data.entities.Birdwatcher;
 import merlin.data.entities.BirdwatcherImpl;
 
@@ -31,12 +35,28 @@ public class BirdwatcherRepository {
 		DbWrapper database = Application.getInstance().database();
 		String id = "";
 		String role = "";
+		PreparedStatement psRegisterBW, psBwId, psUserRole;
 		try {
-			database.sendUpdate("INSERT INTO Birdwatcher (Name, Vorname, Benutzername, Passwort, Email, Rolle) " +
-					 "VALUES ('" + name + "', '" + vorname + "', '" + benutzername + "', '" + passwort + "', '" + email + "', '" + "R03" + "')");
-			 id   = database.getSingleValue("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = " + benutzername);
-			 role = database.getSingleValue("SELECT Rolle FROM Birdwatcher WHERE Benutzername = " + benutzername); 
-			 return BirdwatcherImpl.valueOf(id, name, vorname, benutzername, new String(passwort), email, role);
+			psRegisterBW = getPreparedStatement(REGISTER_BIRDWATCHER);
+			psRegisterBW.setString(1, name);
+			psRegisterBW.setString(2, vorname);
+			psRegisterBW.setString(3, benutzername);
+			psRegisterBW.setString(4, passwort);
+			psRegisterBW.setString(5, email);
+			psRegisterBW.setString(6, "R03");
+			
+			database.sendUpdate(psRegisterBW);
+			
+			psBwId = getPreparedStatement(GET_BW_ID);
+			psBwId.setString(1, benutzername);
+			
+			psUserRole = getPreparedStatement(GET_USER_ROLE);
+			psUserRole.setString(1, benutzername);
+			
+			id = database.getSingleValue(psBwId);
+			role = database.getSingleValue(psUserRole);
+			
+			return BirdwatcherImpl.valueOf(id, name, vorname, benutzername, new String(passwort), email, role);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;

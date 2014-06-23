@@ -193,7 +193,14 @@ public final class ConstantElems {
 		}
 	}
 	
+	public static void showMsgBox(String msg, String headline) {
+		JOptionPane.showMessageDialog(
+				null,
+			    msg, headline,
+			    JOptionPane.INFORMATION_MESSAGE);
+	}
+	
 	public static void showMsgBox(String msg) {
-		showMsgBox(msg, false);
+		showMsgBox(msg, "");
 	}
 }
