@@ -140,7 +140,11 @@ public class MerlinMainWindow {
 	private JButton btnAddObservation;
 	private JLabel lblWillkommenstext;
 	private JCheckBox chkDatumBis;
-	
+	private JCheckBox chkFilterLifer;
+	private JCheckBox chkFilterTicks;
+	private String filter;
+	private boolean ticks;
+	private boolean lifer;
 	
 
 	/**
@@ -258,6 +262,7 @@ public class MerlinMainWindow {
 		
 		
 		tglbtnCheckliste = new JToggleButton("Checkliste");
+		tglbtnCheckliste.setVisible(false);
 		tglbtnCheckliste.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				tglbtnCheckliste.setToolTipText( ( tglbtnBeobachtungsliste.isEnabled() )?(null):("Nur für Birdwatcher!") );
@@ -337,7 +342,7 @@ public class MerlinMainWindow {
 			    
 			}
 		});
-		tglbtnCheckliste.setBounds(180, 9, 160, 25);
+		tglbtnCheckliste.setBounds(350, 9, 160, 25);
 		panelUser.add(tglbtnCheckliste);
 		
 		
@@ -353,7 +358,7 @@ public class MerlinMainWindow {
 			    toggleCardButtons(false, false, true);
 			}
 		});
-		tglbtnVerwaltung.setBounds(350, 9, 160, 25);
+		tglbtnVerwaltung.setBounds(180, 9, 160, 25);
 		panelUser.add(tglbtnVerwaltung);
 		
 		lblWillkommenstext = new JLabel("Herzlich Willkommen, Vorname!");
@@ -641,6 +646,7 @@ public class MerlinMainWindow {
 		txtFilterObservation.setColumns(10);
 		txtFilterObservation.setBounds(82, 28, 230, 20);
 		panelObservationTable.add(txtFilterObservation);
+		filter = txtFilterObservation.getText();
 		
 		JButton btnFilterObservation = new JButton("Filtern");
 		btnFilterObservation.setBounds(322, 27, 89, 23);
@@ -651,46 +657,15 @@ public class MerlinMainWindow {
 		chkDeleteObservationWarning.setBounds(955, 27, 119, 23);
 		panelObservationTable.add(chkDeleteObservationWarning);
 		
-		JLabel label_19 = new JLabel("Vom:");
-		label_19.setEnabled(false);
-		label_19.setHorizontalAlignment(SwingConstants.RIGHT);
-		label_19.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		label_19.setBounds(463, 27, 31, 20);
-		panelObservationTable.add(label_19);
-		
-		JDateChooser dateFilterDatumVom = new JDateChooser();
-		dateFilterDatumVom.setEnabled(false);
-		dateFilterDatumVom.getCalendarButton().setEnabled(false);
-		dateFilterDatumVom.setBounds(504, 27, 89, 20);
-		panelObservationTable.add(dateFilterDatumVom);
-		
-		JCheckBox chkFilterDatumVom = new JCheckBox("");
-		chkFilterDatumVom.setToolTipText("Akivieren ");
-		chkFilterDatumVom.setBounds(437, 27, 20, 20);
-		panelObservationTable.add(chkFilterDatumVom);
-		
-		JCheckBox chkFilterDatumBis = new JCheckBox("");
-		chkFilterDatumBis.setToolTipText("Akivieren ");
-		chkFilterDatumBis.setBounds(599, 27, 20, 20);
-		panelObservationTable.add(chkFilterDatumBis);
-		
-		JLabel label_20 = new JLabel("Bis:");
-		label_20.setHorizontalAlignment(SwingConstants.RIGHT);
-		label_20.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		label_20.setEnabled(false);
-		label_20.setBounds(625, 27, 21, 20);
-		panelObservationTable.add(label_20);
-		
-		JDateChooser dateFilterDatumBis = new JDateChooser();
-		dateFilterDatumBis.getCalendarButton().setEnabled(false);
-		dateFilterDatumBis.setEnabled(false);
-		dateFilterDatumBis.setBounds(656, 27, 89, 20);
-		panelObservationTable.add(dateFilterDatumBis);
-		
-		JLabel lblMalSehenOb = new JLabel("Mal sehen, ob das noch klappt.\r\nSQL seitig nich so schwer.\r\n\r\nSELECT *\r\nFROM beobachtet b\r\nWHERE b.DATUMVON > TO_DATE('30-06-2014 11:02', 'DD-MM-YYYY HH24:MI') /*and TO_DATE('30-05-2014 11:02', 'DD-MM-YYYY HH24:MI')*/;");
-		lblMalSehenOb.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		lblMalSehenOb.setBounds(447, 11, 298, 14);
-		panelObservationTable.add(lblMalSehenOb);
+		chkFilterLifer = new JCheckBox("Lifer");
+		chkFilterLifer.setToolTipText("Akivieren ");
+		chkFilterLifer.setBounds(501, 27, 70, 20);
+		panelObservationTable.add(chkFilterLifer);
+				
+		chkFilterTicks = new JCheckBox("Ticks");
+		chkFilterTicks.setToolTipText("Akivieren ");
+		chkFilterTicks.setBounds(573, 28, 70, 20);
+		panelObservationTable.add(chkFilterTicks);
 		
 		JPanel panelAddObservation = new JPanel();
 		panelAddObservation.setBackground(SystemColor.control);
@@ -736,6 +711,7 @@ public class MerlinMainWindow {
 				cmbLandAdd.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadLand(level_1)));
 				cmbGebietAdd.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadArea(level_1, level_2)));
 				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3));
+			
 			}
 		});
 		cmbRegionAdd.setBounds(85, 18, 152, 20);
@@ -1528,6 +1504,15 @@ public class MerlinMainWindow {
 		tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3));
 		
 		
+	}
+	
+	
+	//Hilfsfunktion um Filerdaten zu holen
+	private void filterSelection(){
+		filter = txtFilterObservation.getText();
+		ticks = chkFilterTicks.isSelected();
+		lifer = chkFilterLifer.isSelected();
+		tblBeobachtungsliste.setModel(MainWindowLogic.showLiferTicks(level_1, level_2, level_3, filter, ticks, lifer));
 	}
 	
 	public void addObservation() {

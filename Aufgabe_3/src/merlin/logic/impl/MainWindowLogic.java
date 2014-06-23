@@ -65,5 +65,11 @@ public class MainWindowLogic {
 		SpeciesRepository.deleteDataObservation(beoId);
 	}
 	
-
+	
+	
+	public static DefaultTableModel showLiferTicks(String level1, String level2, String level3, String filter, boolean ticks, boolean lifer){
+		return SpeciesRepository.showLiferTicks(level1, level2, level3, filter, ticks, lifer);
+	}
+	
 }
+
