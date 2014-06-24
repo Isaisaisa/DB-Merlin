@@ -22,7 +22,7 @@ CREATE TABLE Vogelart
         Artentyp      VARCHAR(50) NOT NULL,
         Name_DE       VARCHAR(150), 
         Name_ENG      VARCHAR(150), 
-        Name_LAT      VARCHAR(150) NOT NULL);
+        Name_LAT      VARCHAR(150) UNIQUE NOT NULL);
          
 CREATE TABLE Birdwatcher 
        (Bw_ID         INTEGER PRIMARY KEY, 
