@@ -48,6 +48,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
@@ -69,6 +71,8 @@ import java.awt.event.ContainerAdapter;
 import java.awt.event.ContainerEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 
 public class MerlinMainWindow {
@@ -132,9 +136,9 @@ public class MerlinMainWindow {
 	private JTextField txtAddRegion;
 	private JTextField txtAddLand;
 	private JTextField txtAddLokation;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
+	private JTextField txtEditRegion;
+	private JTextField txtEditLand;
+	private JTextField txtEditLokation;
 	private JTextField txtAdminChecklistCoreDataFilter;
 	private JTable tableAdminChecklistSelection;
 	private JTable tableAdminChecklistCoreData;
@@ -149,7 +153,10 @@ public class MerlinMainWindow {
 	private boolean ticks;
 	private boolean lifer;
 	private JComboBox<String> cmbAdminCoreDataSpecType;
-	private JComboBox<String> cmbAdminAddBirdSpecType;
+	private JTextField txtAdminAddBirdSpecType;
+	private JTextField txtAdminEditBirdSpecType;
+	private Component btnAdminEditBird;
+	private JButton btnAdminCoreDataFilter;
 	
 
 	/**
@@ -1020,12 +1027,12 @@ public class MerlinMainWindow {
 		JPanel panelAdminCoreDataTable = new JPanel();
 		panelAdminCoreDataTable.setLayout(null);
 		panelAdminCoreDataTable.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Stammdaten", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panelAdminCoreDataTable.setBounds(10, 11, 741, 519);
+		panelAdminCoreDataTable.setBounds(10, 11, 741, 660);
 		panelAdminStammdaten.add(panelAdminCoreDataTable);
 		
 		JScrollPane scrollPane_3 = new JScrollPane();
 		scrollPane_3.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_3.setBounds(10, 59, 721, 449);
+		scrollPane_3.setBounds(10, 59, 721, 590);
 		panelAdminCoreDataTable.add(scrollPane_3);
 		
 		tableAdminCoreData = new JTable();
@@ -1034,6 +1041,12 @@ public class MerlinMainWindow {
 		tableAdminCoreData.setBackground(Color.WHITE);
 		
 		txtAdminCoreDataFilter = new JTextField();
+		txtAdminCoreDataFilter.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if (arg0.getKeyCode() == KeyEvent.VK_ENTER) btnAdminCoreDataFilter.doClick();
+			}
+		});
 		txtAdminCoreDataFilter.setColumns(10);
 		txtAdminCoreDataFilter.setBounds(82, 28, 230, 20);
 		panelAdminCoreDataTable.add(txtAdminCoreDataFilter);
@@ -1057,7 +1070,7 @@ public class MerlinMainWindow {
 		lblAdminCoreDataArtentyp.setBounds(554, 28, 47, 20);
 		panelAdminCoreDataTable.add(lblAdminCoreDataArtentyp);
 		
-		JButton btnAdminCoreDataFilter = new JButton("Filtern");
+		btnAdminCoreDataFilter = new JButton("Filtern");
 		btnAdminCoreDataFilter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println();
@@ -1079,6 +1092,30 @@ public class MerlinMainWindow {
 		panelAdminAddBird.add(lblLateinischerName);
 		
 		txtAdminAddBirdNameLat = new JTextField();
+		txtAdminAddBirdNameLat.getDocument().addDocumentListener(new DocumentListener() {
+			
+			public void removeUpdate(DocumentEvent arg0) {
+				checkBirdName(txtAdminAddBirdNameLat, txtAdminAddBirdSpecType);
+			}
+			
+			public void insertUpdate(DocumentEvent arg0) {
+				checkBirdName(txtAdminAddBirdNameLat, txtAdminAddBirdSpecType);
+			}
+
+			public void changedUpdate(DocumentEvent arg0) {
+			}
+		});
+		txtAdminAddBirdNameLat.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtAdminAddBirdNameLat.selectAll();
+			}
+			
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				trimText(txtAdminAddBirdNameLat);
+			}
+		});
 		txtAdminAddBirdNameLat.setBounds(117, 34, 200, 20);
 		panelAdminAddBird.add(txtAdminAddBirdNameLat);
 		txtAdminAddBirdNameLat.setColumns(10);
@@ -1088,6 +1125,17 @@ public class MerlinMainWindow {
 		panelAdminAddBird.add(lblDeutscherName);
 		
 		txtAdminAddBirdNameDe = new JTextField();
+		txtAdminAddBirdNameDe.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtAdminAddBirdNameDe.selectAll();
+			}
+			
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				trimText(txtAdminAddBirdNameDe);
+			}
+		});
 		txtAdminAddBirdNameDe.setColumns(10);
 		txtAdminAddBirdNameDe.setBounds(117, 65, 200, 20);
 		panelAdminAddBird.add(txtAdminAddBirdNameDe);
@@ -1097,6 +1145,17 @@ public class MerlinMainWindow {
 		panelAdminAddBird.add(lblEnglischerName);
 		
 		txtAdminAddBirdNameEng = new JTextField();
+		txtAdminAddBirdNameEng.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtAdminAddBirdNameEng.selectAll();
+			}
+			
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				trimText(txtAdminAddBirdNameEng);
+			}
+		});
 		txtAdminAddBirdNameEng.setColumns(10);
 		txtAdminAddBirdNameEng.setBounds(117, 96, 200, 20);
 		panelAdminAddBird.add(txtAdminAddBirdNameEng);
@@ -1104,11 +1163,6 @@ public class MerlinMainWindow {
 		JLabel label_1 = new JLabel("Artentyp:");
 		label_1.setBounds(10, 127, 47, 20);
 		panelAdminAddBird.add(label_1);
-		
-		cmbAdminAddBirdSpecType = new JComboBox<String>();
-		cmbAdminAddBirdSpecType.setModel(new DefaultComboBoxModel<String>(new String[] {"Oberart", "Unterart"}));
-		cmbAdminAddBirdSpecType.setBounds(117, 127, 200, 20);
-		panelAdminAddBird.add(cmbAdminAddBirdSpecType);
 		
 		JButton btnAdminAddBird = new JButton("Hinzuf\u00FCgen");
 		btnAdminAddBird.setBounds(117, 166, 200, 23);
@@ -1119,9 +1173,11 @@ public class MerlinMainWindow {
 		lblpflichtangabe.setBounds(10, 197, 71, 14);
 		panelAdminAddBird.add(lblpflichtangabe);
 		
-		JLabel label_18 = new JLabel("<html>Artentyp automatisch anhand lat. namen festlegen. textfeld lat. name rot markieren, wenn name ung\u00FCltig und \u00FCbernehmen ausgrauen</html>");
-		label_18.setBounds(117, 200, 200, 51);
-		panelAdminAddBird.add(label_18);
+		txtAdminAddBirdSpecType = new JTextField();
+		txtAdminAddBirdSpecType.setEditable(false);
+		txtAdminAddBirdSpecType.setBounds(117, 127, 200, 20);
+		panelAdminAddBird.add(txtAdminAddBirdSpecType);
+		txtAdminAddBirdSpecType.setColumns(10);
 		
 		JPanel panelAdminEditBird = new JPanel();
 		panelAdminEditBird.setLayout(null);
@@ -1135,6 +1191,25 @@ public class MerlinMainWindow {
 		panelAdminEditBird.add(label_2);
 		
 		txtAdminEditBirdNameLat = new JTextField();
+		txtAdminEditBirdNameLat.setEnabled(false);
+		txtAdminEditBirdNameLat.getDocument().addDocumentListener(new DocumentListener() {
+			
+			public void removeUpdate(DocumentEvent arg0) {
+				checkBirdName(txtAdminEditBirdNameLat, txtAdminEditBirdSpecType);
+			}
+			
+			public void insertUpdate(DocumentEvent arg0) {
+				checkBirdName(txtAdminEditBirdNameLat, txtAdminEditBirdSpecType);
+			}
+
+			public void changedUpdate(DocumentEvent arg0) {
+			}
+		});
+		txtAdminEditBirdNameLat.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+			}
+		});
 		txtAdminEditBirdNameLat.setColumns(10);
 		txtAdminEditBirdNameLat.setBounds(117, 34, 200, 20);
 		panelAdminEditBird.add(txtAdminEditBirdNameLat);
@@ -1144,6 +1219,7 @@ public class MerlinMainWindow {
 		panelAdminEditBird.add(label_3);
 		
 		txtAdminEditBirdNameDe = new JTextField();
+		txtAdminEditBirdNameDe.setEnabled(false);
 		txtAdminEditBirdNameDe.setColumns(10);
 		txtAdminEditBirdNameDe.setBounds(117, 65, 200, 20);
 		panelAdminEditBird.add(txtAdminEditBirdNameDe);
@@ -1153,6 +1229,7 @@ public class MerlinMainWindow {
 		panelAdminEditBird.add(label_4);
 		
 		txtAdminEditBirdNameEng = new JTextField();
+		txtAdminEditBirdNameEng.setEnabled(false);
 		txtAdminEditBirdNameEng.setColumns(10);
 		txtAdminEditBirdNameEng.setBounds(117, 96, 200, 20);
 		panelAdminEditBird.add(txtAdminEditBirdNameEng);
@@ -1161,11 +1238,8 @@ public class MerlinMainWindow {
 		label_5.setBounds(10, 127, 47, 20);
 		panelAdminEditBird.add(label_5);
 		
-		JComboBox<String> cmbAdminEditBirdSpecType = new JComboBox<String>();
-		cmbAdminEditBirdSpecType.setBounds(117, 127, 200, 20);
-		panelAdminEditBird.add(cmbAdminEditBirdSpecType);
-		
 		JButton btnAdminEditBird = new JButton("\u00DCbernehmen");
+		btnAdminEditBird.setEnabled(false);
 		btnAdminEditBird.setBounds(117, 166, 200, 23);
 		panelAdminEditBird.add(btnAdminEditBird);
 		
@@ -1181,11 +1255,14 @@ public class MerlinMainWindow {
 		label_6.setBounds(10, 200, 71, 14);
 		panelAdminEditBird.add(label_6);
 		
-		JLabel lblArtentypAutomatischAnhand = new JLabel("<html>Artentyp automatisch anhand lat. namen festlegen. textfeld lat. name rot markieren, wenn name ung\u00FCltig und \u00FCbernehmen ausgrauen</html>");
-		lblArtentypAutomatischAnhand.setBounds(117, 234, 200, 80);
-		panelAdminEditBird.add(lblArtentypAutomatischAnhand);
+		txtAdminEditBirdSpecType = new JTextField();
+		txtAdminEditBirdSpecType.setEditable(false);
+		txtAdminEditBirdSpecType.setColumns(10);
+		txtAdminEditBirdSpecType.setBounds(117, 127, 200, 20);
+		panelAdminEditBird.add(txtAdminEditBirdSpecType);
 		
 		JPanel panelAdminCoreDataConflicts = new JPanel();
+		panelAdminCoreDataConflicts.setVisible(false);
 		panelAdminCoreDataConflicts.setBorder(new TitledBorder(null, "Konflikte", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelAdminCoreDataConflicts.setBounds(10, 541, 741, 130);
 		panelAdminStammdaten.add(panelAdminCoreDataConflicts);
@@ -1285,24 +1362,28 @@ public class MerlinMainWindow {
 		panelAdminEditLokation.setBounds(761, 346, 329, 325);
 		panelAdminLokationen.add(panelAdminEditLokation);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(117, 34, 200, 20);
-		panelAdminEditLokation.add(textField_3);
+		txtEditRegion = new JTextField();
+		txtEditRegion.setEnabled(false);
+		txtEditRegion.setColumns(10);
+		txtEditRegion.setBounds(117, 34, 200, 20);
+		panelAdminEditLokation.add(txtEditRegion);
 		
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
-		textField_4.setBounds(117, 65, 200, 20);
-		panelAdminEditLokation.add(textField_4);
+		txtEditLand = new JTextField();
+		txtEditLand.setEnabled(false);
+		txtEditLand.setColumns(10);
+		txtEditLand.setBounds(117, 65, 200, 20);
+		panelAdminEditLokation.add(txtEditLand);
 		
-		textField_5 = new JTextField();
-		textField_5.setColumns(10);
-		textField_5.setBounds(117, 96, 200, 20);
-		panelAdminEditLokation.add(textField_5);
+		txtEditLokation = new JTextField();
+		txtEditLokation.setEnabled(false);
+		txtEditLokation.setColumns(10);
+		txtEditLokation.setBounds(117, 96, 200, 20);
+		panelAdminEditLokation.add(txtEditLokation);
 		
-		JButton button_1 = new JButton("\u00DCbernehmen");
-		button_1.setBounds(117, 127, 200, 23);
-		panelAdminEditLokation.add(button_1);
+		JButton btnEditLocation = new JButton("\u00DCbernehmen");
+		btnEditLocation.setEnabled(false);
+		btnEditLocation.setBounds(117, 127, 200, 23);
+		panelAdminEditLokation.add(btnEditLocation);
 		
 		JButton button_2 = new JButton("L\u00F6schen");
 		button_2.setForeground(Color.BLACK);
@@ -1312,7 +1393,7 @@ public class MerlinMainWindow {
 		
 		JLabel label_12 = new JLabel("*Pflichtangabe");
 		label_12.setForeground(new Color(0, 0, 128));
-		label_12.setBounds(10, 192, 71, 14);
+		label_12.setBounds(10, 185, 71, 14);
 		panelAdminEditLokation.add(label_12);
 		
 		JLabel label_7 = new JLabel("*Zook\u00F6kol. Region:");
@@ -1536,6 +1617,49 @@ public class MerlinMainWindow {
 		
 	}
 	
+	private boolean checkBirdName(JTextField txtName, JTextField txtSpec) {
+		String birdName = txtName.getText().trim().replaceAll("\\s+", " ");
+		int birdNameLength = birdName.split(" ").length;
+		
+		if (birdName.isEmpty()) {
+			txtName.setBackground(Color.PINK);
+			txtSpec.setText("-ungültiger lat. Name-");
+			return false;
+		} else {
+			txtName.setBackground(Color.WHITE);
+			if (birdNameLength == 2) {
+				txtSpec.setText("Oberart");
+				return true;
+			} else if (birdNameLength == 3) {
+				txtSpec.setText("Unterart");
+				return true;
+			} else {
+				txtName.setBackground(Color.PINK);
+				txtSpec.setText("-ungültiger lat. Name-");
+				return false;
+			}
+		}
+	}
+	
+	private boolean checkLocationName() {
+		// TODO
+		return true;
+	}
+	
+	private void enableBirdEditOnSelection(boolean enabled) {
+		txtAdminEditBirdNameLat.setEnabled(enabled);
+		txtAdminEditBirdNameDe.setEnabled(enabled);
+		txtAdminEditBirdNameEng.setEnabled(enabled);
+		btnAdminEditBird.setEnabled(enabled);
+	}
+	
+	private void enableLocationEditOnSelection(boolean enabled) {
+		txtAdminEditBirdNameLat.setEnabled(enabled);
+		txtAdminEditBirdNameDe.setEnabled(enabled);
+		txtAdminEditBirdNameEng.setEnabled(enabled);
+		btnAdminEditBird.setEnabled(enabled);
+	}
+	
 	private void addLocation() {
 		String l1, l2, l3;
 		
@@ -1658,7 +1782,8 @@ public class MerlinMainWindow {
 	}
 	
 	private void initAdminPanel() {
-		getCoreData();
+//		getCoreData();
+		getCoreData("Amsel", "Alle");
 		tglbtnVerwaltung.doClick();
 		tglbtnAdminStammdaten.doClick();
 	}
