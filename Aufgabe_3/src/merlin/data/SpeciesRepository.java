@@ -443,41 +443,51 @@ public class SpeciesRepository {
 				DefaultTableModel table = new DefaultTableModel();
 				try{
 					database = Application.getInstance().database();
-					String ort_id = getLocationId(level1, level2, level3);
+//					String ort_id = getLocationId(level1, level2, level3);
 //					String ort_id = "SELECT Ort_ID FROM BEOBACHTUNSGEBIET WHERE LEVEL_1 = '"+ level1 + "' AND LEVEL_2 = '" + level2 + "' AND LEVEL_3 = '" + level3 + "'";
+					String ort_id = "SELECT Ort_ID FROM BEOBACHTUNSGEBIET";
+					if(!(level1 == null) && !level1.equals("")){
+						ort_id += " WHERE Level_1 = '" + level1 +"'";
+						if (!(level2 == null) && !level2.equals("")){
+							ort_id += " AND Level_2 = '" +  level2 + "'";
+							if(!(level3 == null) && !level3.equals("")){
+								ort_id += " AND Level_3 = '" +  level3 + "'";
+							}
+						}
+					}
 					query = "SELECT * FROM "
 							+ "(SELECT b.beo_id, v.Name_Lat, v.Name_De, v.Name_Eng,b.Ort_Id, b.DatumVon, b.DatumBis, b.Bemerkung,"
 							     + "CASE WHEN l.Lifer = b.datumVon  THEN 'Lifer'"
 							     + "     WHEN t.Tick = b.datumVon   THEN 'Tick'"
 							     + "END as \"Lifer/Tick\" "
 							+ "FROM  beobachtet b, Vogelart v,"
-							     + "(SELECT beo.va_id, MIN(beo.datumVon) AS Lifer FROM Beobachtet beo GROUP BY beo.va_id) l,"
-							     + "(SELECT beob.va_id, MIN(beob.datumVon) AS Tick FROM Beobachtet beob WHERE beob.ort_id IN"
+							     + " (SELECT beo.va_id, MIN(beo.datumVon) AS Lifer FROM Beobachtet beo GROUP BY beo.va_id) l,"
+							     + " (SELECT beob.va_id, MIN(beob.datumVon) AS Tick FROM Beobachtet beob WHERE beob.ort_id IN"
 							          + "(" + ort_id + ") GROUP BY beob.va_id) t"
-							     + "WHERE b.bw_id = " + BirdwatcherRepository.getActiveUser().id()  + " AND b.va_Id = v.va_id AND b.Ort_id IN ("
+							     + " WHERE b.bw_id = " + BirdwatcherRepository.getActiveUser().id()  + " AND b.va_Id = v.va_id AND b.Ort_id IN ("
 							        + "" + ort_id + ") AND l.va_id = b.va_id AND t.va_id = b.va_id ORDER BY DatumVon ASC)"
-							+ "WHERE (Name_Lat LIKE '%" + filter  + "%' OR Name_DE LIKE '%" + filter  + "%' OR Name_ENG LIKE '%" + filter  + "%')";
+							+ " WHERE (Name_Lat LIKE '%" + filter  + "%' OR Name_DE LIKE '%" + filter  + "%' OR Name_ENG LIKE '%" + filter  + "%')";
 					
 					if (ticks || lifer){
-						query += "AND";
+						query += " AND";
 						if (ticks && !lifer){
-							query += "\"Lifer/Tick\" = 'Lifer'";
+							query += " \"Lifer/Tick\" = 'Lifer'";
 						}else if (!ticks && lifer){
-							query += "\"Lifer/Tick\" = 'Tick'";
+							query += " \"Lifer/Tick\" = 'Tick'";
 						}else if (ticks && lifer){
-							query += "(\"Lifer/Tick\" = 'Lifer' OR \"Lifer/Tick\" = 'Ticks')";
+							query += " (\"Lifer/Tick\" = 'Lifer' OR \"Lifer/Tick\" = 'Ticks')";
 						}
 						
-						
-						 table = database.getTableModelOfQuery(query);	
-						 
 					}	
+					 System.out.println("SpeciesRepository#showLiferTicks : " + query);
+					 table = database.getTableModelOfQuery(query);	
+					 
 					}catch(Exception e){
 							e.printStackTrace();
 							
 					}
 				
-				
+				System.out.println("SpeciesRepository#showLiferTicks : " + table.toString());
 				return table;
 				
 			}

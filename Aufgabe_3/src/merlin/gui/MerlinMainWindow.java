@@ -711,7 +711,7 @@ public class MerlinMainWindow {
 				cmbLandAdd.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadLand(level_1)));
 				cmbGebietAdd.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadArea(level_1, level_2)));
 				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3));
-			
+				filterSelection();
 			}
 		});
 		cmbRegionAdd.setBounds(85, 18, 152, 20);
@@ -726,6 +726,7 @@ public class MerlinMainWindow {
 				level_3 = "";
 				cmbGebietAdd.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadArea(level_1, level_2)));
 				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3));
+				filterSelection();
 			}
 		});
 		cmbLandAdd.setBounds(85, 46, 152, 20);
@@ -738,6 +739,7 @@ public class MerlinMainWindow {
 			public void itemStateChanged(ItemEvent arg0) {
 				level_3 = cmbGebietAdd.getSelectedItem().toString();
 				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3));
+				filterSelection();
 			}
 		});
 		cmbGebietAdd.setBounds(85, 73, 152, 20);
