@@ -48,15 +48,15 @@ public class MainWindowLogic {
 		return SpeciesRepository.getCoreData(filter, spec);
 	}
 	
-	public static DefaultTableModel loadTableDataIntoGui() {
-		try {
-			return SpeciesRepository.getCoreData("xxxxxxxx", SpeciesCategoryEnum.SPECIES, 0);
-		} catch (Exception e) {
-			e.printStackTrace();
-//			showMsgBox(e); //TODO im auge behalten --> macht ärger beim Windowbuilder
-			return new DefaultTableModel();
-		}
-	}
+//	public static DefaultTableModel loadTableDataIntoGui() {
+//		try {
+//			return SpeciesRepository.getCoreData("xxxxxxxx", SpeciesCategoryEnum.SPECIES, 0);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+////			showMsgBox(e); //TODO im auge behalten --> macht ärger beim Windowbuilder
+//			return new DefaultTableModel();
+//		}
+//	}
 	
 	// leitet an die Datenbankebene weiter, um Tablle Beobachtet zu holen
 	public static DefaultTableModel getDataObservation(){

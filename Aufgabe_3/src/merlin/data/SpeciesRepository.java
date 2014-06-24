@@ -520,9 +520,9 @@ public class SpeciesRepository {
 					
 					if (ticks || lifer){
 						query += " AND";
-						if (ticks && !lifer){
+						if (!ticks && lifer){
 							query += " \"Lifer/Tick\" = 'Lifer'";
-						}else if (!ticks && lifer){
+						}else if (ticks && !lifer){
 							query += " \"Lifer/Tick\" = 'Tick'";
 						}else if (ticks && lifer){
 							query += " (\"Lifer/Tick\" = 'Lifer' OR \"Lifer/Tick\" = 'Ticks')";
