@@ -193,7 +193,7 @@ public final class DbWrapper implements DbWrapperInterface {
 	
 	// Direkteste Methode, um direkt von einem Query das volle Ergebnis in Form
 	// eines TableModels zu erhalten
-	public DefaultTableModel getTableModelOfQuery (String query) {
+	public DefaultTableModel getTableModelOfQuery(String query) {
 		try {
 			ResultSet resultSet = sendQuery(query);
 			DefaultTableModel resultTableModel = getTableModel(resultSet);
@@ -213,7 +213,7 @@ public final class DbWrapper implements DbWrapperInterface {
 			e.printStackTrace();
 			System.err.println(e.getMessage());
 			return new DefaultTableModelNoEdit();
-		} 
+		}
 	}
 	
 	
