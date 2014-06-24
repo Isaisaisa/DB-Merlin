@@ -65,6 +65,8 @@ import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ContainerAdapter;
 import java.awt.event.ContainerEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 
 public class MerlinMainWindow {
@@ -501,7 +503,7 @@ public class MerlinMainWindow {
 		panelBeobachtungsliste.setLayout(null);
 		
 		JPanel panelCoreDataTable = new JPanel();
-		panelCoreDataTable.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Stammdaten", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelCoreDataTable.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Checkliste", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panelCoreDataTable.setBounds(4, 11, 810, 350);
 		panelBeobachtungsliste.add(panelCoreDataTable);
 		panelCoreDataTable.setLayout(null);
@@ -561,12 +563,6 @@ public class MerlinMainWindow {
 		JButton btnFilterCoreData = new JButton("Filtern");
 		btnFilterCoreData.setBounds(322, 27, 89, 23);
 		panelCoreDataTable.add(btnFilterCoreData);
-		
-		JLabel lblNewLabel = new JLabel("<html>Anfrage f\u00FCr Stammdaten Tabelle auf PrepStatement umbauen und filter einbauen\r\nSchritt f\u00FCr Schritt!!</html>");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		lblNewLabel.setToolTipText("");
-		lblNewLabel.setBounds(634, 11, 148, 44);
-		panelCoreDataTable.add(lblNewLabel);
 		tblStammdatenBeob.getColumnModel().getColumn(0).setPreferredWidth(0);
 		tblStammdatenBeob.getColumnModel().getColumn(0).setMinWidth(0);
 		tblStammdatenBeob.getColumnModel().getColumn(0).setMaxWidth(0);
@@ -599,7 +595,7 @@ public class MerlinMainWindow {
 		});
 		btnDeleteObservation.setEnabled(false);
 		btnDeleteObservation.setBackground(Color.PINK);
-		btnDeleteObservation.setBounds(790, 27, 159, 23);
+		btnDeleteObservation.setBounds(638, 27, 230, 23);
 		panelObservationTable.add(btnDeleteObservation);
 		btnDeleteObservation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -623,6 +619,14 @@ public class MerlinMainWindow {
 		btnDeleteObservation.setFocusable(false);
 		
 		tblBeobachtungsliste = new JTable();
+		tblBeobachtungsliste.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if (tblBeobachtungsliste.getSelectedRow() > -1) {
+					if (arg0.getKeyCode() == KeyEvent.VK_DELETE || arg0.getKeyCode() == KeyEvent.VK_BACK_SPACE) btnDeleteObservation.doClick();
+				}
+			}
+		});
 		tblBeobachtungsliste.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent arg0) {
 				btnDeleteObservation.setEnabled( (tblBeobachtungsliste.getSelectedRow() > -1) );
@@ -654,17 +658,17 @@ public class MerlinMainWindow {
 		
 		chkDeleteObservationWarning = new JCheckBox("L\u00F6schen best\u00E4tigen");
 		chkDeleteObservationWarning.setSelected(true);
-		chkDeleteObservationWarning.setBounds(955, 27, 119, 23);
+		chkDeleteObservationWarning.setBounds(874, 27, 119, 23);
 		panelObservationTable.add(chkDeleteObservationWarning);
 		
 		chkFilterLifer = new JCheckBox("Lifer");
 		chkFilterLifer.setToolTipText("Akivieren ");
-		chkFilterLifer.setBounds(501, 27, 70, 20);
+		chkFilterLifer.setBounds(446, 27, 55, 23);
 		panelObservationTable.add(chkFilterLifer);
 				
 		chkFilterTicks = new JCheckBox("Ticks");
 		chkFilterTicks.setToolTipText("Akivieren ");
-		chkFilterTicks.setBounds(573, 28, 70, 20);
+		chkFilterTicks.setBounds(503, 27, 55, 23);
 		panelObservationTable.add(chkFilterTicks);
 		
 		JPanel panelAddObservation = new JPanel();
@@ -1503,6 +1507,10 @@ public class MerlinMainWindow {
 		cmbRegionAdd.setModel(MainWindowLogic.getLevel1Data());
 		tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3));
 		
+		JLabel label_19 = new JLabel("<-- egal");
+		label_19.setBounds(620, 31, 46, 14);
+		panelCoreDataTable.add(label_19);
+		
 		
 	}
 	
@@ -1558,13 +1566,13 @@ public class MerlinMainWindow {
 		
 		// Einrichten, welche Funktionen freigeschaltet bzw. deaktiviert werden sollen
 		if (userIsAdmin(role)) {
-			applyRolePermissions(false, false, true);
+			applyRolePermissions(false, true);
 			tglbtnVerwaltung.doClick();
 		} else if (userIsContentAdmin(role)) {
-			applyRolePermissions(false, false, true);
+			applyRolePermissions(false, true);
 			tglbtnVerwaltung.doClick();
 		} else if (userIsBirdwatcher(role)) {
-			applyRolePermissions(true, true, false);
+			applyRolePermissions(true, false);
 			tglbtnBeobachtungsliste.doClick();
 		}
 	}
@@ -1574,9 +1582,8 @@ public class MerlinMainWindow {
 		lblWillkommenstext.setText("Herzlich Willkommen, " + firstname);
 	}
 	
-	private void applyRolePermissions(boolean beob, boolean check, boolean verwaltung) {
+	private void applyRolePermissions(boolean beob, boolean verwaltung) {
 		tglbtnBeobachtungsliste.setEnabled(beob);
-		tglbtnCheckliste.setEnabled(check);
 		tglbtnVerwaltung.setEnabled(verwaltung);
 	}
 	
@@ -1593,6 +1600,13 @@ public class MerlinMainWindow {
 		return (role.toLowerCase().equals("r03"))?(true):(false);
 	}
 	
+	public void hideFirstColumn(JTable table) {
+		table.getColumnModel().getColumn(0).setWidth(0);
+		table.getColumnModel().getColumn(0).setMaxWidth(0);
+		table.getColumnModel().getColumn(0).setMinWidth(0);
+		table.getColumnModel().getColumn(0).setPreferredWidth(0);
+		table.getColumnModel().getColumn(0).setResizable(false);
+	}	
 	
 	public DefaultTableModel getTableModel(ResultSet resultSet) throws SQLException {
 		DefaultTableModel dtm = new DefaultTableModel();
