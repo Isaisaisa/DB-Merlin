@@ -656,6 +656,20 @@ public class MerlinMainWindow {
 		panelObservationTable.add(label);
 		
 		txtFilterObservation = new JTextField();
+		txtFilterObservation.getDocument().addDocumentListener(new DocumentListener() {
+			
+			public void removeUpdate(DocumentEvent arg0) {
+				filterSelection();				
+			}
+			
+			public void insertUpdate(DocumentEvent arg0) {
+				filterSelection();
+			}
+			
+			public void changedUpdate(DocumentEvent arg0) {
+				filterSelection();
+			}
+		});
 		txtFilterObservation.setColumns(10);
 		txtFilterObservation.setBounds(82, 28, 230, 20);
 		panelObservationTable.add(txtFilterObservation);
@@ -666,11 +680,25 @@ public class MerlinMainWindow {
 		panelObservationTable.add(btnFilterObservation);
 		
 		chkFilterLifer = new JCheckBox("Lifer");
+		chkFilterLifer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(chkFilterLifer.isSelected()){
+					filterSelection();
+				}
+			}
+		});
 		chkFilterLifer.setToolTipText("Akivieren ");
 		chkFilterLifer.setBounds(446, 27, 55, 23);
 		panelObservationTable.add(chkFilterLifer);
 				
 		chkFilterTicks = new JCheckBox("Ticks");
+		chkFilterTicks.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(chkFilterTicks.isSelected()){
+					filterSelection();
+				}
+			}
+		});
 		chkFilterTicks.setToolTipText("Akivieren ");
 		chkFilterTicks.setBounds(503, 27, 55, 23);
 		panelObservationTable.add(chkFilterTicks);
@@ -719,7 +747,7 @@ public class MerlinMainWindow {
 				cmbLandAdd.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadLand(level_1)));
 				cmbGebietAdd.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadArea(level_1, level_2)));
 				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3));
-			
+				filterSelection();
 			}
 		});
 		cmbRegionAdd.setBounds(85, 18, 152, 20);
@@ -734,6 +762,7 @@ public class MerlinMainWindow {
 				level_3 = "";
 				cmbGebietAdd.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadArea(level_1, level_2)));
 				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3));
+				filterSelection();
 			}
 		});
 		cmbLandAdd.setBounds(85, 46, 152, 20);
@@ -746,6 +775,7 @@ public class MerlinMainWindow {
 			public void itemStateChanged(ItemEvent arg0) {
 				level_3 = cmbGebietAdd.getSelectedItem().toString();
 				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3));
+				filterSelection();
 			}
 		});
 		cmbGebietAdd.setBounds(85, 73, 152, 20);
