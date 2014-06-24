@@ -34,8 +34,18 @@ public class MainWindowLogic {
 
 	public static void addObservation(String birdId, String level1, String level2, String level3, String dateFrom, String dateUntil, String notice){
 		SpeciesRepository.addDataObservation(birdId, level1, level2, level3, dateFrom, dateUntil, notice);
-
-		
+	}
+	
+	public static void addLocation(String l1, String l2, String l3) {
+		SpeciesRepository.addLocation(l1, l2, l3);
+	}
+	
+	public static DefaultTableModel getLocations() throws Exception {
+		return SpeciesRepository.getLocations();
+	}
+	
+	public static DefaultTableModel getCoreData(String filter, String spec) throws Exception {
+		return SpeciesRepository.getCoreData(filter, spec);
 	}
 	
 	public static DefaultTableModel loadTableDataIntoGui() {

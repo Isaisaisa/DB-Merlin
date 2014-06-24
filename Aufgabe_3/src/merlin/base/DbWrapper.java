@@ -1,6 +1,5 @@
 package merlin.base;
 
-import static merlin.base.PreparedStatementKeyEnum.*;
 import static merlin.utils.ConstantElems.defaultDbPort;
 import static merlin.utils.ConstantElems.defaultDbSID;
 import static merlin.utils.ConstantElems.defaultDbURL;
@@ -40,13 +39,8 @@ public final class DbWrapper implements DbWrapperInterface {
 	private String				dbUsername;
 	private byte[]  			dbPassword; // setter auto-encrypts and getter auto-decrypts
 	
-	// TODO: Entfernen, falls externe Variante funktioniert
-	private Hashtable<PreparedStatementKeyEnum, PreparedStatement> preparedStatements;
-
-	
 	// PRIVATE CONSTRUCTOR USED BY SINGLETON PATTERN: DbWrapper nur instanziieren und Treiber initialisieren
 	private DbWrapper() throws ClassNotFoundException {
-//		this.resultContainer = null;
 		initDriver();
 	}
 	
@@ -57,25 +51,6 @@ public final class DbWrapper implements DbWrapperInterface {
 		}
 		return instance;
 	}
-	
-	// TODO: Entfernen, falls externe Variante funktioniert
-//	private void prepareStatements() {
-//		System.out.println("Preparing statements...");
-//		try {
-//			preparedStatements.put(COREDATA_FILTERED_ORDERED,
-//					connection.prepareStatement("SELECT ? FROM Vogelart WHERE "
-//							+ "lower(NAME_LAT) LIKE lower(%?%) OR "
-//							+ "lower(NAME_DE)  LIKE lower(%?%) OR "
-//							+ "lower(NAME_ENG) LIKE lower(%?%) OR "
-//							+ "lower(ARTENTYP) LIKE lower(%?%) "
-//							+ "ORDER BY ? ?"
-//					)
-//			);
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-////			showMsgBox(e, "Prepared-Statements konnten nicht vorbereitet werden.");
-//		}
-//	}
 	
 	public PreparedStatement prepareStatement(String query) throws SQLException {
 		return connection().prepareStatement(query);
@@ -143,16 +118,6 @@ public final class DbWrapper implements DbWrapperInterface {
 	/**
 	 * @throws SQLException *************************************************************************************************************/
 	
-	// DON'T USE
-	public boolean isEmptyResultSet(ResultSet resultSet) throws SQLException {
-		showMsgBox(new Exception("Obsolete DbWrapper method"), "Don't use isEmptyResultSet anymore, since it consumes the first row of a given result set causing consequential errors");
-		return true;
-	}
-	
-	public boolean hasResults(ResultSet resultSet) throws SQLException {
-		return !isEmptyResultSet(resultSet);
-	}
-	
 	public boolean hasResults(Vector<?> resultVector) throws SQLException {
 		return resultVector.size() > 0;
 	}
@@ -172,31 +137,11 @@ public final class DbWrapper implements DbWrapperInterface {
 	
 	public String getSingleValue(PreparedStatement ps) throws SQLException {
 		return getSingleValue( sendQuery(ps) );
-//		try {
-//			ResultSet resultSet = sendQuery(ps);
-//			String resultString = getSingleValue(resultSet);
-//			resultSet.getStatement().close(); // Automatisches Schlieﬂen des Statements nach Verarbeitung des ResultSets erwirken
-//			return resultString;
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//			showMsgBox(e);
-//			throw e;
-//		}
 	}
 	
 	
 	public String getSingleValue(String query) throws SQLException {
 		return getSingleValue( sendQuery(query) );
-//		try {
-//			ResultSet resultSet = sendQuery(query);
-//			String resultString = getSingleValue(resultSet);
-//			resultSet.getStatement().close(); // Automatisches Schlieﬂen des Statements nach Verarbeitung des ResultSets erwirken
-//			return resultString;
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//			showMsgBox(e);
-//			throw e;
-//		}
 	}
 	
 	
@@ -248,7 +193,7 @@ public final class DbWrapper implements DbWrapperInterface {
 	
 	// Direkteste Methode, um direkt von einem Query das volle Ergebnis in Form
 	// eines TableModels zu erhalten
-	public DefaultTableModel getTableModelOfQuery (String query) {
+	public DefaultTableModel getTableModelOfQuery(String query) {
 		try {
 			ResultSet resultSet = sendQuery(query);
 			DefaultTableModel resultTableModel = getTableModel(resultSet);
@@ -264,12 +209,11 @@ public final class DbWrapper implements DbWrapperInterface {
 	public DefaultTableModel getTableModel(ResultSet resultSet) {
 		try {
 			return new DefaultTableModelNoEdit(getResultVector(resultSet), getColumnNames(resultSet));
-//			return new DefaultTableModel(getResultVector(resultSet), getColumnNames(resultSet));
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.err.println(e.getMessage());
 			return new DefaultTableModelNoEdit();
-		} 
+		}
 	}
 	
 	
@@ -500,10 +444,5 @@ public final class DbWrapper implements DbWrapperInterface {
 			showMsgBox(e);
 			throw e;
 		}
-	}
-	
-	// TODO: Entfernen, falls externe Variante funktioniert
-	public PreparedStatement getPreparedStatement(PreparedStatementKeyEnum key) {
-		return preparedStatements.get(key);
 	}
 }

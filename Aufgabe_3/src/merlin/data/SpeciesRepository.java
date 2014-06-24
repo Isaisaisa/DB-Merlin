@@ -8,6 +8,7 @@ import static merlin.utils.ConstantElems.showMsgBox;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -48,7 +49,69 @@ public class SpeciesRepository {
 			return errModel;
 		} 
 	}
- 	
+	
+	public static void addLocation(String l1, String l2, String l3) {
+		PreparedStatement psAddLoc = getPreparedStatement(ADD_LOCATION);
+		
+		try {
+			psAddLoc.setString(1, l1);
+			psAddLoc.setString(2, (l2.isEmpty())?(null):(l2));
+			psAddLoc.setString(3, (l3.isEmpty())?(null):(l3));
+			database().sendUpdate(psAddLoc);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Ort konnte nicht hinzugefügt werden");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Ort konnte nicht hinzugefügt werden");
+		}
+	}
+	
+	public static DefaultTableModel getLocations() throws Exception {
+		return database().getTableModelOfQuery("SELECT Level_1 as Region, Level_2 as Land, Level_3 as Lokation FROM Beobachtunsgebiet ORDER BY Level_1 ASC, Level_2 ASC, Level_3 ASC");
+	}
+	
+	public static DefaultTableModel getCoreData(String filter, String spec) throws Exception {
+		
+		String specFilter = "WHERE (lower(Artentyp) = 'species' OR lower(Artentyp) = 'subspecies') ";
+		
+		if (spec == "Oberarten") {
+			specFilter = "WHERE (lower(Artentyp) = 'species') ";
+		} else if (spec == "Unterarten") {
+			specFilter = "WHERE (lower(Artentyp) = 'subspecies') ";
+		}
+		System.out.println("specFilter = " + specFilter);
+		
+		String ordering   = "ORDER BY Name_LAT ASC";
+		
+		String query =    "SELECT Name_LAT as \"Vogelart (lateinischer Name)\", "
+						+ "Name_DE as \"(deutscher Name)\", "
+						+ "Name_ENG as \"(englischer Name)\", "
+						+ "Artentyp as \"Artentyp\" "
+						+ "FROM Vogelart " + specFilter;
+		
+		if (filter.isEmpty()) {
+			query += ordering;
+		} else {
+			String filterText = 
+					  "AND (lower(Name_Lat) like lower('%" + filter + "%') OR "
+					+ "lower(Name_DE)  like lower('%" + filter + "%') OR "
+					+ "lower(Name_ENG) like lower('%" + filter + "%')) ";
+			
+			query += filterText + ordering;
+		}
+		
+		System.out.println(query);
+		
+		return database().getTableModelOfQuery(query);
+	}
+	
+	private static DbWrapper database() throws Exception {
+		return Application.getInstance().database();
+	}
+	
 	public static DefaultTableModel selectLocation(String region, String land, String area){
 		DbWrapper database;
 		DefaultTableModel table = new DefaultTableModel();
@@ -214,7 +277,7 @@ public class SpeciesRepository {
 		// Beobachtung löschen aus Datenbank
 		//TODO das Delete statement ist falsch, Datum ist falsch
 		public static void deleteDataObservation(String beoId){
-			String bw_id = BirdwatcherRepository.getActiveUser().id();
+//			String bw_id = BirdwatcherRepository.getActiveUser().id();
 			System.out.println("SpeciesRepository#deleteDataObservasion : " + beoId);
 			DbWrapper database;
 			try{
@@ -271,21 +334,21 @@ public class SpeciesRepository {
 		} 
 		
 		// Stammdaten holen
-//		public static DefaultTableModel getCoreData() throws Exception {
+//		public static DefaultTableModel Data() throws Exception {
 //			return Application.getInstance().database().getTableModelOfQuery("SELECT * FROM VOGELART WHERE NAME_LAT LIKE 'X%' ORDER BY NAME_LAT ASC");
 ////			return Application.getInstance().database().getTableModelOfQuery("SELECT * FROM VOGELART ORDER BY NAME_LAT ASC");
 //		}
 		
-//		public static DefaultTableModel getCoreData(String filter) throws Exception {
+//		public static DefaultTableModel Data(String filter) throws Exception {
 //			
 //		}
 //		
-//		public static DefaultTableModel getCoreData(String filter, String location) throws Exception {
+//		public static DefaultTableModel Data(String filter, String location) throws Exception {
 //			
 //		}
 //		
 	
-//		public static DefaultTableModel getCoreData(String filter, SpeciesCategoryEnum species, int ordering) throws Exception {
+//		public static DefaultTableModel Data(String filter, SpeciesCategoryEnum species, int ordering) throws Exception {
 //			// TODO: gefilterte Stammdaten ausgeben
 //			DbWrapper database = Application.getInstance().database();
 //			
@@ -299,7 +362,7 @@ public class SpeciesRepository {
 //			return resultTableModel;
 //		}
 		
-		public static DefaultTableModel getCoreData(String filter, SpeciesCategoryEnum species, int orderBy) throws Exception {
+		public static DefaultTableModel Data(String filter, SpeciesCategoryEnum species, int orderBy) throws Exception {
 			// TODO Gefilterte Stammdaten ausgeben
 			/*
 			 * String filter
@@ -410,22 +473,9 @@ public class SpeciesRepository {
 								+ "VALUES (?, ?, ?, TO_DATE(?, '"+SQL_DATE_FORMAT+"'), TO_DATE(?, '"+SQL_DATE_FORMAT+"'), ?)")
 				);
 				
-//				preparedStatements.put(ADD_OBSERVATION_PERIOD, 
-//						database.prepareStatement("INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung) VALUES (?, ?, ?, TO_DATE(?, ?), TO_DATE(?, ?), ?)")
-//				);
-//				preparedStatements.put(OBSERVATION_FILTERED_ORDERED, 
-//						database.prepareStatement(
-//								  ""
-//								+ ""
-//						)
-//				);
-//				
-//				preparedStatements.put(CHECKLIST_FILTERED, 
-//						database.prepareStatement(
-//								  ""
-//								+ ""
-//						)
-//				);
+				preparedStatements.put(ADD_LOCATION,
+						database.prepareStatement("INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values (?, ?, ?)")
+				);
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -489,7 +539,6 @@ public class SpeciesRepository {
 				
 				System.out.println("SpeciesRepository#showLiferTicks : " + table.toString());
 				return table;
-				
 			}
 		
 

@@ -9,7 +9,9 @@ public enum PreparedStatementKeyEnum {
     GET_BW_ID(5),
     GET_USER_ROLE(6),
     ADD_OBSERVATION_MOMENT(7),
-    ADD_OBSERVATION_PERIOD(8);
+    ADD_OBSERVATION_PERIOD(8),
+    ADD_LOCATION(9),
+    GET_LOCATIONS(10);
     
     
     private int key = 0;
