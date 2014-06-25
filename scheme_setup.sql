@@ -225,14 +225,14 @@ INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung)
   VALUES (284, 3, 2, TO_DATE('08-05-2014 11:02', 'DD-MM-YYYY HH24:MI'), TO_DATE('09-MAI-2014 14:15', 'DD-MONTH-YYYY HH24:MI'), '2 m. 5 w. 3 juv.');
 	
 INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung)
-  VALUES (300, 3, 3, TO_DATE('28-05-2014 21:02', 'DD-MM-YYYY HH24:MI'), null, '...');
+  VALUES (300, 3, 3, TO_DATE('28-05-2014 21:02', 'DD-MM-YYYY HH24:MI'), null, '');
 	
 INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung)
   VALUES (397, 3, 2, TO_DATE('14-06-2014 13:14', 'DD-MM-YYYY HH24:MI'), null, 'Stürmisches Wetter');
 	
 INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung)
-  VALUES (256, 3, 2, TO_DATE('08-07-2014 11:27', 'DD-MM-YYYY HH24:MI'), null, '3 m. 5 w.');
+  VALUES (256, 3, 2, TO_DATE('15-06-2014 11:27', 'DD-MM-YYYY HH24:MI'), null, '3 m. 5 w.');
 	
 INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung)
-  VALUES (284, 3, 2, TO_DATE('08-07-2014 11:03', 'DD-MM-YYYY HH24:MI'), null, '2 m. im Kampf');
+  VALUES (284, 3, 2, TO_DATE('11-06-2014 11:03', 'DD-MM-YYYY HH24:MI'), null, '2 m. im Kampf');
     

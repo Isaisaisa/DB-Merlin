@@ -3,13 +3,10 @@ package merlin.data;
 
 
 import static merlin.base.PreparedStatementKeyEnum.*;
-import static merlin.data.enums.SpeciesCategoryEnum.*;
-import static merlin.utils.ConstantElems.showMsgBox;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
@@ -21,9 +18,6 @@ import javax.swing.table.DefaultTableModel;
 import merlin.base.Application;
 import merlin.base.DbWrapper;
 import merlin.base.PreparedStatementKeyEnum;
-import merlin.data.entities.Birdwatcher;
-import merlin.data.entities.BirdwatcherImpl;
-import merlin.data.enums.SpeciesCategoryEnum;
 import merlin.utils.ConstantElems;
 
 
@@ -37,6 +31,25 @@ public class SpeciesRepository {
 			List<String> resultList = database.getListOfQuery("SELECT DISTINCT Level_1 FROM Beobachtunsgebiet");
 			
 			resultModel.addElement("");
+			for (String str : resultList)
+				resultModel.addElement(str);
+			
+			return resultModel;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			DefaultComboBoxModel<String> errModel = new DefaultComboBoxModel<String>();
+			errModel.addElement("Fehler");
+			return errModel;
+		} 
+	}
+	
+	public static DefaultComboBoxModel<String> getLevel1Data_Checklist() {
+		try {
+			DbWrapper database = Application.getInstance().database();
+			DefaultComboBoxModel<String> resultModel = new DefaultComboBoxModel<String>();
+			List<String> resultList = database.getListOfQuery("SELECT DISTINCT Level_1 FROM Beobachtunsgebiet");
+			
 			for (String str : resultList)
 				resultModel.addElement(str);
 			
@@ -69,8 +82,40 @@ public class SpeciesRepository {
 		}
 	}
 	
+	public static void addChecklistEntry(String va_id, String level_1_admin, String level_2_admin, String level_3_admin) throws Exception {
+		String ort_id = getLocationId(level_1_admin, level_2_admin, level_3_admin);
+		
+		database().sendUpdate("INSERT INTO kommtVor VALUES("+va_id+", "+ort_id+")");
+	}
+	
+	public static void deleteChecklistEntry(String va_id, String level_1_admin, String level_2_admin, String level_3_admin) throws Exception {
+		String ort_id = getLocationId(level_1_admin, level_2_admin, level_3_admin);
+		
+		database().sendUpdate("DELETE kommtVor WHERE va_id = "+va_id+" AND ort_id = "+ort_id);
+	}
+	
+	public static void updateLocation(String Ort_Id, String l1, String l2, String l3) {
+		PreparedStatement psUpdateLoc = getPreparedStatement(UPDATE_LOCATION);
+		
+		try {
+			psUpdateLoc.setString(1, l1);
+			psUpdateLoc.setString(2, (l2.isEmpty())?(null):(l2));
+			psUpdateLoc.setString(3, (l3.isEmpty())?(null):(l3));
+			psUpdateLoc.setString(4, Ort_Id);
+			database().sendUpdate(psUpdateLoc);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Ort konnte nicht aktualisiert werden");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("Ort konnte nicht aktualisiert werden");
+		}
+	}
+	
 	public static DefaultTableModel getLocations() throws Exception {
-		return database().getTableModelOfQuery("SELECT Level_1 as Region, Level_2 as Land, Level_3 as Lokation FROM Beobachtunsgebiet ORDER BY Level_1 ASC, Level_2 ASC, Level_3 ASC");
+		return database().getTableModelOfQuery("SELECT Ort_Id as Ort_Id, Level_1 as \"Zooökologische Region\", Level_2 as \"Land\", Level_3 as \"Lokation\" FROM Beobachtunsgebiet ORDER BY Level_1 ASC, Level_2 ASC, Level_3 ASC");
 	}
 	
 	public static DefaultTableModel getCoreData(String filter, String spec) throws Exception {
@@ -117,6 +162,18 @@ public class SpeciesRepository {
 		psAddBird.setString(4, name_lat);
 		
 		database().sendUpdate(psAddBird);
+		System.out.println();
+	}
+	
+	public static void updateBird(String va_id, String lat, String de, String eng, String spec) throws SQLException, Exception {
+		PreparedStatement psUpdateBird = getPreparedStatement(UPDATE_BIRD);
+		psUpdateBird.setString(1, spec);
+		psUpdateBird.setString(2, lat);
+		psUpdateBird.setString(3, de);
+		psUpdateBird.setString(4, eng);
+		psUpdateBird.setString(5, va_id);
+		
+		database().sendUpdate(psUpdateBird);
 	}
 	
 	private static DbWrapper database() throws Exception {
@@ -130,19 +187,19 @@ public class SpeciesRepository {
 			database = Application.getInstance().database();
 			System.out.println("37 SpeciesRepository : "+database);
 			if ((region == null || region.equals("")) && (land == null || land.equals("")) && (area == null || area.equals(""))){
-				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat, v.Name_DE , v.Name_ENG, v.Artentyp FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
+				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat as \"Vogelart (lateinischer Name)\", v.Name_DE as \"(deutscher Name)\" , v.Name_ENG as \"(englischer Name)\", v.Artentyp as \"Artentyp\" FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
 						+ "Vogelart v ON  v.va_ID = kv.va_ID");
 				
 		    }else if ((land == null || land.equals("")) && (area == null || area.equals(""))){
-				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat, v.Name_DE , v.Name_ENG, v.Artentyp FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
+				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat as \"Vogelart (lateinischer Name)\", v.Name_DE as \"(deutscher Name)\" , v.Name_ENG as \"(englischer Name)\", v.Artentyp as \"Artentyp\" FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
 						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "'");
 				
 			}else if (area == null || area.equals("")){
-				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat, v.Name_DE , v.Name_ENG, v.Artentyp FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
+				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat as \"Vogelart (lateinischer Name)\", v.Name_DE as \"(deutscher Name)\" , v.Name_ENG as \"(englischer Name)\", v.Artentyp as \"Artentyp\" FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
 						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "' AND level_2 = '" +  land  + "'");
 			
 			}else{
-				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat, v.Name_DE , v.Name_ENG, v.Artentyp FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
+				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat as \"Vogelart (lateinischer Name)\", v.Name_DE as \"(deutscher Name)\" , v.Name_ENG as \"(englischer Name)\", v.Artentyp as \"Artentyp\" FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
 						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "' AND level_2 = '" +  land  + "' AND level_3 = '" + area + "'");
 			}
 		
@@ -159,7 +216,6 @@ public class SpeciesRepository {
 			ResultSet rs;
 			Vector<String> list = new Vector<String>();
 			list.add("");
-//			list.add("WPA");
 			try {
 				rs = Application.getInstance().database().sendQuery("SELECT Level_1 FROM Beobachtunsgebiet WHERE Level_2 is null and Level_3 is null"); 
 				System.out.println(rs);
@@ -214,9 +270,6 @@ public class SpeciesRepository {
 			return list;
 		}
 			
-		
-		
-
 		//Beobachtung eintragen in Datenbank
 		public static void addDataObservation(String birdId, String level1, String level2, String level3, String dateFrom, String dateUntil, String notice) throws Exception{
 				System.out.println("120 SpeciesRepository : " + level1); // TODO syso's aufräumen
@@ -401,45 +454,6 @@ public class SpeciesRepository {
 //			return resultTableModel;
 //		}
 		
-		public static DefaultTableModel Data(String filter, SpeciesCategoryEnum species, int orderBy) throws Exception {
-			// TODO Gefilterte Stammdaten ausgeben
-			/*
-			 * String filter
-			 * SpeciesCategoryEnum species
-			 * int orderBy => 0 = none, 1 = ASC, 2 = DESC
-			 * 
-			 */
-			boolean filtered = filter != null && !filter.isEmpty();
-			boolean filterSpecies = !species.value().equals(ALL.value());
-			boolean orderResult = orderBy > 0;
-			boolean limitQuery = filtered || filterSpecies;
-			String query = "SELECT * FROM VOGELART";
-			
-			
-			// MEEEGA dreckig. Is nur zu testzwecken so gebaut
-			if (limitQuery) {
-				query+= " WHERE ";
-				
-				if (filtered) {
-					
-					query += "(NAME_LAT LIKE '%" + filter +
-							 "%' OR NAME_DE LIKE '%" + filter +
-							"%' OR NAME_ENG LIKE '%" + filter +
-							"%' OR ARTENTYP LIKE '%" + filter + "%')";
-				}
-				
-				if (!species.value().isEmpty()) {
-					query += " AND ARTENTYP = '" + species.value() +"'";
-				}
-			}			
-			
-			return Application.getInstance().database().getTableModelOfQuery(query);
-		}
-		
-		
-		
-		
-		
 //		  SELECT v.Name_Lat, v.Name_De, v.Name_Eng,b.Ort_Id, b.DatumVon, b.DatumBis, b.Bemerkung 
 //		  FROM  beobachtet b, Vogelart v WHERE b.bw_id = 24 AND b.va_Id = v.va_id ORDER BY DatumVon ASC;
 		
@@ -476,17 +490,6 @@ public class SpeciesRepository {
 			try {
 				database = Application.getInstance().database();
 				
-				preparedStatements.put(COREDATA_FILTERED_ORDERED,
-						database.prepareStatement(
-								  "SELECT * FROM Vogelart WHERE "
-								+ "lower(NAME_LAT) LIKE lower(?) OR "
-								+ "lower(NAME_DE)  LIKE lower(?) OR "
-								+ "lower(NAME_ENG) LIKE lower(?) OR "
-								+ "lower(ARTENTYP) LIKE lower(?) "
-								+ "ORDER BY ? ?"
-						)
-				);
-				
 				preparedStatements.put(REGISTER_BIRDWATCHER, 
 						database.prepareStatement("INSERT INTO Birdwatcher "
 								+ "(Name, Vorname, Benutzername, Passwort, Email, Rolle) "
@@ -494,8 +497,14 @@ public class SpeciesRepository {
 						)
 				);
 				
+				
+				
 				preparedStatements.put(GET_BW_ID, 
 						database.prepareStatement("SELECT Bw_ID FROM Birdwatcher WHERE Benutzername = ?")
+				);
+				
+				preparedStatements.put(LOGIN_TO_MERLIN, 
+						database.prepareStatement("SELECT Bw_ID, Name, Vorname, Benutzername, Passwort, Email, Rolle FROM Birdwatcher WHERE Benutzername = ? AND Passwort = ?")
 				);
 				
 				preparedStatements.put(GET_USER_ROLE, 
@@ -518,6 +527,14 @@ public class SpeciesRepository {
 				
 				preparedStatements.put(ADD_BIRD,
 						database.prepareStatement("INSERT INTO Vogelart (Artentyp, Name_DE, Name_ENG, Name_LAT) Values (?, ?, ?, ?)")
+				);
+				
+				preparedStatements.put(UPDATE_BIRD,
+						database.prepareStatement("UPDATE Vogelart SET Artentyp = ?, Name_LAT = ?, NAME_DE = ?, NAME_ENG = ? WHERE Va_ID = ?")
+				);
+				
+				preparedStatements.put(UPDATE_LOCATION,
+						database.prepareStatement("UPDATE BEOBACHTUNSGEBIET SET LEVEL_1 = ?, LEVEL_2 = ?, LEVEL_3 = ? WHERE ORT_ID = ?")
 				);
 				
 			} catch (Exception e) {
@@ -568,7 +585,7 @@ public class SpeciesRepository {
 						}else if (ticks && !lifer){
 							query += " \"Lifer/Tick\" = 'Tick'";
 						}else if (ticks && lifer){
-							query += " (\"Lifer/Tick\" = 'Lifer' OR \"Lifer/Tick\" = 'Ticks')";
+							query += " (\"Lifer/Tick\" = 'Lifer' OR \"Lifer/Tick\" = 'Tick')";
 						}
 						
 					}	

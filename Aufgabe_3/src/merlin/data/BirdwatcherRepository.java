@@ -72,7 +72,11 @@ public class BirdwatcherRepository {
 		ResultSet loginResult;
 		
 		try {
-			loginResult = database.sendQuery("SELECT Bw_ID, Name, Vorname, Benutzername, Passwort, Email, Rolle FROM Birdwatcher WHERE Benutzername = '" + benutzername + "' AND Passwort = '" + passwort + "'");
+			PreparedStatement psLogin = getPreparedStatement(LOGIN_TO_MERLIN);
+			psLogin.setString(1, benutzername);
+			psLogin.setString(2, passwort);
+			loginResult = database.sendQuery(psLogin);
+//			loginResult = database.sendQuery("SELECT Bw_ID, Name, Vorname, Benutzername, Passwort, Email, Rolle FROM Birdwatcher WHERE Benutzername = '" + benutzername + "' AND Passwort = '" + passwort + "'");
 			Vector<Vector<String>> resultVector = database.getResultVector(loginResult);
 			
 			if (database.hasResults(resultVector)) {

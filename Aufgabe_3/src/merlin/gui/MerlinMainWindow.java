@@ -1,6 +1,5 @@
 package merlin.gui;
 
-import java.awt.AWTEvent;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -10,6 +9,12 @@ import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -57,22 +62,12 @@ import javax.swing.table.TableModel;
 
 import merlin.base.Application;
 import merlin.data.BirdwatcherRepository;
-import merlin.data.enums.SpeciesCategoryEnum;
 import merlin.logic.impl.MainWindowLogic;
 import merlin.utils.ConstantElems;
 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import com.toedter.calendar.JDateChooser;
-
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ContainerAdapter;
-import java.awt.event.ContainerEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 
 
 public class MerlinMainWindow {
@@ -96,6 +91,9 @@ public class MerlinMainWindow {
 	private String level_1;
 	private String level_2;
 	private String level_3;
+	private String level_1_admin;
+	private String level_2_admin; 
+	private String level_3_admin;
 	private JSpinner uhrzeitVom;
 	private JSpinner uhrzeitBis;
 	private JDateChooser datumVom;
@@ -105,6 +103,7 @@ public class MerlinMainWindow {
 	private String formatVon;
 	private String formatBis;
 	private String notice;
+	private boolean isAdminChecklistenCoreDataInitialized = false;
 
 	private JTextArea txtComment;
 	private JTextField txtFilterCoreData;
@@ -133,12 +132,12 @@ public class MerlinMainWindow {
 	private JTextField txtAdminEditBirdNameDe;
 	private JTextField txtAdminEditBirdNameEng;
 	private JTable tableAdminLokationen;
-	private JTextField txtAddRegion;
-	private JTextField txtAddLand;
-	private JTextField txtAddLokation;
-	private JTextField txtEditRegion;
-	private JTextField txtEditLand;
-	private JTextField txtEditLokation;
+	private JTextField txtAdminAddRegion;
+	private JTextField txtAdminAddLand;
+	private JTextField txtAdminAddLokation;
+	private JTextField txtAdminEditRegion;
+	private JTextField txtAdminEditLand;
+	private JTextField txtAdminEditLokation;
 	private JTextField txtAdminChecklistCoreDataFilter;
 	private JTable tableAdminChecklistSelection;
 	private JTable tableAdminChecklistCoreData;
@@ -158,6 +157,15 @@ public class MerlinMainWindow {
 	private JButton btnAdminEditBird;
 	private JButton btnAdminCoreDataFilter;
 	private JButton btnAdminAddBird;
+	private JComboBox<String> cmbAdminChecklistCoreDataSpecType;
+	private JComboBox<String> cmbFilterCoreDataSpecType;
+	private JComboBox<String> cmbAdminChecklisteL1;
+	private JComboBox<String> cmbAdminChecklisteL2;
+	private JComboBox<String> cmbAdminChecklisteL3;
+	private JButton btnAdminChecklistCoreDataFilter;
+	private JButton btnAdminChecklistAdd;
+	private JButton btnAdminChecklistRemove;
+	private JButton btnAdminEditLocation;
 	
 
 	/**
@@ -285,22 +293,6 @@ public class MerlinMainWindow {
 			}
 		});
 		tglbtnCheckliste.setEnabled(false);
-		tglbtnCheckliste.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				if (tglbtnCheckliste.isEnabled()) tglbtnCheckliste.setForeground(btnNormalHover);
-			}
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-				if (tglbtnCheckliste.isEnabled()) tglbtnCheckliste.setForeground(btnNormalNoHover);
-			}
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				if (!tglbtnCheckliste.isEnabled()) {
-					ConstantElems.showMsgBox("Nur für Birdwatcher!");
-				}
-			}
-		});
 		tglbtnCheckliste.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		tglbtnVerwaltung = new JToggleButton("Verwaltung");
@@ -334,13 +326,11 @@ public class MerlinMainWindow {
 		tglbtnBeobachtungsliste.setFocusable(false);
 		tglbtnBeobachtungsliste.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				 CardLayout cl = (CardLayout)(panelMain.getLayout());
-			     cl.show(panelMain, "panel_beobachtungsliste");
+//				 CardLayout cl = (CardLayout)(panelMain.getLayout());
+//			     cl.show(panelMain, "panel_beobachtungsliste");
 			     
-//			     tglbtnBeobachtungsliste.setSelected(true);
-//			     tglbtnCheckliste.setSelected(false);
-//			     tglbtnVerwaltung.setSelected(false);
-			     toggleCardButtons(true, false, false);
+			     toggleCardButtons(true, false);
+			     initBirdwatcherPanel();
 			}
 		});
 		tglbtnBeobachtungsliste.setBounds(10, 9, 160, 25);
@@ -349,18 +339,6 @@ public class MerlinMainWindow {
 		
 		
 		tglbtnCheckliste.setFocusable(false);
-		tglbtnCheckliste.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				 CardLayout cl = (CardLayout)(panelMain.getLayout());
-			     cl.show(panelMain, "panel_checkliste");
-			     
-//			     tglbtnBeobachtungsliste.setSelected(false);
-//			     tglbtnCheckliste.setSelected(true);
-//			     tglbtnVerwaltung.setSelected(false);
-			     toggleCardButtons(false, true, false);
-			    
-			}
-		});
 		tglbtnCheckliste.setBounds(350, 9, 160, 25);
 		panelUser.add(tglbtnCheckliste);
 		
@@ -371,10 +349,7 @@ public class MerlinMainWindow {
 				CardLayout cl = (CardLayout)(panelMain.getLayout());
 			    cl.show(panelMain, "panel_verwaltung");
 			    
-//			    tglbtnBeobachtungsliste.setSelected(false);
-//			    tglbtnCheckliste.setSelected(false);
-//			    tglbtnVerwaltung.setSelected(true);
-			    toggleCardButtons(false, false, true);
+			    toggleCardButtons(false, true);
 			}
 		});
 		tglbtnVerwaltung.setBounds(180, 9, 160, 25);
@@ -572,7 +547,7 @@ public class MerlinMainWindow {
 		label_17.setBounds(433, 28, 47, 20);
 		panelCoreDataTable.add(label_17);
 		
-		JComboBox<String> cmbFilterCoreDataSpecType = new JComboBox<String>();
+		cmbFilterCoreDataSpecType = new JComboBox<String>();
 		cmbFilterCoreDataSpecType.setModel(new DefaultComboBoxModel<String>(new String[] {"Alle", "Oberarten", "Unterarten"}));
 		cmbFilterCoreDataSpecType.setBounds(490, 28, 120, 20);
 		panelCoreDataTable.add(cmbFilterCoreDataSpecType);
@@ -580,12 +555,6 @@ public class MerlinMainWindow {
 		JButton btnFilterCoreData = new JButton("Filtern");
 		btnFilterCoreData.setBounds(322, 27, 89, 23);
 		panelCoreDataTable.add(btnFilterCoreData);
-		// TODO: säubern, wenn nicht mehr weiter benötigt
-//		tblStammdatenBeob.getColumnModel().getColumn(0).setPreferredWidth(0);
-//		tblStammdatenBeob.getColumnModel().getColumn(0).setMinWidth(0);
-//		tblStammdatenBeob.getColumnModel().getColumn(0).setMaxWidth(0);
-//		tblStammdatenBeob.getColumnModel().getColumn(0).setWidth(0);
-//		tblStammdatenBeob.getColumnModel().getColumn(0).setResizable(false);
 		
 		JPanel panelObservationTable = new JPanel();
 		panelObservationTable.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Beobachtungen", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
@@ -621,7 +590,8 @@ public class MerlinMainWindow {
 				String beoId = (String)tblBeobachtungsliste.getValueAt(tblBeobachtungsliste.getSelectedRow(), 0);
 			
 				MainWindowLogic.deleteDataObservation(beoId);
-				tblBeobachtungsliste.setModel(MainWindowLogic.getDataObservation());
+//				tblBeobachtungsliste.setModel(MainWindowLogic.getDataObservation());
+				filterSelection();
 				
 						
 			}
@@ -650,7 +620,7 @@ public class MerlinMainWindow {
 		});
 		tblBeobachtungsliste.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane_2.setViewportView(tblBeobachtungsliste);
-		tblBeobachtungsliste.setModel(MainWindowLogic.getDataObservation());
+//		tblBeobachtungsliste.setModel(MainWindowLogic.getDataObservation());
 		
 		JLabel label = new JLabel("Volltextfilter:");
 		label.setBounds(10, 28, 62, 20);
@@ -993,6 +963,14 @@ public class MerlinMainWindow {
 				CardLayout cl = (CardLayout)(panelAdminCards.getLayout());
 				cl.show(panelAdminCards, "panel_admin_checklisten");
 				toggleAdminCardButtons(false, false, true, false, false);
+				
+				if (!isAdminChecklistenCoreDataInitialized) {
+					tableAdminChecklistCoreData.setModel(getCoreData("turdus merula", "")); // TODO zurücksetzen vor auslieferung
+					hideFirstColumn(tableAdminChecklistCoreData);
+					isAdminChecklistenCoreDataInitialized = true;
+				}
+				
+//				cmbAdminChecklisteL1.setModel(MainWindowLogic.getLevel1Data_Checklist());
 			}
 		});
 		tglbtnAdminChecklisten.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -1001,6 +979,8 @@ public class MerlinMainWindow {
 		panelAdminButtons.add(tglbtnAdminChecklisten);
 		
 		tglbtnBenutzer = new JToggleButton("Benutzer");
+		tglbtnBenutzer.setEnabled(false);
+		tglbtnBenutzer.setVisible(false);
 		tglbtnBenutzer.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
@@ -1020,7 +1000,7 @@ public class MerlinMainWindow {
 		});
 		tglbtnBenutzer.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		tglbtnBenutzer.setFocusable(false);
-		tglbtnBenutzer.setBounds(520, 9, 160, 25);
+		tglbtnBenutzer.setBounds(690, 9, 160, 25);
 		panelAdminButtons.add(tglbtnBenutzer);
 		
 		tglbtnAdminManQuery = new JToggleButton("Manuelle Queries");
@@ -1043,7 +1023,7 @@ public class MerlinMainWindow {
 		});
 		tglbtnAdminManQuery.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		tglbtnAdminManQuery.setFocusable(false);
-		tglbtnAdminManQuery.setBounds(690, 9, 160, 25);
+		tglbtnAdminManQuery.setBounds(520, 9, 160, 25);
 		panelAdminButtons.add(tglbtnAdminManQuery);
 		
 		panelAdminCards = new JPanel();
@@ -1114,7 +1094,9 @@ public class MerlinMainWindow {
 		cmbAdminCoreDataSpecType.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
 				System.out.println();
-				getCoreData(txtAdminCoreDataFilter.getText(), cmbAdminCoreDataSpecType.getSelectedItem().toString());
+//				tableAdminCoreData.setModel(getCoreData(txtAdminCoreDataFilter.getText(), cmbAdminCoreDataSpecType.getSelectedItem().toString()));
+//				hideFirstColumn(tableAdminCoreData);
+				btnAdminCoreDataFilter.doClick();
 			}
 		});
 		cmbAdminCoreDataSpecType.setModel(new DefaultComboBoxModel<String>(new String[] {"Alle", "Oberarten", "Unterarten"}));
@@ -1129,7 +1111,9 @@ public class MerlinMainWindow {
 		btnAdminCoreDataFilter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println();
-				getCoreData(txtAdminCoreDataFilter.getText(), cmbAdminCoreDataSpecType.getSelectedItem().toString());
+//				getCoreData(txtAdminCoreDataFilter.getText(), cmbAdminCoreDataSpecType.getSelectedItem().toString());
+				tableAdminCoreData.setModel(getCoreData(txtAdminCoreDataFilter.getText(), cmbAdminCoreDataSpecType.getSelectedItem().toString()));
+				hideFirstColumn(tableAdminCoreData);
 			}
 		});
 		btnAdminCoreDataFilter.setBounds(322, 27, 89, 23);
@@ -1253,6 +1237,12 @@ public class MerlinMainWindow {
 		panelAdminEditBird.add(label_2);
 		
 		txtAdminEditBirdNameLat = new JTextField();
+		txtAdminEditBirdNameLat.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				trimText(txtAdminEditBirdNameLat);
+			}
+		});
 		txtAdminEditBirdNameLat.setEnabled(false);
 		txtAdminEditBirdNameLat.getDocument().addDocumentListener(new DocumentListener() {
 			
@@ -1267,11 +1257,6 @@ public class MerlinMainWindow {
 			public void changedUpdate(DocumentEvent arg0) {
 			}
 		});
-		txtAdminEditBirdNameLat.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent arg0) {
-			}
-		});
 		txtAdminEditBirdNameLat.setColumns(10);
 		txtAdminEditBirdNameLat.setBounds(117, 34, 200, 20);
 		panelAdminEditBird.add(txtAdminEditBirdNameLat);
@@ -1281,6 +1266,12 @@ public class MerlinMainWindow {
 		panelAdminEditBird.add(label_3);
 		
 		txtAdminEditBirdNameDe = new JTextField();
+		txtAdminEditBirdNameDe.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				trimText(txtAdminEditBirdNameDe);
+			}
+		});
 		txtAdminEditBirdNameDe.setEnabled(false);
 		txtAdminEditBirdNameDe.setColumns(10);
 		txtAdminEditBirdNameDe.setBounds(117, 65, 200, 20);
@@ -1291,6 +1282,12 @@ public class MerlinMainWindow {
 		panelAdminEditBird.add(label_4);
 		
 		txtAdminEditBirdNameEng = new JTextField();
+		txtAdminEditBirdNameEng.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				trimText(txtAdminEditBirdNameEng);
+			}
+		});
 		txtAdminEditBirdNameEng.setEnabled(false);
 		txtAdminEditBirdNameEng.setColumns(10);
 		txtAdminEditBirdNameEng.setBounds(117, 96, 200, 20);
@@ -1303,13 +1300,10 @@ public class MerlinMainWindow {
 		btnAdminEditBird = new JButton("\u00DCbernehmen");
 		btnAdminEditBird.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnAdminEditBird.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				String birdId = (String)tableAdminCoreData.getValueAt(tableAdminCoreData.getSelectedRow(), 0);
-				ConstantElems.showMsgBox("muss noch implementiert werden", "BirdId = " + birdId);
+				String va_id = (String)tableAdminCoreData.getValueAt(tableAdminCoreData.getSelectedRow(), 0);
+//				String name_lat = txtAdminEditBirdNameLat.getText();
+//				ConstantElems.showMsgBox("muss noch implementiert werden", "BirdId = " + birdId);
+				updateBird(va_id);
 			}
 		});
 		btnAdminEditBird.setEnabled(false);
@@ -1334,14 +1328,6 @@ public class MerlinMainWindow {
 		txtAdminEditBirdSpecType.setBounds(117, 127, 200, 20);
 		panelAdminEditBird.add(txtAdminEditBirdSpecType);
 		
-		JLabel lblBearbeitungsfunktionFehltNoch = new JLabel("Bearbeitungsfunktion fehlt noch");
-		lblBearbeitungsfunktionFehltNoch.setBounds(73, 234, 153, 14);
-		panelAdminEditBird.add(lblBearbeitungsfunktionFehltNoch);
-		
-		JLabel lblFeldverhaltenVonvogel = new JLabel("feldverhalten von \"vogel hinzuf\u00FCgen\" kopieren");
-		lblFeldverhaltenVonvogel.setBounds(43, 259, 222, 14);
-		panelAdminEditBird.add(lblFeldverhaltenVonvogel);
-		
 		JPanel panelAdminCoreDataConflicts = new JPanel();
 		panelAdminCoreDataConflicts.setVisible(false);
 		panelAdminCoreDataConflicts.setBorder(new TitledBorder(null, "Konflikte", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -1362,7 +1348,6 @@ public class MerlinMainWindow {
 		JButton btnAdminCoreDataConflicts = new JButton("Ermitteln");
 		btnAdminCoreDataConflicts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO: zB prüfen, ob Lateinischer name 1 oder 2 leerzeichen enthält, also ob der lateinische namen zum angegebenen artentyp passt.
 			}
 		});
 		btnAdminCoreDataConflicts.setBounds(10, 21, 89, 23);
@@ -1384,6 +1369,30 @@ public class MerlinMainWindow {
 		panelAdminLokationenFrame.add(scrollPane_6);
 		
 		tableAdminLokationen = new JTable();
+		tableAdminLokationen.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if (tableAdminLokationen.getSelectedRow() > -1) {
+					enableLocationEditOnSelection(true);
+					txtAdminEditRegion.setText((String)tableAdminLokationen.getValueAt(tableAdminLokationen.getSelectedRow(), 1));
+					txtAdminEditLand.setText((String)tableAdminLokationen.getValueAt(tableAdminLokationen.getSelectedRow(), 2));
+					txtAdminEditLokation.setText((String)tableAdminLokationen.getValueAt(tableAdminLokationen.getSelectedRow(), 3));
+				} else {
+					enableLocationEditOnSelection(false);
+				}
+			}
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				if (tableAdminLokationen.getSelectedRow() > -1) {
+					enableLocationEditOnSelection(true);
+					txtAdminEditRegion.setText((String)tableAdminLokationen.getValueAt(tableAdminLokationen.getSelectedRow(), 1));
+					txtAdminEditLand.setText((String)tableAdminLokationen.getValueAt(tableAdminLokationen.getSelectedRow(), 2));
+					txtAdminEditLokation.setText((String)tableAdminLokationen.getValueAt(tableAdminLokationen.getSelectedRow(), 3));
+				} else {
+					enableLocationEditOnSelection(false);
+				}
+			}
+		});
 		tableAdminLokationen.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableAdminLokationen.setBackground(Color.WHITE);
 		scrollPane_6.setViewportView(tableAdminLokationen);
@@ -1399,38 +1408,96 @@ public class MerlinMainWindow {
 		lblzookkRegion.setBounds(10, 34, 97, 20);
 		panelAdminAddLokation.add(lblzookkRegion);
 		
-		txtAddRegion = new JTextField();
-		txtAddRegion.setColumns(10);
-		txtAddRegion.setBounds(117, 34, 200, 20);
-		panelAdminAddLokation.add(txtAddRegion);
+		txtAdminAddRegion = new JTextField();
+		txtAdminAddRegion.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				trimText(txtAdminAddRegion);
+			}
+		});
+		txtAdminAddRegion.getDocument().addDocumentListener(new DocumentListener() {
+			
+			public void removeUpdate(DocumentEvent arg0) {
+				checkLocationName(txtAdminAddRegion);
+			}
+			
+			public void insertUpdate(DocumentEvent arg0) {
+				checkLocationName(txtAdminAddRegion);
+			}
+
+			public void changedUpdate(DocumentEvent arg0) {
+			}
+		});
+		txtAdminAddRegion.setColumns(10);
+		txtAdminAddRegion.setBounds(117, 34, 200, 20);
+		panelAdminAddLokation.add(txtAdminAddRegion);
 		
 		JLabel lblLand_2 = new JLabel("Land:");
 		lblLand_2.setBounds(10, 65, 91, 20);
 		panelAdminAddLokation.add(lblLand_2);
 		
-		txtAddLand = new JTextField();
-		txtAddLand.setColumns(10);
-		txtAddLand.setBounds(117, 65, 200, 20);
-		panelAdminAddLokation.add(txtAddLand);
+		txtAdminAddLand = new JTextField();
+		txtAdminAddLand.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				trimText(txtAdminAddLand);
+			}
+		});
+		txtAdminAddLand.getDocument().addDocumentListener(new DocumentListener() {
+			
+			public void removeUpdate(DocumentEvent arg0) {
+				checkLocationName(txtAdminAddLand);
+			}
+			
+			public void insertUpdate(DocumentEvent arg0) {
+				checkLocationName(txtAdminAddLand);
+			}
+
+			public void changedUpdate(DocumentEvent arg0) {
+			}
+		});
+		txtAdminAddLand.setColumns(10);
+		txtAdminAddLand.setBounds(117, 65, 200, 20);
+		panelAdminAddLokation.add(txtAdminAddLand);
 		
 		JLabel lblLokation_1 = new JLabel("Lokation:");
 		lblLokation_1.setBounds(10, 96, 91, 20);
 		panelAdminAddLokation.add(lblLokation_1);
 		
-		txtAddLokation = new JTextField();
-		txtAddLokation.setColumns(10);
-		txtAddLokation.setBounds(117, 96, 200, 20);
-		panelAdminAddLokation.add(txtAddLokation);
+		txtAdminAddLokation = new JTextField();
+		txtAdminAddLokation.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				trimText(txtAdminAddLokation);
+			}
+		});
+		txtAdminAddLokation.getDocument().addDocumentListener(new DocumentListener() {
+			
+			public void removeUpdate(DocumentEvent arg0) {
+				checkLocationName(txtAdminAddLokation);
+			}
+			
+			public void insertUpdate(DocumentEvent arg0) {
+				checkLocationName(txtAdminAddLokation);
+			}
+
+			public void changedUpdate(DocumentEvent arg0) {
+			}
+		});
+		txtAdminAddLokation.setColumns(10);
+		txtAdminAddLokation.setBounds(117, 96, 200, 20);
+		panelAdminAddLokation.add(txtAdminAddLokation);
 		
-		JButton btnAddLocation = new JButton("Hinzuf\u00FCgen");
-		btnAddLocation.addActionListener(new ActionListener() {
+		JButton btnAdminAddLocation = new JButton("Hinzuf\u00FCgen");
+		btnAdminAddLocation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				addLocation();
 				getLocations();
+				cmbAdminChecklisteL1.setModel(MainWindowLogic.getLevel1Data_Checklist());
 			}
 		});
-		btnAddLocation.setBounds(117, 127, 200, 23);
-		panelAdminAddLokation.add(btnAddLocation);
+		btnAdminAddLocation.setBounds(117, 127, 200, 23);
+		panelAdminAddLokation.add(btnAdminAddLocation);
 		
 		JLabel label_11 = new JLabel("*Pflichtangabe");
 		label_11.setForeground(new Color(0, 0, 128));
@@ -1443,30 +1510,96 @@ public class MerlinMainWindow {
 		panelAdminEditLokation.setBounds(761, 346, 329, 325);
 		panelAdminLokationen.add(panelAdminEditLokation);
 		
-		txtEditRegion = new JTextField();
-		txtEditRegion.setEnabled(false);
-		txtEditRegion.setColumns(10);
-		txtEditRegion.setBounds(117, 34, 200, 20);
-		panelAdminEditLokation.add(txtEditRegion);
+		txtAdminEditRegion = new JTextField();
+		txtAdminEditRegion.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				trimText(txtAdminEditRegion);
+			}
+		});
+		txtAdminEditRegion.getDocument().addDocumentListener(new DocumentListener() {
+			
+			public void removeUpdate(DocumentEvent arg0) {
+				checkLocationName(txtAdminEditRegion);
+			}
+			
+			public void insertUpdate(DocumentEvent arg0) {
+				checkLocationName(txtAdminEditRegion);
+			}
+
+			public void changedUpdate(DocumentEvent arg0) {
+			}
+		});
+		txtAdminEditRegion.setEnabled(false);
+		txtAdminEditRegion.setColumns(10);
+		txtAdminEditRegion.setBounds(117, 34, 200, 20);
+		panelAdminEditLokation.add(txtAdminEditRegion);
 		
-		txtEditLand = new JTextField();
-		txtEditLand.setEnabled(false);
-		txtEditLand.setColumns(10);
-		txtEditLand.setBounds(117, 65, 200, 20);
-		panelAdminEditLokation.add(txtEditLand);
+		txtAdminEditLand = new JTextField();
+		txtAdminEditLand.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				trimText(txtAdminEditLand);
+			}
+		});
+		txtAdminEditLand.getDocument().addDocumentListener(new DocumentListener() {
+			
+			public void removeUpdate(DocumentEvent arg0) {
+				checkLocationName(txtAdminEditLand);
+			}
+			
+			public void insertUpdate(DocumentEvent arg0) {
+				checkLocationName(txtAdminEditLand);
+			}
+
+			public void changedUpdate(DocumentEvent arg0) {
+			}
+		});
+		txtAdminEditLand.setEnabled(false);
+		txtAdminEditLand.setColumns(10);
+		txtAdminEditLand.setBounds(117, 65, 200, 20);
+		panelAdminEditLokation.add(txtAdminEditLand);
 		
-		txtEditLokation = new JTextField();
-		txtEditLokation.setEnabled(false);
-		txtEditLokation.setColumns(10);
-		txtEditLokation.setBounds(117, 96, 200, 20);
-		panelAdminEditLokation.add(txtEditLokation);
+		txtAdminEditLokation = new JTextField();
+		txtAdminEditLokation.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				trimText(txtAdminEditLokation);
+			}
+		});
+		txtAdminEditLokation.getDocument().addDocumentListener(new DocumentListener() {
+			
+			public void removeUpdate(DocumentEvent arg0) {
+				checkLocationName(txtAdminEditLokation);
+			}
+			
+			public void insertUpdate(DocumentEvent arg0) {
+				checkLocationName(txtAdminEditLokation);
+			}
+
+			public void changedUpdate(DocumentEvent arg0) {
+			}
+		});
+		txtAdminEditLokation.setEnabled(false);
+		txtAdminEditLokation.setColumns(10);
+		txtAdminEditLokation.setBounds(117, 96, 200, 20);
+		panelAdminEditLokation.add(txtAdminEditLokation);
 		
-		JButton btnEditLocation = new JButton("\u00DCbernehmen");
-		btnEditLocation.setEnabled(false);
-		btnEditLocation.setBounds(117, 127, 200, 23);
-		panelAdminEditLokation.add(btnEditLocation);
+		btnAdminEditLocation = new JButton("\u00DCbernehmen");
+		btnAdminEditLocation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String ort_id = (String) tableAdminLokationen.getValueAt(tableAdminLokationen.getSelectedRow(), 0);
+				updateLocation(ort_id);
+				getLocations();
+				cmbAdminChecklisteL1.setModel(MainWindowLogic.getLevel1Data_Checklist());
+			}
+		});
+		btnAdminEditLocation.setEnabled(false);
+		btnAdminEditLocation.setBounds(117, 127, 200, 23);
+		panelAdminEditLokation.add(btnAdminEditLocation);
 		
 		JButton button_2 = new JButton("L\u00F6schen");
+		button_2.setVisible(false);
 		button_2.setForeground(Color.BLACK);
 		button_2.setBackground(Color.PINK);
 		button_2.setBounds(117, 161, 200, 23);
@@ -1474,7 +1607,7 @@ public class MerlinMainWindow {
 		
 		JLabel label_12 = new JLabel("*Pflichtangabe");
 		label_12.setForeground(new Color(0, 0, 128));
-		label_12.setBounds(10, 185, 71, 14);
+		label_12.setBounds(10, 161, 71, 14);
 		panelAdminEditLokation.add(label_12);
 		
 		JLabel label_7 = new JLabel("*Zook\u00F6kol. Region:");
@@ -1501,6 +1634,12 @@ public class MerlinMainWindow {
 		panelAdminChecklisten.add(panelAdminChecklistCoreData);
 		
 		txtAdminChecklistCoreDataFilter = new JTextField();
+		txtAdminChecklistCoreDataFilter.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				btnAdminChecklistCoreDataFilter.doClick();
+			}
+		});
 		txtAdminChecklistCoreDataFilter.setColumns(10);
 		txtAdminChecklistCoreDataFilter.setBounds(82, 28, 155, 20);
 		panelAdminChecklistCoreData.add(txtAdminChecklistCoreDataFilter);
@@ -1509,7 +1648,12 @@ public class MerlinMainWindow {
 		label_10.setBounds(10, 28, 62, 20);
 		panelAdminChecklistCoreData.add(label_10);
 		
-		JComboBox<String> cmbAdminChecklistCoreDataSpecType = new JComboBox<String>();
+		cmbAdminChecklistCoreDataSpecType = new JComboBox<String>();
+		cmbAdminChecklistCoreDataSpecType.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				btnAdminChecklistCoreDataFilter.doClick();
+			}
+		});
 		cmbAdminChecklistCoreDataSpecType.setModel(new DefaultComboBoxModel<String>(new String[] {"Alle", "Oberarten", "Unteraten"}));
 		cmbAdminChecklistCoreDataSpecType.setBounds(408, 28, 120, 20);
 		panelAdminChecklistCoreData.add(cmbAdminChecklistCoreDataSpecType);
@@ -1518,11 +1662,32 @@ public class MerlinMainWindow {
 		label_13.setBounds(350, 28, 47, 20);
 		panelAdminChecklistCoreData.add(label_13);
 		
-		JButton btnAdminChecklistCoreDataFilter = new JButton("Filtern");
+		btnAdminChecklistCoreDataFilter = new JButton("Filtern");
+		btnAdminChecklistCoreDataFilter.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				tableAdminChecklistCoreData.setModel(getCoreData(txtAdminChecklistCoreDataFilter.getText(), cmbAdminChecklistCoreDataSpecType.getSelectedItem().toString()));
+				hideFirstColumn(tableAdminChecklistCoreData);
+			}
+		});
 		btnAdminChecklistCoreDataFilter.setBounds(247, 27, 89, 23);
 		panelAdminChecklistCoreData.add(btnAdminChecklistCoreDataFilter);
 		
-		JButton btnAdminChecklistAdd = new JButton("Auswahl hinzuf\u00FCgen");
+		btnAdminChecklistAdd = new JButton("Auswahl hinzuf\u00FCgen");
+		btnAdminChecklistAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String va_id = (String) tableAdminChecklistCoreData.getValueAt(tableAdminChecklistCoreData.getSelectedRow(), 0);
+				try {
+					MainWindowLogic.addChecklistEntry(va_id, level_1_admin, level_2_admin, level_3_admin);
+					ConstantElems.showMsgBox("Vogel zur Checkliste hinzugefügt!", "Erfolg");
+					tableAdminChecklistSelection.setModel(MainWindowLogic.selectLocation(level_1_admin, level_2_admin, level_3_admin));
+					hideFirstColumn(tableAdminChecklistSelection);
+				} catch (Exception e) {
+					e.printStackTrace();
+					ConstantElems.showMsgBox(e, "Vogelart konnte nicht zur Checkliste hinzugefügt werden.");
+				}
+			}
+		});
+		btnAdminChecklistAdd.setEnabled(false);
 		btnAdminChecklistAdd.setBounds(551, 27, 180, 23);
 		panelAdminChecklistCoreData.add(btnAdminChecklistAdd);
 		
@@ -1532,6 +1697,21 @@ public class MerlinMainWindow {
 		panelAdminChecklistCoreData.add(scrollPane_7);
 		
 		tableAdminChecklistCoreData = new JTable();
+		tableAdminChecklistCoreData.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				btnAdminChecklistAdd.setEnabled(tableAdminChecklistCoreData.getSelectedRow() > -1);
+				if (btnAdminChecklistAdd.isEnabled()) {
+					if (arg0.getClickCount() == 2) {
+						btnAdminChecklistAdd.doClick();
+					}
+				}
+			}
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				btnAdminChecklistAdd.setEnabled(tableAdminChecklistCoreData.getSelectedRow() > -1);
+			}
+		});
 		tableAdminChecklistCoreData.setBackground(Color.WHITE);
 		tableAdminChecklistCoreData.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane_7.setViewportView(tableAdminChecklistCoreData);
@@ -1554,15 +1734,48 @@ public class MerlinMainWindow {
 		label_16.setBounds(297, 16, 131, 20);
 		panelAdminChecklistSelection.add(label_16);
 		
-		JComboBox<String> cmbAdminChecklisteL1 = new JComboBox<String>();
+		cmbAdminChecklisteL1 = new JComboBox<String>();
+		cmbAdminChecklisteL1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				selectLevel1_AdminChecklist();
+			}
+		});
+		cmbAdminChecklisteL1.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				selectLevel1_AdminChecklist();
+//				level_1_admin = cmbAdminChecklisteL1.getSelectedItem().toString();
+//				level_2_admin = "";
+//				level_3_admin = "";
+//				cmbAdminChecklisteL2.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadLand(level_1_admin)));
+//				cmbAdminChecklisteL3.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadArea(level_1_admin, level_2_admin)));
+//				tableAdminChecklistSelection.setModel(MainWindowLogic.selectLocation(level_1_admin, level_2_admin, level_3_admin));
+			}
+		});
+		
 		cmbAdminChecklisteL1.setBounds(10, 36, 136, 20);
 		panelAdminChecklistSelection.add(cmbAdminChecklisteL1);
 		
-		JComboBox<String> cmbAdminChecklisteL2 = new JComboBox<String>();
+		cmbAdminChecklisteL2 = new JComboBox<String>();
+		cmbAdminChecklisteL2.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				level_2_admin = cmbAdminChecklisteL2.getSelectedItem().toString();
+				level_3_admin = "";
+				cmbAdminChecklisteL3.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadArea(level_1_admin, level_2_admin)));
+				tableAdminChecklistSelection.setModel(MainWindowLogic.selectLocation(level_1_admin, level_2_admin, level_3_admin));
+				hideFirstColumn(tableAdminChecklistSelection);
+			}
+		});
 		cmbAdminChecklisteL2.setBounds(151, 36, 136, 20);
 		panelAdminChecklistSelection.add(cmbAdminChecklisteL2);
 		
-		JComboBox<String> cmbAdminChecklisteL3 = new JComboBox<String>();
+		cmbAdminChecklisteL3 = new JComboBox<String>();
+		cmbAdminChecklisteL3.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				level_3_admin = cmbAdminChecklisteL3.getSelectedItem().toString();
+				tableAdminChecklistSelection.setModel(MainWindowLogic.selectLocation(level_1_admin, level_2_admin, level_3_admin));
+				hideFirstColumn(tableAdminChecklistSelection);
+			}
+		});
 		cmbAdminChecklisteL3.setBounds(292, 36, 136, 20);
 		panelAdminChecklistSelection.add(cmbAdminChecklisteL3);
 		
@@ -1572,11 +1785,49 @@ public class MerlinMainWindow {
 		panelAdminChecklistSelection.add(scrollPane_8);
 		
 		tableAdminChecklistSelection = new JTable();
+		tableAdminChecklistSelection.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if (tableAdminChecklistSelection.getSelectedRow() > -1) {
+					if (arg0.getKeyCode() == KeyEvent.VK_DELETE || arg0.getKeyCode() == KeyEvent.VK_BACK_SPACE) btnAdminChecklistRemove.doClick();
+				}
+			}
+		});
+		tableAdminChecklistSelection.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				btnAdminChecklistRemove.setEnabled(tableAdminChecklistSelection.getSelectedRow() > -1);
+			}
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				btnAdminChecklistRemove.setEnabled(tableAdminChecklistSelection.getSelectedRow() > -1);
+			}
+		});
 		tableAdminChecklistSelection.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableAdminChecklistSelection.setBackground(Color.WHITE);
 		scrollPane_8.setViewportView(tableAdminChecklistSelection);
 		
-		JButton btnAdminChecklistRemove = new JButton("Auswahl entfernen");
+		btnAdminChecklistRemove = new JButton("Auswahl entfernen");
+		btnAdminChecklistRemove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (dlgYesNo("Wollen Sie den gewählten Vogel wirklich von der Checkliste entfernen?", "Eintrag löschen") == JOptionPane.NO_OPTION) {
+					return;
+				}
+
+				String va_id = (String) tableAdminChecklistSelection.getValueAt(tableAdminChecklistSelection.getSelectedRow(), 0); // TODO Checklisten eintrag löschen können!
+				try {
+					MainWindowLogic.deleteChecklistEntry(va_id, level_1_admin, level_2_admin, level_3_admin);
+					tableAdminChecklistSelection.setModel(MainWindowLogic.selectLocation(level_1_admin, level_2_admin, level_3_admin));
+					hideFirstColumn(tableAdminChecklistSelection);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+					ConstantElems.showMsgBox(e, "Vogel konnte nicht von der Checkliste gelöscht werden");
+				}
+				
+			}
+		});
+		btnAdminChecklistRemove.setEnabled(false);
 		btnAdminChecklistRemove.setBounds(551, 35, 180, 23);
 		panelAdminChecklistSelection.add(btnAdminChecklistRemove);
 		
@@ -1685,7 +1936,7 @@ public class MerlinMainWindow {
 		panelManStatementsFrame.add(lblOhneAbschlieendesSemikolon);
 		
 		/*
-		 * AFTER-INITIALIZATION AREA
+		 * AFTER-INIT AREA
 		 */
 		
 		applyRolePermissions();
@@ -1694,7 +1945,6 @@ public class MerlinMainWindow {
 		JLabel label_19 = new JLabel("<-- egal");
 		label_19.setBounds(620, 31, 46, 14);
 		panelCoreDataTable.add(label_19);
-		
 		
 	}
 	
@@ -1730,18 +1980,28 @@ public class MerlinMainWindow {
 	}
 	
 	private void enableLocationEditOnSelection(boolean enabled) {
-		txtAdminEditBirdNameLat.setEnabled(enabled);
-		txtAdminEditBirdNameDe.setEnabled(enabled);
-		txtAdminEditBirdNameEng.setEnabled(enabled);
-		btnAdminEditBird.setEnabled(enabled);
+		txtAdminEditRegion.setEnabled(enabled);
+		txtAdminEditLand.setEnabled(enabled);
+		txtAdminEditLokation.setEnabled(enabled);
+		btnAdminEditLocation.setEnabled(enabled);
+	}
+	
+	private void selectLevel1_AdminChecklist() {
+		level_1_admin = cmbAdminChecklisteL1.getSelectedItem().toString();
+		level_2_admin = "";
+		level_3_admin = "";
+		cmbAdminChecklisteL2.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadLand(level_1_admin)));
+		cmbAdminChecklisteL3.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadArea(level_1_admin, level_2_admin)));
+		tableAdminChecklistSelection.setModel(MainWindowLogic.selectLocation(level_1_admin, level_2_admin, level_3_admin));
+		hideFirstColumn(tableAdminChecklistSelection);
 	}
 	
 	private void addLocation() {
 		String l1, l2, l3;
 		
-		l1 = trimText(txtAddRegion); 
-		l2 = trimText(txtAddLand);
-		l3 = trimText(txtAddLokation);
+		l1 = trimText(txtAdminAddRegion); 
+		l2 = trimText(txtAdminAddLand);
+		l3 = trimText(txtAdminAddLokation);
 		
 		if (isLocationInputValid(l1, l2, l3)) {
 			MainWindowLogic.addLocation(l1,l2,l3);
@@ -1750,26 +2010,43 @@ public class MerlinMainWindow {
 		}
 	}
 	
+	private void updateLocation(String ort_id) {
+		String l1, l2, l3;
+		
+		l1 = trimText(txtAdminEditRegion); 
+		l2 = trimText(txtAdminEditLand);
+		l3 = trimText(txtAdminEditLokation);
+		
+		if (isLocationInputValid(l1, l2, l3)) {
+			MainWindowLogic.updateLocation(ort_id,l1,l2,l3);
+		} else {
+			ConstantElems.showMsgBox(new Exception("Ungültige Ortsangaben!"));
+		}
+	}
+	
 	private void getLocations() {
 		try {
 			tableAdminLokationen.setModel(MainWindowLogic.getLocations());
+			hideFirstColumn(tableAdminLokationen);
 		} catch (Exception e) {
 			e.printStackTrace();
 			ConstantElems.showMsgBox(e, "Ortsliste konnte nicht geladen werden.");
 		}
 	}
 	
-	private void getCoreData() {
-		getCoreData("","");
+	private DefaultTableModel getCoreData() {
+		return getCoreData("","");
 	}
 	
-	private void getCoreData(String filter, String spec) {
+	private DefaultTableModel getCoreData(String filter, String spec) {
 		try {
-			tableAdminCoreData.setModel(MainWindowLogic.getCoreData(filter, spec));
-			hideFirstColumn(tableAdminCoreData);
+			return MainWindowLogic.getCoreData(filter, spec);
+//			tableAdminCoreData.setModel(MainWindowLogic.getCoreData(filter, spec));
+//			hideFirstColumn(tableAdminCoreData);
 		} catch (Exception e) {
 			e.printStackTrace();
 			ConstantElems.showMsgBox(e, "Stammdaten konnten nicht geladen werden.");
+			return new DefaultTableModel();
 		}
 	}
 	
@@ -1789,6 +2066,8 @@ public class MerlinMainWindow {
 		if (isBirdInputValid(de, eng)) {
 			try {
 				MainWindowLogic.addBird(lat, de, eng, spec);
+				tableAdminCoreData.setModel(getCoreData(lat, "Alle"));
+				hideFirstColumn(tableAdminCoreData);
 				ConstantElems.showMsgBox("Vogelart hinzugefügt!","Erfolg");
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1797,6 +2076,35 @@ public class MerlinMainWindow {
 		} else {
 			ConstantElems.showMsgBox(new Exception("Ungültige Vogelangaben!"));
 		}
+		
+	}
+	
+	private void updateBird(String va_id) {
+		String lat, de, eng, spec;
+		
+		lat = trimText(txtAdminEditBirdNameLat.getText()); // no need to check further after trimming due to checkLatBirdName()
+		de  = trimText(txtAdminEditBirdNameDe);
+		eng = trimText(txtAdminEditBirdNameEng);
+		spec = txtAdminEditBirdSpecType.getText(); // no need to trim
+		if (spec.toLowerCase().equals("oberart")) { // Eingabe konvertieren
+			spec = "species";
+		} else if (spec.toLowerCase().equals("unterart")) {
+			spec = "subspecies";
+		}
+		
+		if (isBirdInputValid(de, eng)) {
+			try {
+				MainWindowLogic.updateBird(va_id, lat, de, eng, spec);
+				tableAdminCoreData.setModel(getCoreData(lat, "Alle"));
+				hideFirstColumn(tableAdminCoreData);
+				ConstantElems.showMsgBox("Vogelart aktualisiert!","Erfolg");
+			} catch (Exception e) {
+				e.printStackTrace();
+				ConstantElems.showMsgBox(e, "Vogelart konnte nicht aktualisiert werden.");
+			}
+		} else {
+			ConstantElems.showMsgBox(new Exception("Ungültige Vogelangaben!"));
+		} 
 		
 	}
 	
@@ -1821,6 +2129,14 @@ public class MerlinMainWindow {
 		return matches(string);
 	}
 	
+	private void checkLocationName(JTextField textField) {
+		if (validLocationName(textField.getText())) {
+			textField.setBackground(Color.WHITE);
+		} else {
+			textField.setBackground(Color.PINK);
+		}
+	}
+	
 	private boolean validBirdName(String string) {
 		return matches(string);
 	}
@@ -1839,6 +2155,7 @@ public class MerlinMainWindow {
 		ticks = chkFilterTicks.isSelected();
 		lifer = chkFilterLifer.isSelected();
 		tblBeobachtungsliste.setModel(MainWindowLogic.showLiferTicks(level_1, level_2, level_3, filter, ticks, lifer));
+//		hideFirstColumn(tblBeobachtungsliste); // TODO reinnehmen, sobald alles funzt
 	}
 	
 	public void addObservation() {
@@ -1872,16 +2189,19 @@ public class MerlinMainWindow {
 		
 		try {
 			MainWindowLogic.addObservation(birdId, level_1, level_2, level_3,  formatVon, formatBis, notice);
+			ConstantElems.showMsgBox("Beobachtung hinzugefügt!", "Erfolg");
 		} catch (Exception e) {
 			e.printStackTrace();
 			ConstantElems.showMsgBox(e);
+//			ConstantElems.showMsgBox(e, "Beobachtung konnte nicht hinzugefügt werden.");
 		}
 		
 		
 		/* Die Tabelle Beobachtet aus der Datenbank in die Gui laden.
 		 * ein update muss durchgeführt werden.
 		 * */
-		tblBeobachtungsliste.setModel(MainWindowLogic.getDataObservation());
+//		tblBeobachtungsliste.setModel(MainWindowLogic.getDataObservation());
+		filterSelection();
 	}
 	
 	// Abhängig vom Attribut 'Role' des aktiven Users, Felder (in)aktiv schalten oder aus-/einblenden
@@ -1902,8 +2222,11 @@ public class MerlinMainWindow {
 	}
 	
 	private void initAdminPanel() {
-//		getCoreData();
-		getCoreData("Amsel", "Alle");
+		tableAdminCoreData.setModel(getCoreData("Amsel", "Alle")); // TODO zurücksetzen vor auslieferung
+		hideFirstColumn(tableAdminCoreData);
+		cmbAdminChecklisteL1.setModel(MainWindowLogic.getLevel1Data_Checklist());
+		if (cmbAdminChecklisteL1.getItemCount() > 0) selectLevel1_AdminChecklist();
+		//-------------//
 		tglbtnVerwaltung.doClick();
 		tglbtnAdminStammdaten.doClick();
 	}
@@ -1911,7 +2234,11 @@ public class MerlinMainWindow {
 	private void initBirdwatcherPanel() {
 		cmbRegionAdd.setModel(MainWindowLogic.getLevel1Data());
 		tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3));
-		tglbtnBeobachtungsliste.doClick();
+		filterSelection();
+		//-------------//
+		CardLayout cl = (CardLayout)(panelMain.getLayout());
+	    cl.show(panelMain, "panel_beobachtungsliste");
+//		tglbtnBeobachtungsliste.doClick();
 	}
 	
 	public void greetActiveUser() {
@@ -2037,9 +2364,8 @@ public class MerlinMainWindow {
 		}
 	}
 	
-	private void toggleCardButtons(boolean beob, boolean check, boolean admin) {
+	private void toggleCardButtons(boolean beob, boolean admin) {
 		 tglbtnBeobachtungsliste.setSelected(beob);
-	     tglbtnCheckliste.setSelected(check);
 	     tglbtnVerwaltung.setSelected(admin);
 	}
 	
@@ -2052,17 +2378,6 @@ public class MerlinMainWindow {
 
 	}
 	
-//	public void dlgYesNo(Frame frame, String message, String headline) {
-//		((JFrame) frame).setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-//		
-//		int diagAnswer = JOptionPane.showConfirmDialog(frame, 
-//				message, headline, 
-//                JOptionPane.YES_NO_OPTION); 
-//        
-//        if (diagAnswer == JOptionPane.YES_OPTION) {
-//        	
-//        }
-//	}
 	public int dlgYesNo(String message, String headline) {
 		int diagAnswer = JOptionPane.showConfirmDialog(null, 
 				message, headline, 
@@ -2073,9 +2388,5 @@ public class MerlinMainWindow {
 	
 	public void dlgDoSelectionFirst() {
 		ConstantElems.showMsgBox("Wählen Sie zuerst einen Eintrag aus!", "Hinweis");
-	}
-
-	public void debugPrint(String message) {
-		// TODO nachricht zu debug fenster hinzufügen können
 	}
 }

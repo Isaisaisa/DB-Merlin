@@ -398,6 +398,7 @@ public class MerlinLogin {
 
 		final JCheckBox chkRememberUser = new JCheckBox(
 				"Anmeldedaten merken (AES verschl\u00FCsselt)");
+		chkRememberUser.setVisible(false);
 		chkRememberUser.setEnabled(false);
 		chkRememberUser.setBounds(6, 103, 227, 23);
 		panelLogin.add(chkRememberUser);

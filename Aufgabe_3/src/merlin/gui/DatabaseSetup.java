@@ -185,6 +185,7 @@ public class DatabaseSetup extends JDialog {
 		}
 		{
 			chkRememberLogin = new JCheckBox("Anmeldedaten merken (AES verschl\u00FCsselt)");
+			chkRememberLogin.setVisible(false);
 			chkRememberLogin.setEnabled(false);
 			chkRememberLogin.setBounds(6, 46, 357, 23);
 			loginPanel.add(chkRememberLogin);

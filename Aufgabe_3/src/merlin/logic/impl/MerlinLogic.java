@@ -42,7 +42,6 @@ public class MerlinLogic {
 		if (isValidInput) {
 			Application.getInstance().saveConnectionData(dbURL, dbPort, dbSID);
 
-			// falls Anmeldedaten gemerkt werden sollen ==> verschlüsselt in Properties ablegen.
 			if (saveLoginData) {
 				Application.getInstance().saveDatabaseLogin(dbUsername, dbPassword);
 				Application.getInstance().saveProp(rememberLoginPropKey, "true");

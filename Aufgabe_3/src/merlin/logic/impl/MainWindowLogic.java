@@ -7,7 +7,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 
 import merlin.data.SpeciesRepository;
-import merlin.data.enums.SpeciesCategoryEnum;
 
 public class MainWindowLogic {
 
@@ -17,6 +16,10 @@ public class MainWindowLogic {
 	
 	public static DefaultComboBoxModel<String> getLevel1Data() {
 		return SpeciesRepository.getLevel1Data();
+	}
+	
+	public static DefaultComboBoxModel<String> getLevel1Data_Checklist() {
+		return SpeciesRepository.getLevel1Data_Checklist();
 	}
 	
 //	gibt Name (String) von Level1 an GUI weiter
@@ -41,8 +44,24 @@ public class MainWindowLogic {
 		SpeciesRepository.addLocation(l1, l2, l3);
 	}
 	
+	public static void updateLocation(String ort_id, String l1, String l2, String l3) {
+		SpeciesRepository.updateLocation(ort_id, l1, l2, l3);
+	}
+	
+	public static void addChecklistEntry(String va_id, String  level_1_admin, String  level_2_admin, String level_3_admin) throws Exception {
+		SpeciesRepository.addChecklistEntry(va_id, level_1_admin, level_2_admin, level_3_admin);
+	}
+	
+	public static void deleteChecklistEntry(String va_id, String  level_1_admin, String  level_2_admin, String level_3_admin) throws Exception {
+		SpeciesRepository.deleteChecklistEntry(va_id, level_1_admin, level_2_admin, level_3_admin);
+	}
+	
 	public static void addBird(String name_lat, String name_de, String name_eng, String spec) throws Exception {
 		SpeciesRepository.addBird(name_lat, name_de, name_eng, spec);
+	}
+	
+	public static void updateBird(String va_id, String lat, String de, String eng, String spec) throws SQLException, Exception {
+		SpeciesRepository.updateBird(va_id, lat, de, eng, spec);
 	}
 	
 	public static DefaultTableModel getLocations() throws Exception {
