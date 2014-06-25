@@ -212,7 +212,8 @@ public class SpeciesRepository {
 				System.out.println("121 SpeciesRepository : " + level2);
 				System.out.println("122 SpeciesRepository : " + level3);
 				String ort_id = getLocationId(level1, level2, level3);
-			String bw_id = BirdwatcherRepository.getActiveUser().id();
+				System.out.println("215 SpeciesRepository#addDataObservation : " +  ort_id);
+				String bw_id = BirdwatcherRepository.getActiveUser().id();
 				System.out.println("127 SpeciesRepository#addDataObservation : " +  bw_id);
 			
 			
@@ -323,6 +324,7 @@ public class SpeciesRepository {
 				}else{
 					query =  stmt + level1 + "' AND level_2 ='" + level2 + "' AND level_3 = '" + level3 + "'";
 				}
+				System.out.println("327 SpeciesRepository query: " + query);
 				return Application.getInstance().database().getSingleValue(query);
 				
 			}catch (Exception e){

@@ -589,7 +589,7 @@ public class MerlinMainWindow {
 		
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(10, 59, 1064, 280);
+		scrollPane_2.setBounds(10, 61, 1064, 280);
 		panelObservationTable.add(scrollPane_2);
 		scrollPane_2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
@@ -645,6 +645,7 @@ public class MerlinMainWindow {
 		tblBeobachtungsliste.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane_2.setViewportView(tblBeobachtungsliste);
 		tblBeobachtungsliste.setModel(MainWindowLogic.getDataObservation());
+//		filterSelection();
 		
 		JLabel label = new JLabel("Volltextfilter:");
 		label.setBounds(10, 28, 62, 20);
@@ -1646,7 +1647,9 @@ public class MerlinMainWindow {
 		
 		System.out.println("682 MerlinMainWindow : " + dateFormat);
 		System.out.println("683 MerlinMainWindow : " + timeFormat);
-		
+		level_1 = cmbRegionAdd.getSelectedItem().toString();
+		level_2 = cmbLandAdd.getSelectedItem().toString();	
+		level_3 = cmbGebietAdd.getSelectedItem().toString();
 		formatVon = dateFormat.format(datumVom.getDate()) + " " + timeFormat.format((Date)uhrzeitVom.getValue());
 		
 		if (!datumBis.isEnabled()){
