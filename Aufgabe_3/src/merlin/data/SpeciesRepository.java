@@ -86,7 +86,8 @@ public class SpeciesRepository {
 		
 		String ordering   = "ORDER BY Name_LAT ASC";
 		
-		String query =    "SELECT Name_LAT as \"Vogelart (lateinischer Name)\", "
+		String query =    "SELECT Va_ID as \"Vogel-ID\", "
+						+ "Name_LAT as \"Vogelart (lateinischer Name)\", "
 						+ "Name_DE as \"(deutscher Name)\", "
 						+ "Name_ENG as \"(englischer Name)\", "
 						+ "Artentyp as \"Artentyp\" "
@@ -106,6 +107,16 @@ public class SpeciesRepository {
 		System.out.println(query);
 		
 		return database().getTableModelOfQuery(query);
+	}
+	
+	public static void addBird(String name_lat, String name_de, String name_eng, String spec) throws Exception {
+		PreparedStatement psAddBird = getPreparedStatement(ADD_BIRD);
+		psAddBird.setString(1, spec);
+		psAddBird.setString(2, name_de);
+		psAddBird.setString(3, name_eng);
+		psAddBird.setString(4, name_lat);
+		
+		database().sendUpdate(psAddBird);
 	}
 	
 	private static DbWrapper database() throws Exception {
@@ -207,12 +218,12 @@ public class SpeciesRepository {
 		
 
 		//Beobachtung eintragen in Datenbank
-		public static void addDataObservation(String birdId, String level1, String level2, String level3, String dateFrom, String dateUntil, String notice){
+		public static void addDataObservation(String birdId, String level1, String level2, String level3, String dateFrom, String dateUntil, String notice) throws Exception{
 				System.out.println("120 SpeciesRepository : " + level1); // TODO syso's aufräumen
 				System.out.println("121 SpeciesRepository : " + level2);
 				System.out.println("122 SpeciesRepository : " + level3);
 				String ort_id = getLocationId(level1, level2, level3);
-			String bw_id = BirdwatcherRepository.getActiveUser().id();
+				String bw_id  = BirdwatcherRepository.getActiveUser().id();
 				System.out.println("127 SpeciesRepository#addDataObservation : " +  bw_id);
 			
 			
@@ -294,44 +305,72 @@ public class SpeciesRepository {
 		
 		
 		
-		private static String getLocationId(String level1, String level2, String level3) {
-//			 String template1 = level1, template2 = "null", template3 = "null";
+//		private static String getLocationId(String level1, String level2, String level3) {
+////			 String template1 = level1, template2 = "null", template3 = "null";
+////			
+////			if ( level1.isEmpty()) { return "-1"; } // fehler
+////			if (!level2.isEmpty()) { template2 = level2; }
+////			if (!level3.isEmpty()) { template3 = level3; }
+////			
+////			String query = "SELECT Ort_ID FROM Beobachtunsgebiete WHERE Level_1 = '" + template1 + "' AND Level_2 = '" + template2 + "' AND Level_3 = '" + template3 + "'";
+////			try {
+////				return Application.getInstance().database().getSingleValue(query);
+////			} catch (Exception e) {
+////				e.printStackTrace();
+////				showMsgBox(e); // TODO
+////				return "";
+////			}
+//			String query = "";
+//			String stmt = "SELECT ort_Id FROM Beobachtunsgebiet WHERE level_1 = '";
 //			
-//			if ( level1.isEmpty()) { return "-1"; } // fehler
-//			if (!level2.isEmpty()) { template2 = level2; }
-//			if (!level3.isEmpty()) { template3 = level3; }
-//			
-//			String query = "SELECT Ort_ID FROM Beobachtunsgebiete WHERE Level_1 = '" + template1 + "' AND Level_2 = '" + template2 + "' AND Level_3 = '" + template3 + "'";
-//			try {
+//			try{
+//				if (level1 == null || level1.isEmpty()){
+//					query = "SELECT ort_Id FROM Beobachtunsgebiet";
+//				}else if ((level2 == null || level2.isEmpty()) && (level3 == null) || level3.isEmpty()){
+//					query =  stmt + level1 + "' AND level_2 IS NULL AND level_3 IS NULL";
+//						
+//				}else if (level3 == null || level3.isEmpty()){
+//					query =  stmt + level1 + "' AND level_2 ='" + level2 + "' AND level_3 IS NULL";
+//				}else{
+//					query =  stmt + level1 + "' AND level_2 ='" + level2 + "' AND level_3 = '" + level3 + "'";
+//				}
+//				System.out.println(query);
 //				return Application.getInstance().database().getSingleValue(query);
-//			} catch (Exception e) {
+//				
+//			}catch (Exception e){
 //				e.printStackTrace();
 //				showMsgBox(e); // TODO
-//				return "";
+//				return "EXCEPTION IS THROWN";
 //			}
-			String query = "";
-			String stmt = "SELECT ort_Id FROM Beobachtunsgebiet WHERE level_1 = '";
-			
-			try{
-				if (level1 == null || level1.isEmpty()){
-					query = "SELECT ort_Id FROM Beobachtunsgebiet";
-				}else if ((level2 == null || level2.isEmpty()) && (level3 == null) || level3.isEmpty()){
-					query =  stmt + level1 + "' AND level_2 IS NULL AND level_3 IS NULL";
-						
-				}else if (level3 == null || level3.isEmpty()){
-					query =  stmt + level1 + "' AND level_2 ='" + level2 + "' AND level_3 IS NULL";
-				}else{
-					query =  stmt + level1 + "' AND level_2 ='" + level2 + "' AND level_3 = '" + level3 + "'";
-				}
-				return Application.getInstance().database().getSingleValue(query);
-				
-			}catch (Exception e){
-				e.printStackTrace();
-				showMsgBox(e); // TODO
-				return "EXCEPTION IS THROWN";
+//			
+//		}
+		
+		public static String getLocationId(String l1, String l2, String l3) throws Exception {
+			String query = "SELECT Ort_Id FROM Beobachtunsgebiet WHERE level_1 = '%L1%' and level_2 %L2% and level_3 %L3%";
+			if (l1 == null || l1.isEmpty()) {
+				throw new Exception("Keine zooökologische Region gewählt!");
+			} else {
+				query = query.replace("%L1%", l1);
 			}
 			
-		} 
+			if (l2 == null || l2.isEmpty()) {
+				query = query.replace("%L2%", "is null");
+			} else {
+				query = query.replace("%L2%", "= '" + l2 + "'");
+			}
+			
+			if (l3 == null || l3.isEmpty()) {
+				query = query.replace("%L3%", "is null");
+			} else {
+				query = query.replace("%L3%", "= '" + l3 + "'");
+			}
+			
+			System.out.println("getLocationId() query: " + query);
+			String result = Application.getInstance().database().getSingleValue(query);
+			System.out.println("Location Id returned: " + result);
+			return result;
+			
+		}
 		
 		// Stammdaten holen
 //		public static DefaultTableModel Data() throws Exception {
@@ -477,6 +516,10 @@ public class SpeciesRepository {
 						database.prepareStatement("INSERT INTO Beobachtunsgebiet (Level_1, Level_2, Level_3) Values (?, ?, ?)")
 				);
 				
+				preparedStatements.put(ADD_BIRD,
+						database.prepareStatement("INSERT INTO Vogelart (Artentyp, Name_DE, Name_ENG, Name_LAT) Values (?, ?, ?, ?)")
+				);
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 //				showMsgBox(e);
@@ -485,7 +528,7 @@ public class SpeciesRepository {
 			}
 		}
 			
-			//TODO siehe oben wie query ausf´geführt
+			//TODO siehe oben wie query ausgeführt
 			//Lifer/Ticks anzeigen, Volltextsuche
 			public static DefaultTableModel showLiferTicks(String level1, String level2, String level3, String filter, boolean ticks, boolean lifer){
 				DbWrapper database;

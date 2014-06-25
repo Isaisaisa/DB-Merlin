@@ -155,8 +155,9 @@ public class MerlinMainWindow {
 	private JComboBox<String> cmbAdminCoreDataSpecType;
 	private JTextField txtAdminAddBirdSpecType;
 	private JTextField txtAdminEditBirdSpecType;
-	private Component btnAdminEditBird;
+	private JButton btnAdminEditBird;
 	private JButton btnAdminCoreDataFilter;
+	private JButton btnAdminAddBird;
 	
 
 	/**
@@ -1066,6 +1067,30 @@ public class MerlinMainWindow {
 		panelAdminCoreDataTable.add(scrollPane_3);
 		
 		tableAdminCoreData = new JTable();
+		tableAdminCoreData.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if (tableAdminCoreData.getSelectedRow() > -1) {
+					enableBirdEditOnSelection(true);
+					txtAdminEditBirdNameLat.setText((String)tableAdminCoreData.getValueAt(tableAdminCoreData.getSelectedRow(), 1));
+					txtAdminEditBirdNameDe.setText((String)tableAdminCoreData.getValueAt(tableAdminCoreData.getSelectedRow(), 2));
+					txtAdminEditBirdNameEng.setText((String)tableAdminCoreData.getValueAt(tableAdminCoreData.getSelectedRow(), 3));
+				} else {
+					enableBirdEditOnSelection(false);
+				}
+			}
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				if (tableAdminCoreData.getSelectedRow() > -1) {
+					enableBirdEditOnSelection(true);
+					txtAdminEditBirdNameLat.setText((String)tableAdminCoreData.getValueAt(tableAdminCoreData.getSelectedRow(), 1));
+					txtAdminEditBirdNameDe.setText((String)tableAdminCoreData.getValueAt(tableAdminCoreData.getSelectedRow(), 2));
+					txtAdminEditBirdNameEng.setText((String)tableAdminCoreData.getValueAt(tableAdminCoreData.getSelectedRow(), 3));
+				} else {
+					enableBirdEditOnSelection(false);
+				}
+			}
+		});
 		scrollPane_3.setViewportView(tableAdminCoreData);
 		tableAdminCoreData.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableAdminCoreData.setBackground(Color.WHITE);
@@ -1125,11 +1150,11 @@ public class MerlinMainWindow {
 		txtAdminAddBirdNameLat.getDocument().addDocumentListener(new DocumentListener() {
 			
 			public void removeUpdate(DocumentEvent arg0) {
-				checkBirdName(txtAdminAddBirdNameLat, txtAdminAddBirdSpecType);
+				checkLatBirdName(txtAdminAddBirdNameLat, txtAdminAddBirdSpecType);
 			}
 			
 			public void insertUpdate(DocumentEvent arg0) {
-				checkBirdName(txtAdminAddBirdNameLat, txtAdminAddBirdSpecType);
+				checkLatBirdName(txtAdminAddBirdNameLat, txtAdminAddBirdSpecType);
 			}
 
 			public void changedUpdate(DocumentEvent arg0) {
@@ -1194,7 +1219,14 @@ public class MerlinMainWindow {
 		label_1.setBounds(10, 127, 47, 20);
 		panelAdminAddBird.add(label_1);
 		
-		JButton btnAdminAddBird = new JButton("Hinzuf\u00FCgen");
+		btnAdminAddBird = new JButton("Hinzuf\u00FCgen");
+		btnAdminAddBird.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (checkLatBirdName(txtAdminAddBirdNameLat, txtAdminAddBirdSpecType)) {
+					addBird();
+				};
+			}
+		});
 		btnAdminAddBird.setBounds(117, 166, 200, 23);
 		panelAdminAddBird.add(btnAdminAddBird);
 		
@@ -1225,11 +1257,11 @@ public class MerlinMainWindow {
 		txtAdminEditBirdNameLat.getDocument().addDocumentListener(new DocumentListener() {
 			
 			public void removeUpdate(DocumentEvent arg0) {
-				checkBirdName(txtAdminEditBirdNameLat, txtAdminEditBirdSpecType);
+				checkLatBirdName(txtAdminEditBirdNameLat, txtAdminEditBirdSpecType);
 			}
 			
 			public void insertUpdate(DocumentEvent arg0) {
-				checkBirdName(txtAdminEditBirdNameLat, txtAdminEditBirdSpecType);
+				checkLatBirdName(txtAdminEditBirdNameLat, txtAdminEditBirdSpecType);
 			}
 
 			public void changedUpdate(DocumentEvent arg0) {
@@ -1268,7 +1300,18 @@ public class MerlinMainWindow {
 		label_5.setBounds(10, 127, 47, 20);
 		panelAdminEditBird.add(label_5);
 		
-		JButton btnAdminEditBird = new JButton("\u00DCbernehmen");
+		btnAdminEditBird = new JButton("\u00DCbernehmen");
+		btnAdminEditBird.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnAdminEditBird.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				String birdId = (String)tableAdminCoreData.getValueAt(tableAdminCoreData.getSelectedRow(), 0);
+				ConstantElems.showMsgBox("muss noch implementiert werden", "BirdId = " + birdId);
+			}
+		});
 		btnAdminEditBird.setEnabled(false);
 		btnAdminEditBird.setBounds(117, 166, 200, 23);
 		panelAdminEditBird.add(btnAdminEditBird);
@@ -1290,6 +1333,14 @@ public class MerlinMainWindow {
 		txtAdminEditBirdSpecType.setColumns(10);
 		txtAdminEditBirdSpecType.setBounds(117, 127, 200, 20);
 		panelAdminEditBird.add(txtAdminEditBirdSpecType);
+		
+		JLabel lblBearbeitungsfunktionFehltNoch = new JLabel("Bearbeitungsfunktion fehlt noch");
+		lblBearbeitungsfunktionFehltNoch.setBounds(73, 234, 153, 14);
+		panelAdminEditBird.add(lblBearbeitungsfunktionFehltNoch);
+		
+		JLabel lblFeldverhaltenVonvogel = new JLabel("feldverhalten von \"vogel hinzuf\u00FCgen\" kopieren");
+		lblFeldverhaltenVonvogel.setBounds(43, 259, 222, 14);
+		panelAdminEditBird.add(lblFeldverhaltenVonvogel);
 		
 		JPanel panelAdminCoreDataConflicts = new JPanel();
 		panelAdminCoreDataConflicts.setVisible(false);
@@ -1647,7 +1698,7 @@ public class MerlinMainWindow {
 		
 	}
 	
-	private boolean checkBirdName(JTextField txtName, JTextField txtSpec) {
+	private boolean checkLatBirdName(JTextField txtName, JTextField txtSpec) {
 		String birdName = txtName.getText().trim().replaceAll("\\s+", " ");
 		int birdNameLength = birdName.split(" ").length;
 		
@@ -1671,11 +1722,6 @@ public class MerlinMainWindow {
 		}
 	}
 	
-	private boolean checkLocationName() {
-		// TODO
-		return true;
-	}
-	
 	private void enableBirdEditOnSelection(boolean enabled) {
 		txtAdminEditBirdNameLat.setEnabled(enabled);
 		txtAdminEditBirdNameDe.setEnabled(enabled);
@@ -1697,9 +1743,11 @@ public class MerlinMainWindow {
 		l2 = trimText(txtAddLand);
 		l3 = trimText(txtAddLokation);
 		
-		isLocationInputValid(l1, l2, l3);
-		
-		MainWindowLogic.addLocation(l1,l2,l3);
+		if (isLocationInputValid(l1, l2, l3)) {
+			MainWindowLogic.addLocation(l1,l2,l3);
+		} else {
+			ConstantElems.showMsgBox(new Exception("Ungültige Ortsangaben!"));
+		}
 	}
 	
 	private void getLocations() {
@@ -1718,10 +1766,42 @@ public class MerlinMainWindow {
 	private void getCoreData(String filter, String spec) {
 		try {
 			tableAdminCoreData.setModel(MainWindowLogic.getCoreData(filter, spec));
+			hideFirstColumn(tableAdminCoreData);
 		} catch (Exception e) {
 			e.printStackTrace();
 			ConstantElems.showMsgBox(e, "Stammdaten konnten nicht geladen werden.");
 		}
+	}
+	
+	private void addBird() {
+		String lat, de, eng, spec;
+		
+		lat = trimText(txtAdminAddBirdNameLat.getText()); // no need to check further after trimming due to checkLatBirdName()
+		de  = trimText(txtAdminAddBirdNameDe);
+		eng = trimText(txtAdminAddBirdNameEng);
+		spec = txtAdminAddBirdSpecType.getText(); // no need to trim
+		if (spec.toLowerCase().equals("oberart")) { // Eingabe konvertieren
+			spec = "species";
+		} else if (spec.toLowerCase().equals("unterart")) {
+			spec = "subspecies";
+		}
+		
+		if (isBirdInputValid(de, eng)) {
+			try {
+				MainWindowLogic.addBird(lat, de, eng, spec);
+				ConstantElems.showMsgBox("Vogelart hinzugefügt!","Erfolg");
+			} catch (Exception e) {
+				e.printStackTrace();
+				ConstantElems.showMsgBox(e, "Vogelart konnte nicht hinzugefügt werden.");
+			}
+		} else {
+			ConstantElems.showMsgBox(new Exception("Ungültige Vogelangaben!"));
+		}
+		
+	}
+	
+	private boolean isBirdInputValid(String de, String eng) {
+		return validBirdName(de) && validBirdName(eng);
 	}
 	
 	public String trimText(JTextField textField) {
@@ -1738,6 +1818,10 @@ public class MerlinMainWindow {
 	}
 	
 	private boolean validLocationName(String string) {
+		return matches(string);
+	}
+	
+	private boolean validBirdName(String string) {
 		return matches(string);
 	}
 	
@@ -1785,7 +1869,13 @@ public class MerlinMainWindow {
 		notice = txtComment.getText();
 		System.out.println("702 MerlinMainWindow : " + notice);
 
-		MainWindowLogic.addObservation(birdId, level_1, level_2, level_3,  formatVon, formatBis, notice);
+		
+		try {
+			MainWindowLogic.addObservation(birdId, level_1, level_2, level_3,  formatVon, formatBis, notice);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ConstantElems.showMsgBox(e);
+		}
 		
 		
 		/* Die Tabelle Beobachtet aus der Datenbank in die Gui laden.

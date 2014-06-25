@@ -1,5 +1,6 @@
 package merlin.logic.impl;
 
+import java.sql.SQLException;
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
@@ -32,12 +33,16 @@ public class MainWindowLogic {
 	}
 	
 
-	public static void addObservation(String birdId, String level1, String level2, String level3, String dateFrom, String dateUntil, String notice){
+	public static void addObservation(String birdId, String level1, String level2, String level3, String dateFrom, String dateUntil, String notice) throws Exception{
 		SpeciesRepository.addDataObservation(birdId, level1, level2, level3, dateFrom, dateUntil, notice);
 	}
 	
 	public static void addLocation(String l1, String l2, String l3) {
 		SpeciesRepository.addLocation(l1, l2, l3);
+	}
+	
+	public static void addBird(String name_lat, String name_de, String name_eng, String spec) throws Exception {
+		SpeciesRepository.addBird(name_lat, name_de, name_eng, spec);
 	}
 	
 	public static DefaultTableModel getLocations() throws Exception {
