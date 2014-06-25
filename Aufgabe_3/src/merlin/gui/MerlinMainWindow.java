@@ -684,9 +684,8 @@ public class MerlinMainWindow {
 		chkFilterLifer = new JCheckBox("Lifer");
 		chkFilterLifer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(chkFilterLifer.isSelected()){
-					filterSelection();
-				}
+				filterSelection();
+				
 			}
 		});
 		chkFilterLifer.setToolTipText("Akivieren ");
@@ -696,9 +695,8 @@ public class MerlinMainWindow {
 		chkFilterTicks = new JCheckBox("Ticks");
 		chkFilterTicks.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(chkFilterTicks.isSelected()){
-					filterSelection();
-				}
+				filterSelection();
+				
 			}
 		});
 		chkFilterTicks.setToolTipText("Akivieren ");
@@ -1839,6 +1837,9 @@ public class MerlinMainWindow {
 		filter = txtFilterObservation.getText();
 		ticks = chkFilterTicks.isSelected();
 		lifer = chkFilterLifer.isSelected();
+		level_1 = cmbRegionAdd.getSelectedItem().toString();
+		level_2 = cmbLandAdd.getSelectedItem().toString();
+		level_3 = cmbGebietAdd.getSelectedItem().toString();
 		tblBeobachtungsliste.setModel(MainWindowLogic.showLiferTicks(level_1, level_2, level_3, filter, ticks, lifer));
 	}
 	
