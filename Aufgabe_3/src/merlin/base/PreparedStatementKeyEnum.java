@@ -11,7 +11,8 @@ public enum PreparedStatementKeyEnum {
     ADD_OBSERVATION_MOMENT(7),
     ADD_OBSERVATION_PERIOD(8),
     ADD_LOCATION(9),
-    GET_LOCATIONS(10);
+    GET_LOCATIONS(10),
+    ADD_BIRD(11);
     
     
     private int key = 0;
