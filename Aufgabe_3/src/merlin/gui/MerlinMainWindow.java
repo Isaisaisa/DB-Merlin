@@ -69,6 +69,8 @@ import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import com.toedter.calendar.JDateChooser;
 
+import javax.swing.JRadioButton;
+
 
 public class MerlinMainWindow {
 
@@ -158,7 +160,6 @@ public class MerlinMainWindow {
 	private JButton btnAdminCoreDataFilter;
 	private JButton btnAdminAddBird;
 	private JComboBox<String> cmbAdminChecklistCoreDataSpecType;
-	private JComboBox<String> cmbFilterCoreDataSpecType;
 	private JComboBox<String> cmbAdminChecklisteL1;
 	private JComboBox<String> cmbAdminChecklisteL2;
 	private JComboBox<String> cmbAdminChecklisteL3;
@@ -166,6 +167,7 @@ public class MerlinMainWindow {
 	private JButton btnAdminChecklistAdd;
 	private JButton btnAdminChecklistRemove;
 	private JButton btnAdminEditLocation;
+	private JCheckBox chckbxNochNichtGesichtet;
 	
 
 	/**
@@ -543,18 +545,31 @@ public class MerlinMainWindow {
 		lblVolltextfilter.setBounds(10, 28, 62, 20);
 		panelCoreDataTable.add(lblVolltextfilter);
 		
-		JLabel label_17 = new JLabel("Artentyp:");
-		label_17.setBounds(433, 28, 47, 20);
-		panelCoreDataTable.add(label_17);
-		
-		cmbFilterCoreDataSpecType = new JComboBox<String>();
-		cmbFilterCoreDataSpecType.setModel(new DefaultComboBoxModel<String>(new String[] {"Alle", "Oberarten", "Unterarten"}));
-		cmbFilterCoreDataSpecType.setBounds(490, 28, 120, 20);
-		panelCoreDataTable.add(cmbFilterCoreDataSpecType);
-		
 		JButton btnFilterCoreData = new JButton("Filtern");
 		btnFilterCoreData.setBounds(322, 27, 89, 23);
 		panelCoreDataTable.add(btnFilterCoreData);
+		
+		chckbxNochNichtGesichtet = new JCheckBox("noch nicht beobachtete Vogelarten");
+		chckbxNochNichtGesichtet.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (chckbxNochNichtGesichtet.isSelected()){
+					try {
+						selectedChecklistView();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}else{
+					level_1 = cmbGebietAdd.getSelectedItem().toString();
+					level_2 = cmbLandAdd.getSelectedItem().toString();
+					level_3 = cmbRegionAdd.getSelectedItem().toString();
+					tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3));
+					
+				}
+			}
+		});
+		chckbxNochNichtGesichtet.setBounds(430, 29, 212, 23);
+		panelCoreDataTable.add(chckbxNochNichtGesichtet);
 		
 		JPanel panelObservationTable = new JPanel();
 		panelObservationTable.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Beobachtungen", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
@@ -1941,10 +1956,6 @@ public class MerlinMainWindow {
 		applyRolePermissions();
 		greetActiveUser();
 		
-		JLabel label_19 = new JLabel("<-- egal");
-		label_19.setBounds(620, 31, 46, 14);
-		panelCoreDataTable.add(label_19);
-		
 	}
 	
 	private boolean checkLatBirdName(JTextField txtName, JTextField txtSpec) {
@@ -2031,6 +2042,14 @@ public class MerlinMainWindow {
 			e.printStackTrace();
 			ConstantElems.showMsgBox(e, "Ortsliste konnte nicht geladen werden.");
 		}
+	}
+	
+	//noch nicht beobachtete Vogelarten ausgeben
+	private void selectedChecklistView() throws Exception{
+		level_1 = cmbGebietAdd.getSelectedItem().toString();
+//		level_2 = (cmbLandAdd.getItemCount() > 0)?(cmbLandAdd.getSelectedItem().toString()):("");
+//		level_3 = (cmbGebietAdd.getItemCount() > 0)?(cmbGebietAdd.getSelectedItem().toString()):("");
+		tblStammdatenBeob.setModel(MainWindowLogic.selectedChecklistView(level1, level2, level3));
 	}
 	
 	private DefaultTableModel getCoreData() {
@@ -2154,8 +2173,8 @@ public class MerlinMainWindow {
 		ticks = chkFilterTicks.isSelected();
 		lifer = chkFilterLifer.isSelected();
 		level_1 = cmbRegionAdd.getSelectedItem().toString();
-		level_2 = cmbLandAdd.getSelectedItem().toString();
-		level_3 = cmbGebietAdd.getSelectedItem().toString();
+		level_2 = (cmbLandAdd.getItemCount() > 0)?(cmbLandAdd.getSelectedItem().toString()):("");
+		level_3 = (cmbGebietAdd.getItemCount() > 0)?(cmbGebietAdd.getSelectedItem().toString()):("");
 		tblBeobachtungsliste.setModel(MainWindowLogic.showLiferTicks(level_1, level_2, level_3, filter, ticks, lifer));
 //		hideFirstColumn(tblBeobachtungsliste); // TODO reinnehmen, sobald alles funzt
 	}

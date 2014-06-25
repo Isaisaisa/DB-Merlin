@@ -93,5 +93,10 @@ public class MainWindowLogic {
 		return SpeciesRepository.showLiferTicks(level1, level2, level3, filter, ticks, lifer);
 	}
 	
+	
+	public static DefaultTableModel selectedChecklistView(String level1, String level2, String level3) throws Exception{
+		return SpeciesRepository.selectedChecklistView(level1, level2, level3);
+	}
+	
 }
 
