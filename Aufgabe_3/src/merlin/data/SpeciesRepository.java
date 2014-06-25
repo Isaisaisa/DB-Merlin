@@ -276,7 +276,8 @@ public class SpeciesRepository {
 				System.out.println("121 SpeciesRepository : " + level2);
 				System.out.println("122 SpeciesRepository : " + level3);
 				String ort_id = getLocationId(level1, level2, level3);
-				String bw_id  = BirdwatcherRepository.getActiveUser().id();
+				System.out.println("215 SpeciesRepository#addDataObservation : " +  ort_id);
+				String bw_id = BirdwatcherRepository.getActiveUser().id();
 				System.out.println("127 SpeciesRepository#addDataObservation : " +  bw_id);
 			
 			
@@ -547,7 +548,7 @@ public class SpeciesRepository {
 			
 			//TODO siehe oben wie query ausgeführt
 			//Lifer/Ticks anzeigen, Volltextsuche
-			public static DefaultTableModel showLiferTicks(String level1, String level2, String level3, String filter, boolean ticks, boolean lifer){
+			public static DefaultTableModel showLiferTicks(String level1, String level2, String level3, String filter, boolean showTicks, boolean showLifer){
 				DbWrapper database;
 				String query;
 				DefaultTableModel table = new DefaultTableModel();
@@ -567,24 +568,24 @@ public class SpeciesRepository {
 					}
 					query = "SELECT * FROM "
 							+ "(SELECT b.beo_id, v.Name_Lat, v.Name_De, v.Name_Eng,b.Ort_Id, b.DatumVon, b.DatumBis, b.Bemerkung,"
-							     + "CASE WHEN l.Lifer = b.datumVon  THEN 'Lifer'"
+							     + " CASE WHEN l.Lifer = b.datumVon  THEN 'Lifer'"
 							     + "     WHEN t.Tick = b.datumVon   THEN 'Tick'"
-							     + "END as \"Lifer/Tick\" "
+							     + " END as \"Lifer/Tick\" "
 							+ "FROM  beobachtet b, Vogelart v,"
 							     + " (SELECT beo.va_id, MIN(beo.datumVon) AS Lifer FROM Beobachtet beo GROUP BY beo.va_id) l,"
 							     + " (SELECT beob.va_id, MIN(beob.datumVon) AS Tick FROM Beobachtet beob WHERE beob.ort_id IN"
-							          + "(" + ort_id + ") GROUP BY beob.va_id) t"
+							          + " (" + ort_id + ") GROUP BY beob.va_id) t"
 							     + " WHERE b.bw_id = " + BirdwatcherRepository.getActiveUser().id()  + " AND b.va_Id = v.va_id AND b.Ort_id IN ("
 							        + "" + ort_id + ") AND l.va_id = b.va_id AND t.va_id = b.va_id ORDER BY DatumVon ASC)"
 							+ " WHERE (Name_Lat LIKE '%" + filter  + "%' OR Name_DE LIKE '%" + filter  + "%' OR Name_ENG LIKE '%" + filter  + "%')";
 					
-					if (ticks || lifer){
+					if (showTicks || showLifer){
 						query += " AND";
-						if (!ticks && lifer){
+						if (!showTicks && showLifer){
 							query += " \"Lifer/Tick\" = 'Lifer'";
-						}else if (ticks && !lifer){
+						}else if (showTicks && !showLifer){
 							query += " \"Lifer/Tick\" = 'Tick'";
-						}else if (ticks && lifer){
+						}else if (showTicks && showLifer){
 							query += " (\"Lifer/Tick\" = 'Lifer' OR \"Lifer/Tick\" = 'Tick')";
 						}
 						
