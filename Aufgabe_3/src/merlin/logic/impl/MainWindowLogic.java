@@ -10,8 +10,8 @@ import merlin.data.SpeciesRepository;
 
 public class MainWindowLogic {
 
-	public static DefaultTableModel selectLocation(String region, String land, String area){
-		return SpeciesRepository.selectLocation(region, land, area);
+	public static DefaultTableModel selectLocation(String region, String land, String area, String filter){
+		return SpeciesRepository.selectLocation(region, land, area, filter);
 	}
 	
 	public static DefaultComboBoxModel<String> getLevel1Data() {

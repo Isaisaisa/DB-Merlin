@@ -180,27 +180,26 @@ public class SpeciesRepository {
 		return Application.getInstance().database();
 	}
 	
-	public static DefaultTableModel selectLocation(String region, String land, String area){
+	public static DefaultTableModel selectLocation(String region, String land, String area, String filter) {
 		DbWrapper database;
 		DefaultTableModel table = new DefaultTableModel();
 		try {
 			database = Application.getInstance().database();
-			System.out.println("37 SpeciesRepository : "+database);
 			if ((region == null || region.equals("")) && (land == null || land.equals("")) && (area == null || area.equals(""))){
 				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat as \"Vogelart (lateinischer Name)\", v.Name_DE as \"(deutscher Name)\" , v.Name_ENG as \"(englischer Name)\", v.Artentyp as \"Artentyp\" FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
-						+ "Vogelart v ON  v.va_ID = kv.va_ID");
+						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE lower(v.Name_lat) like '%"+filter+"%' OR lower(v.Name_de) like '%"+filter+"%' OR lower(v.Name_eng) like '%"+filter+"%' ORDER BY v.Name_Lat ASC");
 				
 		    }else if ((land == null || land.equals("")) && (area == null || area.equals(""))){
 				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat as \"Vogelart (lateinischer Name)\", v.Name_DE as \"(deutscher Name)\" , v.Name_ENG as \"(englischer Name)\", v.Artentyp as \"Artentyp\" FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
-						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "'");
+						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "' AND (lower(v.Name_lat) like '%"+filter+"%' OR lower(v.Name_de) like '%"+filter+"%' OR lower(v.Name_eng) like '%"+filter+"%') ORDER BY v.Name_Lat ASC");
 				
 			}else if (area == null || area.equals("")){
 				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat as \"Vogelart (lateinischer Name)\", v.Name_DE as \"(deutscher Name)\" , v.Name_ENG as \"(englischer Name)\", v.Artentyp as \"Artentyp\" FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
-						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "' AND level_2 = '" +  land  + "'");
+						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "' AND level_2 = '" +  land  + "' AND (lower(v.Name_lat) like '%"+filter+"%' OR lower(v.Name_de) like '%"+filter+"%' OR lower(v.Name_eng) like '%"+filter+"%') ORDER BY v.Name_Lat ASC");
 			
 			}else{
 				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat as \"Vogelart (lateinischer Name)\", v.Name_DE as \"(deutscher Name)\" , v.Name_ENG as \"(englischer Name)\", v.Artentyp as \"Artentyp\" FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
-						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "' AND level_2 = '" +  land  + "' AND level_3 = '" + area + "'");
+						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "' AND level_2 = '" +  land  + "' AND level_3 = '" + area + "' AND (lower(v.Name_lat) like '%"+filter+"%' OR lower(v.Name_de) like '%"+filter+"%' OR lower(v.Name_eng) like '%"+filter+"%') ORDER BY v.Name_Lat ASC");
 			}
 		
 		} catch (Exception e) {
@@ -210,6 +209,38 @@ public class SpeciesRepository {
 		return table;
 	
 	}
+//	public static DefaultTableModel selectLocation(String region, String land, String area, String filter) {
+//		DbWrapper database;
+//		DefaultTableModel table = new DefaultTableModel();
+//		
+//		try {
+//			database = Application.getInstance().database();
+//			System.out.println("37 SpeciesRepository : "+database);
+//			if ((region == null || region.equals("")) && (land == null || land.equals("")) && (area == null || area.equals(""))){
+//				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat as \"Vogelart (lateinischer Name)\", v.Name_DE as \"(deutscher Name)\" , v.Name_ENG as \"(englischer Name)\", v.Artentyp as \"Artentyp\" FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
+//						+ "Vogelart v ON  v.va_ID = kv.va_ID");
+//				
+//			}else if ((land == null || land.equals("")) && (area == null || area.equals(""))){
+//				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat as \"Vogelart (lateinischer Name)\", v.Name_DE as \"(deutscher Name)\" , v.Name_ENG as \"(englischer Name)\", v.Artentyp as \"Artentyp\" FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
+//						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "'");
+//				
+//			}else if (area == null || area.equals("")){
+//				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat as \"Vogelart (lateinischer Name)\", v.Name_DE as \"(deutscher Name)\" , v.Name_ENG as \"(englischer Name)\", v.Artentyp as \"Artentyp\" FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
+//						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "' AND level_2 = '" +  land  + "'");
+//				
+//			}else{
+//				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat as \"Vogelart (lateinischer Name)\", v.Name_DE as \"(deutscher Name)\" , v.Name_ENG as \"(englischer Name)\", v.Artentyp as \"Artentyp\" FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
+//						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "' AND level_2 = '" +  land  + "' AND level_3 = '" + area + "'");
+//				
+//			}
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			ConstantElems.showMsgBox(e);
+//		}
+//		return table;
+//		
+//	}
 	
 	//Holt alle Level1 aus Beobachtung
 		public static Vector<String> getRegion(){
@@ -223,7 +254,6 @@ public class SpeciesRepository {
 			        list.add(rs.getString(1));
 			     }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			list = new Vector<String>(new HashSet<String>(list));
@@ -243,7 +273,6 @@ public class SpeciesRepository {
 			        	list.add(rs.getString(1));
 			     }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			System.out.println(list);
@@ -262,7 +291,6 @@ public class SpeciesRepository {
 			        	list.add(rs.getString(1));
 			     }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			System.out.println(list);
@@ -272,13 +300,13 @@ public class SpeciesRepository {
 			
 		//Beobachtung eintragen in Datenbank
 		public static void addDataObservation(String birdId, String level1, String level2, String level3, String dateFrom, String dateUntil, String notice) throws Exception{
-				System.out.println("120 SpeciesRepository : " + level1); // TODO syso's aufräumen
-				System.out.println("121 SpeciesRepository : " + level2);
-				System.out.println("122 SpeciesRepository : " + level3);
+//				System.out.println("120 SpeciesRepository : " + level1); // TODO syso's aufräumen
+//				System.out.println("121 SpeciesRepository : " + level2);
+//				System.out.println("122 SpeciesRepository : " + level3);
 				String ort_id = getLocationId(level1, level2, level3);
-				System.out.println("215 SpeciesRepository#addDataObservation : " +  ort_id);
+//				System.out.println("215 SpeciesRepository#addDataObservation : " +  ort_id);
 				String bw_id = BirdwatcherRepository.getActiveUser().id();
-				System.out.println("127 SpeciesRepository#addDataObservation : " +  bw_id);
+//				System.out.println("127 SpeciesRepository#addDataObservation : " +  bw_id);
 			
 			
 			DbWrapper database;
@@ -329,10 +357,8 @@ public class SpeciesRepository {
 					
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				
-				//TODO warum es nicht funktioniert
 				ConstantElems.showMsgBox(e);
 			}
 			
@@ -340,64 +366,18 @@ public class SpeciesRepository {
 		}
 			
 		// Beobachtung löschen aus Datenbank
-		//TODO das Delete statement ist falsch, Datum ist falsch
 		public static void deleteDataObservation(String beoId){
-//			String bw_id = BirdwatcherRepository.getActiveUser().id();
-			System.out.println("SpeciesRepository#deleteDataObservasion : " + beoId);
+//			System.out.println("SpeciesRepository#deleteDataObservasion : " + beoId);
 			DbWrapper database;
 			try{
 				database = Application.getInstance().database();	
 				String tmp = "DELETE beobachtet WHERE Beo_id = '" + beoId + "'";
 					database.sendUpdate(tmp);
 			}catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-				//TODO warum es nicht funktioniert
 				ConstantElems.showMsgBox(e);
 			}
 		}
-		
-		
-		
-//		private static String getLocationId(String level1, String level2, String level3) {
-////			 String template1 = level1, template2 = "null", template3 = "null";
-////			
-////			if ( level1.isEmpty()) { return "-1"; } // fehler
-////			if (!level2.isEmpty()) { template2 = level2; }
-////			if (!level3.isEmpty()) { template3 = level3; }
-////			
-////			String query = "SELECT Ort_ID FROM Beobachtunsgebiete WHERE Level_1 = '" + template1 + "' AND Level_2 = '" + template2 + "' AND Level_3 = '" + template3 + "'";
-////			try {
-////				return Application.getInstance().database().getSingleValue(query);
-////			} catch (Exception e) {
-////				e.printStackTrace();
-////				showMsgBox(e); // TODO
-////				return "";
-////			}
-//			String query = "";
-//			String stmt = "SELECT ort_Id FROM Beobachtunsgebiet WHERE level_1 = '";
-//			
-//			try{
-//				if (level1 == null || level1.isEmpty()){
-//					query = "SELECT ort_Id FROM Beobachtunsgebiet";
-//				}else if ((level2 == null || level2.isEmpty()) && (level3 == null) || level3.isEmpty()){
-//					query =  stmt + level1 + "' AND level_2 IS NULL AND level_3 IS NULL";
-//						
-//				}else if (level3 == null || level3.isEmpty()){
-//					query =  stmt + level1 + "' AND level_2 ='" + level2 + "' AND level_3 IS NULL";
-//				}else{
-//					query =  stmt + level1 + "' AND level_2 ='" + level2 + "' AND level_3 = '" + level3 + "'";
-//				}
-//				System.out.println(query);
-//				return Application.getInstance().database().getSingleValue(query);
-//				
-//			}catch (Exception e){
-//				e.printStackTrace();
-//				showMsgBox(e); // TODO
-//				return "EXCEPTION IS THROWN";
-//			}
-//			
-//		}
 		
 		public static String getLocationId(String l1, String l2, String l3) throws Exception {
 			String query = "SELECT Ort_Id FROM Beobachtunsgebiet WHERE level_1 = '%L1%' and level_2 %L2% and level_3 %L3%";
@@ -426,38 +406,6 @@ public class SpeciesRepository {
 			
 		}
 		
-		// Stammdaten holen
-//		public static DefaultTableModel Data() throws Exception {
-//			return Application.getInstance().database().getTableModelOfQuery("SELECT * FROM VOGELART WHERE NAME_LAT LIKE 'X%' ORDER BY NAME_LAT ASC");
-////			return Application.getInstance().database().getTableModelOfQuery("SELECT * FROM VOGELART ORDER BY NAME_LAT ASC");
-//		}
-		
-//		public static DefaultTableModel Data(String filter) throws Exception {
-//			
-//		}
-//		
-//		public static DefaultTableModel Data(String filter, String location) throws Exception {
-//			
-//		}
-//		
-	
-//		public static DefaultTableModel Data(String filter, SpeciesCategoryEnum species, int ordering) throws Exception {
-//			// TODO: gefilterte Stammdaten ausgeben
-//			DbWrapper database = Application.getInstance().database();
-//			
-//			PreparedStatement ps = database.getPreparedStatement(PreparedStatementKeyEnum.COREDATA_FILTERED_ORDERED);
-//			ps.setString(1, "");
-//			
-//			ResultSet resultSet = ps.executeQuery();
-//			DefaultTableModel resultTableModel = database.getTableModel(resultSet);
-//			resultSet.getStatement().close();
-//			
-//			return resultTableModel;
-//		}
-		
-//		  SELECT v.Name_Lat, v.Name_De, v.Name_Eng,b.Ort_Id, b.DatumVon, b.DatumBis, b.Bemerkung 
-//		  FROM  beobachtet b, Vogelart v WHERE b.bw_id = 24 AND b.va_Id = v.va_id ORDER BY DatumVon ASC;
-		
 //		Methode um "beobachtet" in Gui zu laden
 		public static DefaultTableModel getDataObservation() throws Exception{
 			return Application.getInstance().database().getTableModelOfQuery(
@@ -465,13 +413,6 @@ public class SpeciesRepository {
 					+ "FROM  beobachtet b, Vogelart v WHERE b.bw_id = '" + BirdwatcherRepository.getActiveUser().id() + 
 					"' AND b.va_Id = v.va_id ORDER BY DatumVon ASC");
 		}
-//		public static DefaultTableModel getDataObservation() throws Exception{
-//			return Application.getInstance().database().getTableModelOfQuery(
-//					" SELECT v.Name_Lat, v.Name_De, v.Name_Eng,b.Ort_Id, b.DatumVon, b.DatumBis, b.Bemerkung "
-//							+ "FROM  beobachtet b, Vogelart v WHERE b.bw_id = '" + BirdwatcherRepository.getActiveUser().id() + 
-//					"' AND b.va_Id = v.va_id ORDER BY DatumVon ASC");
-//		}
-		
 		
 		private static Hashtable<PreparedStatementKeyEnum, PreparedStatement> preparedStatements = new Hashtable<PreparedStatementKeyEnum, PreparedStatement>();
 		private static boolean isPreparedStatementsHashInitialized = false;
@@ -540,22 +481,16 @@ public class SpeciesRepository {
 				
 			} catch (Exception e) {
 				e.printStackTrace();
-//				showMsgBox(e);
-				System.out.println("SpeciesRepository#prepareStatements: " + e.getMessage());
-				System.out.println("Prepared Statements konnten nicht vorbereitet werden");
 			}
 		}
 			
-			//TODO siehe oben wie query ausgeführt
-			//Lifer/Ticks anzeigen, Volltextsuche
+			// Lifer / Ticks anzeigen, Volltextsuche
 			public static DefaultTableModel showLiferTicks(String level1, String level2, String level3, String filter, boolean showTicks, boolean showLifer){
 				DbWrapper database;
 				String query;
 				DefaultTableModel table = new DefaultTableModel();
 				try{
 					database = Application.getInstance().database();
-//					String ort_id = getLocationId(level1, level2, level3);
-//					String ort_id = "SELECT Ort_ID FROM BEOBACHTUNSGEBIET WHERE LEVEL_1 = '"+ level1 + "' AND LEVEL_2 = '" + level2 + "' AND LEVEL_3 = '" + level3 + "'";
 					String ort_id = "SELECT Ort_ID FROM BEOBACHTUNSGEBIET";
 					if(!(level1 == null) && !level1.equals("")){
 						ort_id += " WHERE Level_1 = '" + level1 +"'";
@@ -566,7 +501,7 @@ public class SpeciesRepository {
 							}
 						}
 					}
-					query = "SELECT * FROM "
+					query = "SELECT beo_id, DatumVon as \"Datum (vom)\", DatumBis as \"Datum (bis)\", Name_Lat as \"Vogelart (lat. Name)\", Name_De as \"(deutscher Name)\", Name_Eng as \"(englischer Name)\", Bemerkung as \"Bemerkung\", \"Lifer/Tick\" as \"Lifer / Tick\" FROM "
 							+ "(SELECT b.beo_id, v.Name_Lat, v.Name_De, v.Name_Eng,b.Ort_Id, b.DatumVon, b.DatumBis, b.Bemerkung,"
 							     + " CASE WHEN l.Lifer = b.datumVon  THEN 'Lifer'"
 							     + "     WHEN t.Tick = b.datumVon   THEN 'Tick'"
@@ -577,7 +512,7 @@ public class SpeciesRepository {
 							          + " (" + ort_id + ") GROUP BY beob.va_id) t"
 							     + " WHERE b.bw_id = " + BirdwatcherRepository.getActiveUser().id()  + " AND b.va_Id = v.va_id AND b.Ort_id IN ("
 							        + "" + ort_id + ") AND l.va_id = b.va_id AND t.va_id = b.va_id ORDER BY DatumVon ASC)"
-							+ " WHERE (Name_Lat LIKE '%" + filter  + "%' OR Name_DE LIKE '%" + filter  + "%' OR Name_ENG LIKE '%" + filter  + "%')";
+							+ " WHERE (lower(Name_Lat) LIKE '%" + filter.toLowerCase()  + "%' OR lower(Name_DE) LIKE '%" + filter.toLowerCase()  + "%' OR lower(Name_ENG) LIKE '%" + filter.toLowerCase()  + "%')";
 					
 					if (showTicks || showLifer){
 						query += " AND";

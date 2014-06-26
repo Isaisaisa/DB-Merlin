@@ -63,8 +63,6 @@ public class MerlinLogin {
 	private JPanel panel;
 	private JMenu mnDatei;
 	private JMenuItem mntmBeenden;
-	private JMenu mnEintellungen;
-	private JMenuItem mntmVerbindungseinstellungen;
 	private JCheckBox chkRememberUser;
 	private JLabel lblPasswort;
 	private JLabel lblUsername;
@@ -452,17 +450,7 @@ public class MerlinLogin {
 		mntmBeenden.setIcon(new ImageIcon(MerlinLogin.class
 				.getResource("/javax/swing/plaf/metal/icons/ocean/close.gif")));
 		mnDatei.add(mntmBeenden);
-
-		mnEintellungen = new JMenu("Eintellungen");
-		menuBar.add(mnEintellungen);
-
-		mntmVerbindungseinstellungen = new JMenuItem("Verbindungseinstellungen");
-		mntmVerbindungseinstellungen
-				.setIcon(new ImageIcon(
-						MerlinLogin.class
-								.getResource("/javax/swing/plaf/metal/icons/ocean/minimize.gif")));
-		mnEintellungen.add(mntmVerbindungseinstellungen);
-		frmLogin.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtUsernameLog, txtPasswordLog, btnLogin, chkRememberUser, txtUsernameReg, txtVorname, txtName, txtEmail, txtPasswordReg, txtPasswordRegBest, btnRegister, frmLogin.getContentPane(), label, panelRegistration, lblEmail, lblName, lblUsernameReg, lblPasswortReg, lblPasswortBestReg, lblNewLabel, lblVorname, panel_AfterRegister, lblAfterRegister, panelLogin, lblPasswort, lblUsername, lblbereitsRegistriert, panel, lblWelcomeText, menuBar, mnDatei, mntmBeenden, mnEintellungen, mntmVerbindungseinstellungen}));
+		frmLogin.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtUsernameLog, txtPasswordLog, btnLogin, chkRememberUser, txtUsernameReg, txtVorname, txtName, txtEmail, txtPasswordReg, txtPasswordRegBest, btnRegister, frmLogin.getContentPane(), label, panelRegistration, lblEmail, lblName, lblUsernameReg, lblPasswortReg, lblPasswortBestReg, lblNewLabel, lblVorname, panel_AfterRegister, lblAfterRegister, panelLogin, lblPasswort, lblUsername, lblbereitsRegistriert, panel, lblWelcomeText, menuBar, mnDatei, mntmBeenden}));
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			
