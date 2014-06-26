@@ -538,6 +538,44 @@ public class SpeciesRepository {
 			}
 		
 
+			
+			public static DefaultTableModel selectedChecklistView(String level1, String level2, String level3) throws Exception{
+				String query = "SELECT DISTINCT Vogelart.NAME_LAT as \"Vogelname (lateinisch)\", Vogelart.NAME_DE as \"(deutsch)\", Vogelart.NAME_ENG as \"(englisch)\", Vogelart.ARTENTYP as \"Artentyp\" "
+								+ " FROM ( (beobachtunsgebiet INNER JOIN kommtVor ON beobachtunsgebiet.ort_id = kommtVor.ort_id) INNER JOIN Vogelart ON Vogelart.va_id = kommtVor.va_id)"
+								+ "	WHERE level_1 = '%L1%' and level_2 %L2% and level_3 %L3% AND NOT EXISTS "
+                                                                      + " ( SELECT DISTINCT * FROM beobachtet, BEOBACHTUNSGEBIET "                                                                         
+                                                                      + " WHERE "
+                                                                      + " beobachtet.ORT_ID = Beobachtunsgebiet.ort_id and "
+                                                                      + "  level_1 = '%L1%' and "
+                                                                      + "  level_2  %L2% and "
+                                                                      + "  level_3  %L3% and "
+                                                                      + "  beobachtet.bw_id = %bw_id% and "
+                                                                      + "  Vogelart.va_id = beobachtet.va_id )";
+			
+				if (level1 == null || level1.isEmpty()) {
+					throw new Exception("Keine zooökologische Region gewählt!");
+				} else {
+					query = query.replace("%L1%", level1);
+				}
+				
+				if (level2 == null || level2.isEmpty()) {
+					query = query.replace("%L2%", "is null");
+				} else {
+					query = query.replace("%L2%", "= '" + level2 + "'");
+				}
+				
+				if (level3 == null || level3.isEmpty()) {
+					query = query.replace("%L3%", "is null");
+				} else {
+					query = query.replace("%L3%", "= '" + level3 + "'");
+				}
+				query = query.replace("%bw_id%", BirdwatcherRepository.getActiveUser().id());
+				
+				DefaultTableModel result = Application.getInstance().database().getTableModelOfQuery(query);
+				return result;
+			
+			
+			}
 }
 
 

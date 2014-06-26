@@ -71,6 +71,8 @@ import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import com.toedter.calendar.JDateChooser;
 
+import javax.swing.JRadioButton;
+
 
 public class MerlinMainWindow {
 
@@ -167,6 +169,7 @@ public class MerlinMainWindow {
 	private JButton btnAdminChecklistAdd;
 	private JButton btnAdminChecklistRemove;
 	private JButton btnAdminEditLocation;
+	private JCheckBox chckbxNochNichtGesichtet;
 	
 
 	/**
@@ -567,6 +570,28 @@ public class MerlinMainWindow {
 		});
 		btnFilterCoreData.setBounds(322, 27, 89, 23);
 		panelCoreDataTable.add(btnFilterCoreData);
+		
+		chckbxNochNichtGesichtet = new JCheckBox("noch nicht beobachtete Vogelarten");
+		chckbxNochNichtGesichtet.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (chckbxNochNichtGesichtet.isSelected()){
+					try {
+						selectedChecklistView();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}else{
+					level_1 = cmbGebietAdd.getSelectedItem().toString();
+					level_2 = cmbLandAdd.getSelectedItem().toString();
+					level_3 = cmbRegionAdd.getSelectedItem().toString();
+					tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3));
+					
+				}
+			}
+		});
+		chckbxNochNichtGesichtet.setBounds(430, 29, 212, 23);
+		panelCoreDataTable.add(chckbxNochNichtGesichtet);
 		
 		JPanel panelObservationTable = new JPanel();
 		panelObservationTable.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Beobachtungen", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
@@ -2039,6 +2064,14 @@ public class MerlinMainWindow {
 			e.printStackTrace();
 			ConstantElems.showMsgBox(e, "Ortsliste konnte nicht geladen werden.");
 		}
+	}
+	
+	//noch nicht beobachtete Vogelarten ausgeben
+	private void selectedChecklistView() throws Exception{
+		level_1 = cmbGebietAdd.getSelectedItem().toString();
+//		level_2 = (cmbLandAdd.getItemCount() > 0)?(cmbLandAdd.getSelectedItem().toString()):("");
+//		level_3 = (cmbGebietAdd.getItemCount() > 0)?(cmbGebietAdd.getSelectedItem().toString()):("");
+		tblStammdatenBeob.setModel(MainWindowLogic.selectedChecklistView(level1, level2, level3));
 	}
 	
 	private DefaultTableModel getCoreData() {
