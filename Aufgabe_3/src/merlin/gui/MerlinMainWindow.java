@@ -317,9 +317,6 @@ public class MerlinMainWindow {
 		tglbtnBeobachtungsliste.setFocusable(false);
 		tglbtnBeobachtungsliste.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-//				 CardLayout cl = (CardLayout)(panelMain.getLayout());
-//			     cl.show(panelMain, "panel_beobachtungsliste");
-			     
 			     toggleCardButtons(true, false);
 			     initBirdwatcherPanel();
 			}
@@ -358,15 +355,7 @@ public class MerlinMainWindow {
 		panelMain.setLayout(new CardLayout(0, 0));
 		
 		
-		
-		
-		
-		
-		
-		
-		//BEOBACHTUNGSLISTE
-		
-		
+		// BEOBACHTUNGSLISTE
 		
 		JPanel panelBeobachtungsliste = new JPanel();
 		panelBeobachtungsliste.setBackground(SystemColor.menu);
@@ -404,7 +393,7 @@ public class MerlinMainWindow {
 			}
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
-				//VogelId aus der Tabelle holen
+				// VogelId aus der Tabelle holen
 				btnAddObservation.setEnabled( (tblStammdatenBeob.getSelectedRow() > -1) );
 			}
 		});
@@ -446,7 +435,6 @@ public class MerlinMainWindow {
 		chkNichtGesichtete = new JCheckBox("nur nicht beobachtete Vogelarten");
 		chkNichtGesichtete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO
 				selectLocation();
 			}
 		});
@@ -483,7 +471,7 @@ public class MerlinMainWindow {
 					return;
 				}
 				
-				//Beo-ID
+				// Beo-ID
 				String beoId = (String)tblBeobachtungsliste.getValueAt(tblBeobachtungsliste.getSelectedRow(), 0);
 			
 				MainWindowLogic.deleteDataObservation(beoId);
@@ -637,10 +625,6 @@ public class MerlinMainWindow {
 			public void itemStateChanged(ItemEvent arg0) {
 				level_3 = cmbGebietAdd.getSelectedItem().toString();
 				selectLocation();
-				// TODO
-//				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3, txtFilterCoreData.getText()));
-//				hideFirstColumn(tblStammdatenBeob);
-//				filterSelection();
 			}
 		});
 		cmbGebietAdd.setBounds(85, 73, 152, 20);
@@ -758,7 +742,6 @@ public class MerlinMainWindow {
 		
 		
 		
-//		btnAddObservation = new JButton("Eintrag hinzuf\u00FCgen");
 		btnAddObservation.setEnabled(false);
 		btnAddObservation.addMouseListener(new MouseAdapter() {
 			@Override
@@ -777,9 +760,7 @@ public class MerlinMainWindow {
 		
 		
 		
-		//STAMMDATEN
-		
-		
+		// STAMMDATEN
 		
 		JPanel panelVerwaltung = new JPanel();
 		panelMain.add(panelVerwaltung, "panel_verwaltung");
@@ -863,8 +844,6 @@ public class MerlinMainWindow {
 					hideFirstColumn(tableAdminChecklistCoreData);
 					isAdminChecklistenCoreDataInitialized = true;
 				}
-				
-//				cmbAdminChecklisteL1.setModel(MainWindowLogic.getLevel1Data_Checklist());
 			}
 		});
 		tglbtnAdminChecklisten.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -1003,7 +982,6 @@ public class MerlinMainWindow {
 		btnAdminCoreDataFilter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println();
-//				getCoreData(txtAdminCoreDataFilter.getText(), cmbAdminCoreDataSpecType.getSelectedItem().toString());
 				tableAdminCoreData.setModel(getCoreData(txtAdminCoreDataFilter.getText(), cmbAdminCoreDataSpecType.getSelectedItem().toString()));
 				hideFirstColumn(tableAdminCoreData);
 			}
@@ -1526,12 +1504,6 @@ public class MerlinMainWindow {
 		panelAdminChecklisten.add(panelAdminChecklistCoreData);
 		
 		txtAdminChecklistCoreDataFilter = new JTextField();
-		txtAdminChecklistCoreDataFilter.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent arg0) {
-//				btnAdminChecklistCoreDataFilter.doClick();
-			}
-		});
 		txtAdminChecklistCoreDataFilter.setColumns(10);
 		txtAdminChecklistCoreDataFilter.setBounds(82, 28, 155, 20);
 		panelAdminChecklistCoreData.add(txtAdminChecklistCoreDataFilter);
@@ -1635,12 +1607,6 @@ public class MerlinMainWindow {
 		cmbAdminChecklisteL1.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
 				selectLevel1_AdminChecklist();
-//				level_1_admin = cmbAdminChecklisteL1.getSelectedItem().toString();
-//				level_2_admin = "";
-//				level_3_admin = "";
-//				cmbAdminChecklisteL2.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadLand(level_1_admin)));
-//				cmbAdminChecklisteL3.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadArea(level_1_admin, level_2_admin)));
-//				tableAdminChecklistSelection.setModel(MainWindowLogic.selectLocation(level_1_admin, level_2_admin, level_3_admin));
 			}
 		});
 		
@@ -1941,7 +1907,7 @@ public class MerlinMainWindow {
 		}
 	}
 	
-	//noch nicht beobachtete Vogelarten ausgeben
+	// noch nicht beobachtete Vogelarten ausgeben
 	private void selectedChecklistView() {
 		
 		try {
@@ -1955,15 +1921,9 @@ public class MerlinMainWindow {
 		filterSelection();
 	}
 	
-	private DefaultTableModel getCoreData() {
-		return getCoreData("","");
-	}
-	
 	private DefaultTableModel getCoreData(String filter, String spec) {
 		try {
 			return MainWindowLogic.getCoreData(filter, spec);
-//			tableAdminCoreData.setModel(MainWindowLogic.getCoreData(filter, spec));
-//			hideFirstColumn(tableAdminCoreData);
 		} catch (Exception e) {
 			e.printStackTrace();
 			ConstantElems.showMsgBox(e, "Stammdaten konnten nicht geladen werden.");

@@ -6,12 +6,12 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Toolkit;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.WindowConstants;
 
 import merlin.gui.DatabaseSetup;
 import merlin.gui.enums.ExitCode;
@@ -138,8 +138,6 @@ public final class Application {
 	public String[] getLogin(String encLoginData) throws Exception {
 		// Login Daten String entschlüsseln
 		String loginData   = getEncProp(encLoginData);
-		// TODO debug
-
 		if (!loginData.isEmpty()) {
 			String decUsername = loginData.substring(0, loginData.indexOf(loginDataSplitString));
 			String decPwd	   = loginData.substring(decUsername.length()).replaceAll(loginDataSplitString, "");
@@ -154,12 +152,10 @@ public final class Application {
 	
 	public String getDbUsername() throws Exception {
 		return getProp(userPropKey);
-//TODO		return getUsername(getLogin(loginDataPropKey));
 	}
 	
 	public String getDbPassword() throws Exception {
 		return getProp(pwdPropKey);
-//TODO		return getPassword(getLogin(loginDataPropKey));
 	}
 	
 	public String getUsername(String[] loginData) {
@@ -235,7 +231,7 @@ public final class Application {
 	}
 	
 	public void closeMerlinYesNo(Frame frame, boolean saveProperties) {
-		((JFrame) frame).setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		((JFrame) frame).setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		
 		int diagAnswer = JOptionPane.showConfirmDialog(frame, 
                 "Möchten Sie MERLIN wirklich beenden?", "MERLIN beenden", 
@@ -244,7 +240,7 @@ public final class Application {
         // Close if user confirmed 
         if (diagAnswer == JOptionPane.YES_OPTION) {
         	try {
-        		((JFrame) frame).setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        		((JFrame) frame).setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				Application.getInstance().shutdown(saveProperties);
 			} catch (Exception e) {
 				e.printStackTrace();

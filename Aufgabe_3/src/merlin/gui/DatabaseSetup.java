@@ -26,6 +26,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
@@ -87,7 +88,7 @@ public class DatabaseSetup extends JDialog {
 				public void windowClosing(WindowEvent e) {
 				}
 			});
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			
 			// center window on screen and make it visible
 			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -121,7 +122,7 @@ public class DatabaseSetup extends JDialog {
 		setTitle("Datenbankverbindung einrichten");
 		setModalityType(modalityType);
 //		setModalityType(ModalityType.APPLICATION_MODAL);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(DatabaseSetup.class.getResource("/javax/swing/plaf/metal/icons/ocean/minimize.gif")));
 		setResizable(false);
 		setBounds(100, 100, 402, 329);

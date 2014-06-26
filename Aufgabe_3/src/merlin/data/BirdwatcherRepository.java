@@ -12,7 +12,6 @@ import java.util.Vector;
 
 import merlin.base.Application;
 import merlin.base.DbWrapper;
-import merlin.base.PreparedStatementKeyEnum;
 import merlin.data.entities.Birdwatcher;
 import merlin.data.entities.BirdwatcherImpl;
 
@@ -76,7 +75,6 @@ public class BirdwatcherRepository {
 			psLogin.setString(1, benutzername);
 			psLogin.setString(2, passwort);
 			loginResult = database.sendQuery(psLogin);
-//			loginResult = database.sendQuery("SELECT Bw_ID, Name, Vorname, Benutzername, Passwort, Email, Rolle FROM Birdwatcher WHERE Benutzername = '" + benutzername + "' AND Passwort = '" + passwort + "'");
 			Vector<Vector<String>> resultVector = database.getResultVector(loginResult);
 			
 			if (database.hasResults(resultVector)) {

@@ -17,7 +17,7 @@ public class DbWrapperTest {
 	public void setUp() throws Exception {
 		database = DbWrapper.getInstance();
 		database.setConnectionData(defaultDbURL, defaultDbPort, defaultDbSID);
-		database.setLoginData("<a-kennung>", "<passwort>");
+		database.setLoginData("<a-kennung>", "<passwort>"); //TODO LOGIN DATEN EINTRAGEN
 		database.connect();
 	}
 

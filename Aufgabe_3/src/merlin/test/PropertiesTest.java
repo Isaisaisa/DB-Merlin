@@ -17,8 +17,6 @@ public class PropertiesTest {
 		app =  Application.getInstance();
 		
 		loadProperties();
-//		app.putPropDefaults();
-//		app.saveProp(dbPortPropKey, "666");
 	}
 
 	@Test

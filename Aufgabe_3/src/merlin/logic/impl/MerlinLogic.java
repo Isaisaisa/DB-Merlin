@@ -1,5 +1,8 @@
 package merlin.logic.impl;
 
+import static merlin.utils.ConstantElems.rememberLoginPropKey;
+import static merlin.utils.ConstantElems.showMsgBox;
+
 import java.io.IOException;
 
 import javax.swing.UnsupportedLookAndFeelException;
@@ -7,9 +10,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import merlin.base.Application;
 import merlin.base.DbWrapper;
 import merlin.data.BirdwatcherRepository;
-import merlin.data.entities.BirdwatcherImpl;
 import merlin.logic.exception.IllegalPasswordException;
-import static merlin.utils.ConstantElems.*;
 
 public class MerlinLogic {
 
@@ -189,28 +190,19 @@ public class MerlinLogic {
 		boolean ciom[] = checkInputOfMerlinLogin(username, password);
 		
 		boolean isValidInput = ciom[0] && ciom[1];
-
 		
 		if (isValidInput) {
-			// TODO falls Login Daten gültig ==> einloggen, sprich, per Select-Statement alle nötigen Daten des BWs holen (id...) + im BW Objekt zwischenspeichern
-			
-			
 			
 			if (rememberLogin) {
-				// TODO Merlin Login Daten merken (inkl. dem gesetzen Häkchen)
+				
 			}
 			
 		}
 		
 		try {
 			boolean isRegistered = BirdwatcherRepository.loginToMerlin(username, password);
-//			System.out.println("209 MerlinLogic#loginToMerlin " + BirdwatcherRepository.getActiveUser().toString());
 			if (isRegistered) {
 				loginSucceed = true;
-			} else {
-				// TODO Sinnvollere Maßnahmen oder Fehler werfen (?)
-//				System.err.println("MerlinLogic#loginToMerlin: Birdwatcher login failed. Passwort falsch oder Birdwatcher nicht vorhanden.");
-//				loginSucceed = false;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

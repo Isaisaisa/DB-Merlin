@@ -209,38 +209,6 @@ public class SpeciesRepository {
 		return table;
 	
 	}
-//	public static DefaultTableModel selectLocation(String region, String land, String area, String filter) {
-//		DbWrapper database;
-//		DefaultTableModel table = new DefaultTableModel();
-//		
-//		try {
-//			database = Application.getInstance().database();
-//			System.out.println("37 SpeciesRepository : "+database);
-//			if ((region == null || region.equals("")) && (land == null || land.equals("")) && (area == null || area.equals(""))){
-//				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat as \"Vogelart (lateinischer Name)\", v.Name_DE as \"(deutscher Name)\" , v.Name_ENG as \"(englischer Name)\", v.Artentyp as \"Artentyp\" FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
-//						+ "Vogelart v ON  v.va_ID = kv.va_ID");
-//				
-//			}else if ((land == null || land.equals("")) && (area == null || area.equals(""))){
-//				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat as \"Vogelart (lateinischer Name)\", v.Name_DE as \"(deutscher Name)\" , v.Name_ENG as \"(englischer Name)\", v.Artentyp as \"Artentyp\" FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
-//						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "'");
-//				
-//			}else if (area == null || area.equals("")){
-//				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat as \"Vogelart (lateinischer Name)\", v.Name_DE as \"(deutscher Name)\" , v.Name_ENG as \"(englischer Name)\", v.Artentyp as \"Artentyp\" FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
-//						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "' AND level_2 = '" +  land  + "'");
-//				
-//			}else{
-//				table = database.getTableModelOfQuery("SELECT DISTINCT v.va_id, v.Name_Lat as \"Vogelart (lateinischer Name)\", v.Name_DE as \"(deutscher Name)\" , v.Name_ENG as \"(englischer Name)\", v.Artentyp as \"Artentyp\" FROM Beobachtunsgebiet b INNER JOIN kommtVor kv ON b.ort_ID = kv.ort_ID INNER JOIN "
-//						+ "Vogelart v ON  v.va_ID = kv.va_ID WHERE level_1 = '" + region + "' AND level_2 = '" +  land  + "' AND level_3 = '" + area + "'");
-//				
-//			}
-//			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			ConstantElems.showMsgBox(e);
-//		}
-//		return table;
-//		
-//	}
 	
 	//Holt alle Level1 aus Beobachtung
 		public static Vector<String> getRegion(){
@@ -300,13 +268,8 @@ public class SpeciesRepository {
 			
 		//Beobachtung eintragen in Datenbank
 		public static void addDataObservation(String birdId, String level1, String level2, String level3, String dateFrom, String dateUntil, String notice) throws Exception{
-//				System.out.println("120 SpeciesRepository : " + level1); // TODO syso's aufräumen
-//				System.out.println("121 SpeciesRepository : " + level2);
-//				System.out.println("122 SpeciesRepository : " + level3);
 				String ort_id = getLocationId(level1, level2, level3);
-//				System.out.println("215 SpeciesRepository#addDataObservation : " +  ort_id);
 				String bw_id = BirdwatcherRepository.getActiveUser().id();
-//				System.out.println("127 SpeciesRepository#addDataObservation : " +  bw_id);
 			
 			
 			DbWrapper database;
@@ -314,12 +277,6 @@ public class SpeciesRepository {
 				database = Application.getInstance().database();
 				if (dateUntil == null) {
 
-//					String tmp ="INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung)"
-//					+ "	VALUES( '" + birdId + "', '" + bw_id + "', '" + ort_id + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), null, '" + notice + "')";
-//					System.out.println("136 SpeciesRepository#addDataObservation : "+tmp);
-//					database.sendUpdate(tmp);
-					
-					
 					PreparedStatement psObservation = getPreparedStatement(ADD_OBSERVATION_MOMENT);
 					psObservation.setString(1, birdId);
 					psObservation.setString(2, bw_id);
@@ -330,12 +287,6 @@ public class SpeciesRepository {
 					database.sendUpdate(psObservation);
 					
 				} else {	
-//					String tmp = "INSERT INTO beobachtet (Va_ID, Bw_ID, Ort_ID, DatumVon, DatumBis, Bemerkung)"
-//							+ "	VALUES ( '" + birdId + "', '" + bw_id + "', '" + ort_id + "', TO_DATE('" + dateFrom + "', 'DD-MM-YYYY HH24:MI'), TO_DATE('" + dateUntil + "', 'DD-MM-YYYY HH24:MI'), '" + notice + "')";
-//					System.out.println("141 SpeciesRepository#addDataObservation : " + tmp);
-//					database.sendUpdate(tmp);
-					
-					
 					PreparedStatement psObservation = getPreparedStatement(ADD_OBSERVATION_PERIOD);
 					psObservation.setString(1, birdId);
 					psObservation.setString(2, bw_id);
@@ -343,15 +294,6 @@ public class SpeciesRepository {
 					psObservation.setString(4, dateFrom);
 					psObservation.setString(5, dateUntil);
 					psObservation.setString(6, notice);
-					
-//					psObservation.setString(1, birdId);
-//					psObservation.setString(2, bw_id);
-//					psObservation.setString(3, ort_id);
-//					psObservation.setString(4, dateFrom);
-//					psObservation.setString(5, SQL_DATE_FORMAT);
-//					psObservation.setString(6, dateUntil);
-//					psObservation.setString(7, SQL_DATE_FORMAT);
-//					psObservation.setString(8, notice);
 					
 					database.sendUpdate(psObservation);
 					

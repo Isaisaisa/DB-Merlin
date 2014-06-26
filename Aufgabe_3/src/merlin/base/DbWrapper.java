@@ -13,7 +13,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
@@ -30,7 +29,6 @@ public final class DbWrapper implements DbWrapperInterface {
 	
 	private static DbWrapper 	instance;
 	private Connection 		 	connection;
-//	private DatabaseMetaData	databaseMetaData;
 	private boolean			 	isDriverInitialized;
 	
 	private String				dbURL  = defaultDbURL;
@@ -94,8 +92,6 @@ public final class DbWrapper implements DbWrapperInterface {
 
 	private void dbPassword(String dbPassword) throws Exception {
 		this.dbPassword = AES.encrypt(dbPassword);
-		// TODO debug, whats going on
-//		System.out.println("DbWrapper#dbPassword(): encrypted PW: " + this.dbPassword);
 	}
 
 	private String dbPassword() throws Exception {
@@ -201,7 +197,6 @@ public final class DbWrapper implements DbWrapperInterface {
 			return resultTableModel;
 		} catch (Exception e) {
 			e.printStackTrace();
-			// showMsgBox(e); // TODO im Auge behalten
 			return new DefaultTableModel();
 		}
 	}
@@ -246,7 +241,6 @@ public final class DbWrapper implements DbWrapperInterface {
 	public List<String> getListOfQuery(String query) throws Exception {
 		ResultSet resultSet = sendQuery(query);
 		List<String> resultList = getList(resultSet);
-		// TODO: Validieren, dass das Schließen des Statements nach Abarbeitung zu keinen Fehlern führt.
 		resultSet.getStatement().close();
 		return resultList;
 	}
@@ -341,9 +335,8 @@ public final class DbWrapper implements DbWrapperInterface {
 			isDriverInitialized = true;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-			showMsgBox(e, "Cannot initialize driver: Class oracle.jdbc.driver.OracleDriver not found"); // TODO nicht validiert, dass problemlos läuft
+			showMsgBox(e, "Cannot initialize driver: Class oracle.jdbc.driver.OracleDriver not found");
 			isDriverInitialized = false;
-//			throws ClassNotFoundException;  // wird trotzdem noch von initDriver() der Fehler nach außerdem geworfen, wenn try catch angewandt wird?
 		}
 	}
 	
@@ -356,7 +349,7 @@ public final class DbWrapper implements DbWrapperInterface {
 			}
 			catch (ClassNotFoundException e) {
 				e.printStackTrace();
-				showMsgBox(e); // TODO nicht validiert, dass problemlos läuft
+				showMsgBox(e);
 			}
 		}
 		
@@ -367,23 +360,17 @@ public final class DbWrapper implements DbWrapperInterface {
 					System.out.println("jdbc:oracle:thin:@" + dbURL + ":" + dbPort + ":" + dbSID +  dbUsername() +  dbPassword);
 					connection( DriverManager.getConnection("jdbc:oracle:thin:@" + dbURL + ":" + dbPort + ":" + dbSID, dbUsername(), dbPassword()) );
 				} catch (SQLException e) {
-					showMsgBox(e, "DbWrapper#connect: Connection to database could not be established"); // TODO nicht validiert, dass problemlos läuft
+					showMsgBox(e, "DbWrapper#connect: Connection to database could not be established");
 					e.printStackTrace();
 					throw e;
 				}
 			}
 		} catch (InvalidConnectionDataException e) {
-			showMsgBox(e, "Invalid connection data.\n" + "URL: " + dbURL + "\n" + "Port: " + dbPort + "\n" + "SID: " + dbSID); // TODO nicht validiert, dass problemlos läuft
+			showMsgBox(e, "Invalid connection data.\n" + "URL: " + dbURL + "\n" + "Port: " + dbPort + "\n" + "SID: " + dbSID);
 			e.printStackTrace();
-//			System.err.println("Invalid connection data.");
-//			System.err.println("URL: " + dbURL + "\n"
-//							 + "Port: " + dbPort + "\n" 
-//							 + "SID: " + dbSID);
 		} catch (InvalidLoginDataException e) {
-			showMsgBox(e, "Invalid login data.\n" + "Username: " + dbUsername); // TODO nicht validiert, dass problemlos läuft
+			showMsgBox(e, "Invalid login data.\n" + "Username: " + dbUsername);
 			e.printStackTrace();
-//			System.err.println("Invalid login data.");
-//			System.err.println("Username: " + dbUsername);
 		}
 	}
 	
@@ -396,12 +383,12 @@ public final class DbWrapper implements DbWrapperInterface {
 	  ///////////////////////////
  	 // DATA(BASE) OPERATIONS //
     //-----------------------//
-	private boolean preSendChecks() throws InvalidConnectionDataException, InvalidLoginDataException, SQLException, Exception {
-		if (!isConnectionValid() && !areDataValid()) {
-			throw new Exception("DbWrapper#preSendChecks(): The attempt to connect to database, before sending, failed.");
-		}
-		return true;
-	}
+//	private boolean preSendChecks() throws InvalidConnectionDataException, InvalidLoginDataException, SQLException, Exception {
+//		if (!isConnectionValid() && !areDataValid()) {
+//			throw new Exception("DbWrapper#preSendChecks(): The attempt to connect to database, before sending, failed.");
+//		}
+//		return true;
+//	}
 	
 	// Query an Datenbank senden
 	
