@@ -29,7 +29,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
 
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -56,9 +55,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.ListDataListener;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -71,22 +67,13 @@ import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import com.toedter.calendar.JDateChooser;
 
-import javax.swing.JRadioButton;
-
 
 public class MerlinMainWindow {
 
 	private JFrame frmMerlinMain;
-	private JTable tableCheckliste;
 	private JTable tblStammdatenBeob;
 	private JPanel panelMain;
 	private JPanel panelAdminCards;
-	private String level1;
-	private String level2;
-	private String level3;
-	private static JComboBox<String> cmbLevel1;
-	private static JComboBox<String> cmbLevel2;
-	private static JComboBox<String> cmbLevel3;
 	private JTable tblBeobachtungsliste;
 	private JTable tableManQuery;
 	private static JComboBox<String> cmbRegionAdd;
@@ -169,7 +156,7 @@ public class MerlinMainWindow {
 	private JButton btnAdminChecklistAdd;
 	private JButton btnAdminChecklistRemove;
 	private JButton btnAdminEditLocation;
-	private JCheckBox chckbxNochNichtGesichtet;
+	private JCheckBox chkNichtGesichtete;
 	
 
 	/**
@@ -371,118 +358,6 @@ public class MerlinMainWindow {
 		panelMain.setLayout(new CardLayout(0, 0));
 		
 		
-		//CHECKLISTE
-		
-		
-		JPanel panelCheckliste = new JPanel();
-		panelMain.add(panelCheckliste, "panel_checkliste");
-		panelCheckliste.setLayout(null);
-		
-		JPanel panelOrtsfilter = new JPanel();
-		panelOrtsfilter.setBorder(new TitledBorder(null, "Nach Ort filtern", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelOrtsfilter.setBounds(10, 11, 810, 703);
-		panelCheckliste.add(panelOrtsfilter);
-		panelOrtsfilter.setLayout(null);
-		
-		JLabel lblLevel1 = new JLabel("Zoo\u00F6kologische Region");
-		lblLevel1.setBounds(14, 16, 132, 20);
-		panelOrtsfilter.add(lblLevel1);
-		
-		JLabel lblLevel2 = new JLabel("Land");
-		lblLevel2.setBounds(155, 16, 132, 20);
-		panelOrtsfilter.add(lblLevel2);
-		
-		JLabel lblLevel3 = new JLabel("Lokation");
-		lblLevel3.setBounds(297, 16, 131, 20);
-		panelOrtsfilter.add(lblLevel3);
-		
-		cmbLevel1 = new JComboBox<String>();
-		cmbLevel1.addPopupMenuListener(new PopupMenuListener() {
-			public void popupMenuCanceled(PopupMenuEvent arg0) {
-			}
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {
-			}
-			public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
-				 cmbLevel1.setModel( new DefaultComboBoxModel<String>(MainWindowLogic.loadRegion()) );	
-			}
-		});
-		cmbLevel1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				level1 = cmbLevel1.getSelectedItem().toString();
-//				MainWindowLogic.selectLocation(level1);
-			}
-		});
-		cmbLevel1.setBounds(10, 36, 136, 20);
-		panelOrtsfilter.add(cmbLevel1);
-		
-		
-		
-		cmbLevel2 = new JComboBox<String>();
-		cmbLevel2.addPopupMenuListener(new PopupMenuListener() {
-			public void popupMenuCanceled(PopupMenuEvent arg0) {
-			}
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {
-			}
-			public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
-				cmbLevel2.setModel( new DefaultComboBoxModel<String>(MainWindowLogic.loadLand(level1)));	
-			}
-		});
-		cmbLevel2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				level2 = cmbLevel2.getSelectedItem().toString();
-//				MainWindowLogic.selectLocation(level1, level2);
-			}
-		});
-		cmbLevel2.setBounds(151, 36, 136, 20);
-		panelOrtsfilter.add(cmbLevel2);
-		
-		
-		
-		cmbLevel3 = new JComboBox<String>();
-		cmbLevel3.addPopupMenuListener(new PopupMenuListener() {
-			public void popupMenuCanceled(PopupMenuEvent arg0) {
-			}
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {
-			}
-			public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
-				cmbLevel3.setModel( new DefaultComboBoxModel<String>(MainWindowLogic.loadArea(level1, level2)));
-			}
-		});
-		cmbLevel3.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				level3 = cmbLevel3.getSelectedItem().toString();
-				// Glaube das wird hier nciht benötigt
-//				MainWindowLogic.selectLocation(level1, level2, level3);
-			}
-		});
-		cmbLevel3.setBounds(292, 36, 136, 20);
-		panelOrtsfilter.add(cmbLevel3);
-		
-		JButton btnChecklisteFiltern = new JButton("Filtern");
-		btnChecklisteFiltern.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-//				System.out.println(level1);
-//				System.out.println(level2); //evtl. null 
-//				System.out.println(level3); //evtl. null 
-				
-//				tableCheckliste.setModel(MainWindowLogic.selectLocation(level1, level2, level3, txtFilterCoreData.getText()));
-			}
-		});
-		btnChecklisteFiltern.setBounds(438, 35, 89, 23);
-		panelOrtsfilter.add(btnChecklisteFiltern);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 67, 790, 625);
-		panelOrtsfilter.add(scrollPane);
-		
-		tableCheckliste = new JTable();
-		tableCheckliste.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableCheckliste.setVerifyInputWhenFocusTarget(false);
-		tableCheckliste.setBackground(Color.WHITE);
-		scrollPane.setViewportView(tableCheckliste);
-		
-		
 		
 		
 		
@@ -541,13 +416,11 @@ public class MerlinMainWindow {
 		txtFilterCoreData.getDocument().addDocumentListener(new DocumentListener() {
 			
 			public void removeUpdate(DocumentEvent arg0) {
-				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3, txtFilterCoreData.getText()));
-				hideFirstColumn(tblStammdatenBeob);
+				selectLocationFilterOnly();
 			}
 			
 			public void insertUpdate(DocumentEvent arg0) {
-				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3, txtFilterCoreData.getText()));
-				hideFirstColumn(tblStammdatenBeob);
+				selectLocationFilterOnly();
 			}
 			
 			public void changedUpdate(DocumentEvent arg0) {
@@ -564,34 +437,21 @@ public class MerlinMainWindow {
 		JButton btnFilterCoreData = new JButton("Filtern");
 		btnFilterCoreData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3, txtFilterCoreData.getText()));
-				hideFirstColumn(tblStammdatenBeob);
+				selectLocationFilterOnly();
 			}
 		});
 		btnFilterCoreData.setBounds(322, 27, 89, 23);
 		panelCoreDataTable.add(btnFilterCoreData);
 		
-		chckbxNochNichtGesichtet = new JCheckBox("noch nicht beobachtete Vogelarten");
-		chckbxNochNichtGesichtet.addActionListener(new ActionListener() {
+		chkNichtGesichtete = new JCheckBox("nur nicht beobachtete Vogelarten");
+		chkNichtGesichtete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (chckbxNochNichtGesichtet.isSelected()){
-					try {
-						selectedChecklistView();
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}else{
-					level_1 = cmbGebietAdd.getSelectedItem().toString();
-					level_2 = cmbLandAdd.getSelectedItem().toString();
-					level_3 = cmbRegionAdd.getSelectedItem().toString();
-					tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3));
-					
-				}
+				// TODO
+				selectLocation();
 			}
 		});
-		chckbxNochNichtGesichtet.setBounds(430, 29, 212, 23);
-		panelCoreDataTable.add(chckbxNochNichtGesichtet);
+		chkNichtGesichtete.setBounds(430, 28, 193, 20);
+		panelCoreDataTable.add(chkNichtGesichtete);
 		
 		JPanel panelObservationTable = new JPanel();
 		panelObservationTable.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Beobachtungen", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
@@ -742,8 +602,6 @@ public class MerlinMainWindow {
 		lblGebiet.setFont(new Font("Tahoma", Font.PLAIN, 13));
 	
 		
-		
-
 		cmbRegionAdd = new  JComboBox<String>();
 		cmbRegionAdd.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
@@ -752,9 +610,7 @@ public class MerlinMainWindow {
 				level_3 = "";
 				cmbLandAdd.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadLand(level_1)));
 				cmbGebietAdd.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadArea(level_1, level_2)));
-				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3, txtFilterCoreData.getText()));
-				hideFirstColumn(tblStammdatenBeob);
-				filterSelection();
+				selectLocation();
 			}
 		});
 		cmbRegionAdd.setBounds(85, 18, 152, 20);
@@ -768,9 +624,7 @@ public class MerlinMainWindow {
 				level_2 = cmbLandAdd.getSelectedItem().toString();
 				level_3 = "";
 				cmbGebietAdd.setModel(new DefaultComboBoxModel<String>(MainWindowLogic.loadArea(level_1, level_2)));
-				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3, txtFilterCoreData.getText()));
-				hideFirstColumn(tblStammdatenBeob);
-				filterSelection();
+				selectLocation();
 			}
 		});
 		cmbLandAdd.setBounds(85, 46, 152, 20);
@@ -782,9 +636,11 @@ public class MerlinMainWindow {
 		cmbGebietAdd.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
 				level_3 = cmbGebietAdd.getSelectedItem().toString();
-				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3, txtFilterCoreData.getText()));
-				hideFirstColumn(tblStammdatenBeob);
-				filterSelection();
+				selectLocation();
+				// TODO
+//				tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3, txtFilterCoreData.getText()));
+//				hideFirstColumn(tblStammdatenBeob);
+//				filterSelection();
 			}
 		});
 		cmbGebietAdd.setBounds(85, 73, 152, 20);
@@ -1003,7 +859,7 @@ public class MerlinMainWindow {
 				toggleAdminCardButtons(false, false, true, false, false);
 				
 				if (!isAdminChecklistenCoreDataInitialized) {
-					tableAdminChecklistCoreData.setModel(getCoreData("turdus merula", "")); // TODO zurücksetzen vor auslieferung
+					tableAdminChecklistCoreData.setModel(getCoreData("", "")); //TODO initialfilter - setzbar, falls startperformance verbessert werden soll
 					hideFirstColumn(tableAdminChecklistCoreData);
 					isAdminChecklistenCoreDataInitialized = true;
 				}
@@ -1850,7 +1706,7 @@ public class MerlinMainWindow {
 					return;
 				}
 
-				String va_id = (String) tableAdminChecklistSelection.getValueAt(tableAdminChecklistSelection.getSelectedRow(), 0); // TODO Checklisten eintrag löschen können!
+				String va_id = (String) tableAdminChecklistSelection.getValueAt(tableAdminChecklistSelection.getSelectedRow(), 0);
 				try {
 					MainWindowLogic.deleteChecklistEntry(va_id, level_1_admin, level_2_admin, level_3_admin);
 					tableAdminChecklistSelection.setModel(MainWindowLogic.selectLocation(level_1_admin, level_2_admin, level_3_admin, ""));
@@ -1929,12 +1785,6 @@ public class MerlinMainWindow {
 		btnSendManQuery.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ResultSet resultSet;
-					// TODO bereiningen
-//					String query = "SELECT * FROM BIRDWATCHER WHERE lower(Benutzername) LIKE lower(demo)";
-//					
-//					PreparedStatement ps = Application.getInstance().database().prepareStatement(query);
-//					ps.setString(1, textPane.getText());
-//					resultSet = ps.executeQuery();
 				try {
 					if (textPane.getText().toLowerCase().contains("select")) {
 						System.out.println("textPane Query:");
@@ -2066,12 +1916,43 @@ public class MerlinMainWindow {
 		}
 	}
 	
+	private void selectLocation() {
+		if (chkNichtGesichtete.isSelected()) {
+			selectedChecklistView();
+		} else {
+			tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3, txtFilterCoreData.getText()));
+			hideFirstColumn(tblStammdatenBeob);
+			filterSelection();
+		}
+	}
+	
+	private void selectLocationFilterOnly() {
+		if (chkNichtGesichtete.isSelected()) {
+			try {
+				tblStammdatenBeob.setModel(MainWindowLogic.selectedChecklistView(level_1, level_2, level_3, txtFilterCoreData.getText()));
+			} catch (Exception e) {
+				e.printStackTrace();
+				ConstantElems.showMsgBox(e);
+			}
+			hideFirstColumn(tblStammdatenBeob);
+		} else {
+			tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3, txtFilterCoreData.getText()));
+			hideFirstColumn(tblStammdatenBeob);
+		}
+	}
+	
 	//noch nicht beobachtete Vogelarten ausgeben
-	private void selectedChecklistView() throws Exception{
-		level_1 = cmbGebietAdd.getSelectedItem().toString();
-//		level_2 = (cmbLandAdd.getItemCount() > 0)?(cmbLandAdd.getSelectedItem().toString()):("");
-//		level_3 = (cmbGebietAdd.getItemCount() > 0)?(cmbGebietAdd.getSelectedItem().toString()):("");
-		tblStammdatenBeob.setModel(MainWindowLogic.selectedChecklistView(level1, level2, level3));
+	private void selectedChecklistView() {
+		
+		try {
+			tblStammdatenBeob.setModel(MainWindowLogic.selectedChecklistView(level_1, level_2, level_3, txtFilterCoreData.getText()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			ConstantElems.showMsgBox(e);
+			chkNichtGesichtete.setSelected(false);
+		}
+		hideFirstColumn(tblStammdatenBeob);
+		filterSelection();
 	}
 	
 	private DefaultTableModel getCoreData() {
@@ -2269,7 +2150,7 @@ public class MerlinMainWindow {
 	}
 	
 	private void initAdminPanel() {
-		tableAdminCoreData.setModel(getCoreData("Amsel", "Alle")); // TODO zurücksetzen vor auslieferung
+		tableAdminCoreData.setModel(getCoreData("", "Alle")); // TODO initialfilter - setzbar, falls startperformance verbessert werden soll
 		hideFirstColumn(tableAdminCoreData);
 		cmbAdminChecklisteL1.setModel(MainWindowLogic.getLevel1Data_Checklist());
 		if (cmbAdminChecklisteL1.getItemCount() > 0) selectLevel1_AdminChecklist();
@@ -2284,9 +2165,7 @@ public class MerlinMainWindow {
 			String addMsg = (userIsAdmin(BirdwatcherRepository.getActiveUser().role()))?("Fügen Sie Orte über die Verwaltung hinzu!"):("Kontaktieren Sie einen Administrator, um dies zu ändern.");
 			ConstantElems.showMsgBox(new Exception("Es existieren noch keine Orte."), addMsg);
 		}
-		tblStammdatenBeob.setModel(MainWindowLogic.selectLocation(level_1, level_2, level_3, txtFilterCoreData.getText()));
-		hideFirstColumn(tblStammdatenBeob);
-		filterSelection();
+		selectLocation();
 		//-------------//
 		CardLayout cl = (CardLayout)(panelMain.getLayout());
 	    cl.show(panelMain, "panel_beobachtungsliste");
